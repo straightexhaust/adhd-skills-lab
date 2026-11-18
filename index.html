@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADHD Skills Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout idea: short "micro-lesson" cards in one readable column; each course has its own signal color; games live in an arcade grid. */
+  --paper:#f2f4f9; --card:#ffffff; --ink:#15203b; --muted:#56617e; --line:#d6dcea;
+  --accent:#2a4fd8; --spark:#ffc72c;
+  --c-focus:#2a4fd8; --c-memory:#8a3fd1; --c-habits:#13875c; --c-skills:#d9601c;
+  --good:#13875c; --bad:#cf3b33;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --r:14px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1424; --card:#18203a; --ink:#e7ebf7; --muted:#a1abc8; --line:#2b3758;
+    --accent:#7f98ff; --spark:#ffd257;
+    --c-focus:#7f98ff; --c-memory:#c08cff; --c-habits:#4fd19b; --c-skills:#ff9a5c;
+    --good:#4fd19b; --bad:#ff7a70; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1424; --card:#18203a; --ink:#e7ebf7; --muted:#a1abc8; --line:#2b3758;
+  --accent:#7f98ff; --spark:#ffd257;
+  --c-focus:#7f98ff; --c-memory:#c08cff; --c-habits:#4fd19b; --c-skills:#ff9a5c;
+  --good:#4fd19b; --bad:#ff7a70; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:2.1rem;font-weight:800}
+h2{font-size:1.5rem;font-weight:800}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--spark);outline-offset:2px}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px}
+header.top{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:14px;height:58px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.15rem;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:8px}
+.brand i{width:14px;height:14px;border-radius:4px;background:var(--spark);display:inline-block;transform:rotate(12deg)}
+nav.tabs{margin-left:auto;display:flex;gap:4px}
+nav.tabs a{text-decoration:none;color:var(--muted);padding:7px 12px;border-radius:999px;font-weight:700;font-size:.95rem}
+nav.tabs a.on{background:var(--ink);color:var(--paper)}
+main{padding:26px 0 70px;display:flex;flex-direction:column;gap:26px}
+.muted{color:var(--muted)}
+.small{font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.hero{display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.hero p{max-width:62ch;font-size:1.08rem}
+.stats{display:flex;gap:12px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;min-width:130px}
+.stat b{font-family:var(--display);font-size:1.6rem;display:block;font-variant-numeric:tabular-nums}
+.course-card{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;border-top:6px solid var(--cc)}
+.course-card:hover{border-color:var(--cc)}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--cc,var(--accent))}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--cc,var(--accent));border-radius:99px;transition:width .4s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:999px;padding:10px 18px;font-weight:700;background:var(--accent);color:#fff;text-decoration:none;min-height:44px}
+:root[data-theme="dark"] .btn{color:#0e1424}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn{color:#0e1424}}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.cc{background:var(--cc)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.lesson-list{display:flex;flex-direction:column;gap:10px}
+.lesson-item{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;text-decoration:none;color:inherit;cursor:pointer;text-align:left;width:100%}
+.lesson-item:hover{border-color:var(--cc)}
+.num{flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;border:2px solid var(--cc);color:var(--cc)}
+.lesson-item.done .num{background:var(--cc);color:var(--card)}
+.lesson-item .grow{flex:1;min-width:0}
+.pill{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--paper);border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--good);border-color:var(--good)}
+.section{display:flex;flex-direction:column;gap:10px}
+.section h3{display:flex;align-items:center;gap:8px}
+.section h3 .dot{width:10px;height:10px;border-radius:3px;background:var(--cc)}
+.example{border-left:4px solid var(--spark);padding:12px 16px;background:var(--paper);border-radius:0 10px 10px 0}
+.lesson p,.lesson li{max-width:66ch}
+.lesson ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.try{border:2px dashed var(--cc);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:12px}
+input[type=text],input[type=time],input[type=date],input[type=number],select,textarea{background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:9px 12px;width:100%;min-height:44px}
+textarea{min-height:80px;resize:vertical}
+label{font-weight:700;font-size:.95rem}
+.field{display:flex;flex-direction:column;gap:5px}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:10px 14px;min-height:44px}
+.choice.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 14%,var(--card))}
+.choice.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,var(--card))}
+.feedback{font-weight:700}
+.feedback.good{color:var(--good)} .feedback.bad{color:var(--bad)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:2px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;font-weight:700;min-height:40px}
+.chip.on{background:var(--cc,var(--accent));border-color:var(--cc,var(--accent));color:var(--card)}
+.checks{display:flex;flex-direction:column;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400;cursor:pointer}
+.check input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--cc)}
+.biglabel{font-family:var(--display);font-weight:800;font-size:2.6rem;font-variant-numeric:tabular-nums;line-height:1}
+.out{background:var(--paper);border-radius:10px;padding:12px 14px}
+.list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.crumbs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.95rem}
+.crumbs a{text-decoration:none;font-weight:700}
+.note{font-size:.9rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+/* games */
+.game-card{display:flex;flex-direction:column;gap:8px;text-align:left;border-top:6px solid var(--spark)}
+.game-card .skill{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center;min-height:360px}
+.hud{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-weight:700;font-variant-numeric:tabular-nums}
+.hud span b{font-family:var(--display);font-size:1.3rem}
+.stroop-word{font-family:var(--display);font-weight:800;font-size:3.4rem;letter-spacing:.02em;min-height:80px;display:grid;place-items:center}
+.cbtns{display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:10px;width:100%;max-width:360px}
+.cbtns button{min-height:56px;border-radius:12px;border:2px solid var(--line);background:var(--paper);font-weight:800;font-size:1.05rem}
+.cbtns button .sw{display:inline-block;width:14px;height:14px;border-radius:4px;margin-right:8px;vertical-align:-1px}
+.nb-grid{display:grid;grid-template-columns:repeat(3,72px);gap:8px}
+.nb-grid div{width:72px;height:72px;border-radius:12px;background:var(--paper);border:2px solid var(--line);transition:background .1s}
+.nb-grid div.lit{background:var(--accent);border-color:var(--accent)}
+.pads{display:grid;grid-template-columns:repeat(2,120px);gap:12px}
+.pads button{width:120px;height:120px;border-radius:22px;border:0;opacity:.45;transition:opacity .12s,transform .12s}
+.pads button.lit{opacity:1;transform:scale(1.05)}
+.gng-zone{width:100%;max-width:380px;height:220px;border-radius:18px;border:2px solid var(--line);background:var(--paper);display:grid;place-items:center;user-select:none;touch-action:manipulation}
+.gng-dot{width:110px;height:110px;border-radius:50%}
+.mm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:380px}
+.mm-grid button{aspect-ratio:1;border-radius:12px;border:2px solid var(--line);background:var(--accent);font-size:1.9rem;color:transparent;transition:transform .15s}
+.mm-grid button.up{background:var(--paper);color:var(--ink)}
+.mm-grid button.got{background:color-mix(in srgb,var(--good) 20%,var(--card));color:var(--ink);border-color:var(--good)}
+.odd-grid{display:grid;gap:6px;width:100%;max-width:380px}
+.odd-grid button{aspect-ratio:1;border-radius:10px;border:2px solid var(--line);background:var(--paper);font-family:var(--display);font-weight:800;font-size:1.4rem;padding:0}
+.breath{width:170px;height:170px;border-radius:50%;background:color-mix(in srgb,var(--cc) 30%,var(--card));border:3px solid var(--cc);display:grid;place-items:center;font-weight:700;transition:transform 4s ease-in-out;margin:14px auto}
+.digits{font-family:var(--display);font-weight:800;font-size:2rem;letter-spacing:.12em;font-variant-numeric:tabular-nums;word-break:break-all}
+footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted);font-size:.9rem}
+@media (max-width:560px){
+  h1{font-size:1.7rem}
+  nav.tabs a{padding:6px 9px;font-size:.88rem}
+  .brand span{display:none}
+  .stroop-word{font-size:2.6rem}
+  .pads{grid-template-columns:repeat(2,100px)} .pads button{width:100px;height:100px}
+  .nb-grid{grid-template-columns:repeat(3,64px)} .nb-grid div{width:64px;height:64px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home"><i></i>ADHD Skills <span>Lab</span></a>
+    <nav class="tabs" aria-label="Main">
+      <a href="#home" data-nav="home">Home</a>
+      <a href="#courses" data-nav="courses">Courses</a>
+      <a href="#games" data-nav="games">Games</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="app"></main>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Your progress is saved in this browser only.</div></footer>
+
+<script>
+/* ---------- storage ---------- */
+const KEY = "adhdlab-v1";
+let S = {done:{}, best:{}, data:{}};
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch(e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {} }
+function getD(k, d){ return (S.data && k in S.data) ? S.data[k] : d; }
+function setD(k, v){ S.data[k] = v; save(); }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let cleanups = [];
+function cleanup(){ cleanups.forEach(f => { try{f()}catch(e){} }); cleanups = []; }
+function every(fn, ms){ const id = setInterval(fn, ms); cleanups.push(() => clearInterval(id)); return id; }
+function later(fn, ms){ const id = setTimeout(fn, ms); cleanups.push(() => clearTimeout(id)); return id; }
+const rand = n => Math.floor(Math.random()*n);
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=rand(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+/* ---------- course content ---------- */
+const COURSES = [
+{ id:"focus", title:"Focus & Executive Function", color:"--c-focus",
+  blurb:"Start tasks, see time passing, and stay on track when your brain wants to wander.",
+  lessons:[
+  { id:"focus1", title:"Your interest-based brain", mins:6,
+    idea:`<p>ADHD is less about having too little attention and more about trouble <b>steering</b> it. Many ADHD brains switch on when a task has one of five ingredients, often remembered as <b>INCUP</b>:</p>
+    <ul><li><b>I</b>nterest: it's fascinating to you</li><li><b>N</b>ovelty: it's new or different</li><li><b>C</b>hallenge: there's a game or a goal to beat</li><li><b>U</b>rgency: a deadline is close</li><li><b>P</b>assion: it connects to something you care about</li></ul>
+    <p>"It's important" and "I should" rarely flip the switch on their own. Instead of waiting to feel motivated, add an ingredient on purpose.</p>`,
+    example:`<p><b>Sam</b> needs to file expense reports and has put it off for three weeks. Knowing it matters hasn't helped. Sam adds <b>Urgency</b> (texts a coworker: "they'll be in by 3 pm") and <b>Novelty</b> (does them at a café with a fancy drink). Done in 25 minutes.</p>`,
+    tryTitle:"Turn up a boring task", widget:{type:"incup"},
+    quiz:{q:"You keep avoiding a dull task. Which move is most likely to help you start?", o:["Remind yourself again how important it is","Turn it into a race against a 15-minute timer","Wait until you feel in the mood"], a:1, why:"A timer adds Challenge and Urgency, two ingredients that switch the ADHD brain on."} },
+  { id:"focus2", title:"Making time visible", mins:7,
+    idea:`<p>Many people with ADHD experience <b>time blindness</b>: there's "now" and "not now," and everything in "not now" feels far away. The fix is to make time something you can <b>see</b>.</p>
+    <ul><li>Use a visual timer or an analog clock so you see time shrinking.</li><li>Estimate how long a task will take, then time it. Compare.</li><li>Plan backwards from deadlines: "Leave at 8:15, so shoes on at 8:05."</li><li>Add a 50% buffer to anything new.</li></ul>`,
+    example:`<p><b>Priya</b> believed her morning routine took 20 minutes. She timed it once: 47 minutes. Now she plans for 50 and has stopped being late.</p>`,
+    tryTitle:"Test your inner clock", widget:{type:"timeguess", target:20},
+    quiz:{q:"What's the best fix for always underestimating how long tasks take?", o:["Try to work faster","Time the task once and plan with the real number","Stop making plans"], a:1, why:"Real measurements beat guesses. Once you know the actual time, you can plan honestly."} },
+  { id:"focus3", title:"Starting is the hardest part", mins:8,
+    idea:`<p>Task paralysis usually happens when the first step is <b>fuzzy</b> or <b>too big</b>. Shrink the first step until it feels almost silly: "open the laptop," "put on one shoe."</p>
+    <p>Then use the <b>5-minute rule</b>: agree to work for 5 minutes, and give yourself real permission to stop after that. Most of the time, starting creates enough momentum to keep going.</p>`,
+    example:`<p>"Clean the kitchen" felt impossible to <b>Leo</b>. He changed it to "put 5 dishes in the dishwasher," said it out loud, set a 5-minute timer, and ended up finishing the whole sink.</p>`,
+    tryTitle:"Break a task into tiny steps", widget:{type:"breaker"},
+    quiz:{q:"Which first step is most likely to get you moving on 'write my report'?", o:["Write the report","Open the document and type the title","Think about the report"], a:1, why:"A concrete, tiny, physical action is easy to begin. 'Think about it' isn't a step you can finish."} },
+  { id:"focus4", title:"Focus sprints", mins:10,
+    idea:`<p>Short, timed blocks suit the ADHD brain: a clear start, a visible finish line, and a reward at the end. Start with <b>15 minutes of work, 5 minutes of break</b>, and lengthen the sprint as it gets easier.</p>
+    <ul><li>Before you start, write the one thing this sprint is for.</li><li>One tab or app open. Phone in another room or face-down.</li><li>Keep a scrap of paper for stray thoughts (next lesson).</li><li>On the break, stand up and move. Avoid starting a video you can't stop.</li></ul>`,
+    example:`<p><b>Body doubling</b> helps many people: work next to another person, in person or on a silent video call. You each do your own task. Their presence keeps you anchored.</p>`,
+    tryTitle:"Run a focus sprint", widget:{type:"sprint", presets:[10,15,25]},
+    quiz:{q:"During a sprint, an idea for a totally different project pops up. What should you do?", o:["Switch to it before you forget","Jot it down and get back to the sprint","Try hard not to think about it"], a:1, why:"Writing it down saves the idea and protects your focus. Fighting a thought tends to make it louder."} },
+  { id:"focus5", title:"The distraction parking lot", mins:5,
+    idea:`<p>Mid-task, your brain will offer things like "email Mom," "what was that actor's name?" or "we need milk." Acting on them derails you; fighting them uses up focus.</p>
+    <p>Give them a <b>parking lot</b>: one place to write them down and deal with them at break time. Your brain lets go more easily once it trusts the note will be there.</p>`,
+    example:`<p>During a 20-minute sprint, <b>Maya</b> parked 6 thoughts. At the break she found 2 were urgent, 3 could wait until the weekend, and 1 she no longer cared about.</p>`,
+    tryTitle:"Your parking lot", widget:{type:"parking"},
+    quiz:{q:"When is the best time to deal with parked thoughts?", o:["Immediately, one by one","At your next planned break","Never; ignore them"], a:1, why:"Batch them at a break so you keep your sprint intact and still handle what matters."} },
+  { id:"focus6", title:"Riding big feelings", mins:7,
+    idea:`<p>For many people with ADHD, feelings arrive <b>faster and stronger</b>, and frustration can go from 0 to 100. Try <b>STOP</b>:</p>
+    <ul><li><b>S</b>top what you're doing for a moment.</li><li><b>T</b>ake a slow breath (or three).</li><li><b>O</b>bserve: name the feeling. "I'm frustrated." Naming a feeling tends to turn down its volume.</li><li><b>P</b>roceed with one chosen action instead of a reaction.</li></ul>`,
+    example:`<p>A coworker changes a plan at the last minute. Instead of firing off an angry message, <b>Jordan</b> stops, breathes, thinks "I'm annoyed because I'd already planned my afternoon," and replies: "Can we talk through the new timeline at 2?"</p>`,
+    tryTitle:"Box breathing (4-4-4-4)", widget:{type:"breathe"},
+    quiz:{q:"What does the 'O' in STOP ask you to do?", o:["Overrule the feeling","Observe and name what you feel","Organize your desk"], a:1, why:"Putting a name to a feeling helps your thinking brain catch up with your emotional one."} }
+  ]},
+{ id:"memory", title:"Memory Boosters", color:"--c-memory",
+  blurb:"Hold onto information, remember what you came into the room for, and stop losing stuff.",
+  lessons:[
+  { id:"mem1", title:"Your mental sticky note", mins:6,
+    idea:`<p><b>Working memory</b> holds information for a few seconds while you use it, like a sticky note in your head. In ADHD that note is often smaller and the glue is weaker.</p>
+    <p>The rule: <b>if it matters, get it out of your head.</b> Write it, say it out loud, or put the object where you'll trip over it. This isn't cheating. It's how you free up your brain for thinking.</p>`,
+    example:`<p>Walking into a room and forgetting why? Say the goal out loud on the way: "Scissors, scissors, scissors." Hearing yourself gives the memory a second route in.</p>`,
+    tryTitle:"Set up your external brain", widget:{type:"checklist", key:"extbrain", items:["Pick ONE capture place for notes (an app or a pocket notebook), not five","Use phone reminders with a time or location for anything with a deadline","Put a whiteboard or sticky-note spot by the door","Use voice memos when your hands are busy","Write tomorrow's top task down before bed"]},
+    quiz:{q:"Your friend tells you a phone number. What's the most ADHD-friendly move?", o:["Repeat it in your head and hope","Type it into your phone right away","Promise to remember it"], a:1, why:"Capture it immediately so you don't rely on a tiny, leaky working memory."} },
+  { id:"mem2", title:"Chunking", mins:6,
+    idea:`<p>Most people can hold about 4 "chunks" in working memory at a time. The trick is to make each chunk <b>bigger</b>. 1 9 4 5 2 0 0 1 is eight items; 1945 and 2001 is two.</p>
+    <ul><li>Group numbers into 3s or 4s (like phone numbers).</li><li>Group shopping items by store section: produce, dairy, freezer.</li><li>Give a chunk a meaning: a year, a jersey number, a birthday.</li></ul>`,
+    example:`<p>To remember the list "eggs, apples, milk, bananas, cheese, spinach," <b>Ana</b> chunks it into "3 fruit-and-veg, 3 fridge": apples, bananas, spinach / eggs, milk, cheese.</p>`,
+    tryTitle:"Chunking challenge", widget:{type:"chunk"},
+    quiz:{q:"Which is easiest to remember?", o:["8 0 0 5 5 5 1 2 3 4","800-555-1234","eight-zero-zero-five..."], a:1, why:"Three chunks are far easier to hold than ten separate digits."} },
+  { id:"mem3", title:"The memory palace", mins:10,
+    idea:`<p>Your brain is excellent at remembering <b>places</b>. The memory palace (method of loci) uses that: picture a route you know well, like your home, and "place" each item you want to remember at a stop along the way.</p>
+    <p>Make each image <b>big, weird, funny or gross</b>. A normal image fades; a bizarre one sticks.</p>`,
+    example:`<p>To remember "batteries, bread, call the dentist": a battery the size of a fridge blocks the <b>front door</b>, the <b>couch</b> is a giant loaf of bread, and a tooth is singing in the <b>kitchen sink</b>. Walk the route in your mind and the items reappear.</p>`,
+    tryTitle:"Build your own palace", widget:{type:"palace"},
+    quiz:{q:"What makes a memory-palace image stick best?", o:["Keeping it realistic","Making it exaggerated and strange","Keeping it small and neat"], a:1, why:"Unusual, emotional or funny images get more attention, so they get stored better."} },
+  { id:"mem4", title:"Make it weird: the story method", mins:7,
+    idea:`<p>Linking items into a silly story is another strong technique. Each item <b>does something</b> to the next. Action and emotion make the chain memorable, and remembering one link pulls up the next.</p>`,
+    example:`<p>Words: <i>dog, umbrella, pizza, rocket</i>. "A <b>dog</b> opens an <b>umbrella</b> that rains <b>pizza</b>, which fuels a <b>rocket</b> to the moon."</p>`,
+    tryTitle:"Story chain", widget:{type:"story"},
+    quiz:{q:"In the story method, what links one item to the next?", o:["Alphabetical order","An action or interaction between them","Their colors"], a:1, why:"When items interact in a scene, recalling one cues the next."} },
+  { id:"mem5", title:"Spaced repetition", mins:6,
+    idea:`<p>Cramming feels productive, but memories fade fast. <b>Reviewing at growing intervals</b> (1 day, 3 days, 1 week, 2 weeks, 1 month) builds memories that last, and each review takes only a few minutes.</p>
+    <p>Quiz yourself instead of rereading. Pulling an answer out of your memory strengthens it far more than looking at it again.</p>`,
+    example:`<p><b>Chris</b> is learning 20 Spanish words. Instead of a 2-hour cram, he does 10 minutes today, 5 minutes in 3 days, and 5 minutes next week, and he remembers more by the test.</p>`,
+    tryTitle:"Make a review schedule", widget:{type:"spaced"},
+    quiz:{q:"Which study habit builds longer-lasting memory?", o:["Rereading notes 5 times in one night","Quizzing yourself across several days","Highlighting everything"], a:1, why:"Self-testing spread over time is one of the best-supported study methods."} },
+  { id:"mem6", title:"Never lose your keys again", mins:5,
+    idea:`<p>Searching for lost things can eat a lot of time. The solution isn't a better memory; it's a <b>launch pad</b>: one spot by the door where keys, wallet, glasses, badge and earbuds always live.</p>
+    <ul><li>Make it obvious: a bowl, a hook, a tray.</li><li>Put tomorrow's bag there the night before.</li><li>Add trackers to the items you lose most.</li><li>Do a "pat check" before leaving: phone, keys, wallet.</li></ul>`,
+    example:`<p><b>Tasha</b> used to lose about 10 minutes a day hunting for her keys. After adding a hook right next to the light switch, she now loses them maybe once a month.</p>`,
+    tryTitle:"Build your launch pad", widget:{type:"checklist", key:"launchpad", items:["Choose a spot within 3 steps of the door","Add a bowl, tray or hooks","Keys, wallet, phone charger and badge live there","Night before: bag and tomorrow's items go on the pad","Stick a 'Phone - Keys - Wallet' note at eye level on the door"]},
+    quiz:{q:"What's the key idea behind a launch pad?", o:["Remember harder","One fixed home for important items","Buy spares of everything"], a:1, why:"A fixed home removes the need to remember where something is."} }
+  ]},
+{ id:"habits", title:"Healthy Habits", color:"--c-habits",
+  blurb:"Sleep, movement, food and routines that work with an ADHD brain instead of against it.",
+  lessons:[
+  { id:"hab1", title:"Sleep that sticks", mins:7,
+    idea:`<p>Sleep problems are very common with ADHD, and poor sleep makes focus, mood and memory worse. Many people with ADHD also have a naturally later body clock.</p>
+    <ul><li><b>Anchor your wake-up time</b>, even on weekends. It matters more than bedtime.</li><li>Start a 30–60 minute <b>wind-down</b>: dim lights, screens away, something calm.</li><li>Charge your phone outside the bedroom.</li><li>Get daylight in the morning; it helps reset your clock.</li></ul>`,
+    example:`<p><b>Devon</b> set a "wind-down alarm" for 10:15 pm. When it rings, the phone goes on the kitchen charger and he reads a paper book. He's falling asleep about 40 minutes earlier.</p>`,
+    tryTitle:"Bedtime calculator", widget:{type:"bedtime"},
+    quiz:{q:"Which sleep habit is the strongest anchor?", o:["The same wake-up time every day","Sleeping in on weekends to catch up","Scrolling until you feel sleepy"], a:0, why:"A steady wake time helps set your body clock, which makes falling asleep easier over time."} },
+  { id:"hab2", title:"Move your brain", mins:6,
+    idea:`<p>Exercise raises dopamine and norepinephrine, the same brain chemicals many ADHD medicines act on. Even <b>10–20 minutes</b> of movement can sharpen focus for a while afterward.</p>
+    <ul><li>Use <b>movement snacks</b>: 1–2 minutes between tasks.</li><li>Fidget on purpose: a stress ball, a standing desk, a walk while on calls.</li><li>Pick movement you enjoy; fun beats "optimal."</li></ul>`,
+    example:`<p>Before homework, <b>Mia</b> does a 60-second dance break to one song. She says it "shakes the static out" and she gets started faster.</p>`,
+    tryTitle:"60-second movement break", widget:{type:"movebreak"},
+    quiz:{q:"How much movement can start to help focus?", o:["Only an hour at the gym","Even 10–20 minutes, or short breaks","None; exercise doesn't affect focus"], a:1, why:"Short bouts count. Consistency matters more than intensity."} },
+  { id:"hab3", title:"Fuel and water", mins:5,
+    idea:`<p>Skipping meals is easy when you're hyperfocused, busy or taking a medicine that blunts appetite. Low fuel feels like brain fog and irritability.</p>
+    <ul><li><b>Eat by the clock</b>, not by hunger: set meal reminders.</li><li>Include some protein at breakfast.</li><li>Keep easy, grab-and-go snacks <b>visible</b>: out of sight is out of mind.</li><li>Keep a water bottle in your line of sight.</li></ul>
+    <p class="small muted">If you take ADHD medicine and have appetite or weight concerns, talk with your prescriber.</p>`,
+    example:`<p><b>Raj</b> forgot lunch most days. He now has a 12:30 alarm labelled "FOOD, then back to it" and keeps nuts and fruit on his desk.</p>`,
+    tryTitle:"Set up your fuel system", widget:{type:"checklist", key:"fuel", items:["Set a phone reminder for lunch","Pick 3 easy breakfasts you'll actually eat","Put snacks you like somewhere you can see them","Fill a water bottle and keep it on your desk","Prep or buy one 'emergency meal' for busy days"]},
+    quiz:{q:"Your meds make you not hungry at lunch. What helps most?", o:["Skip it; eat a big dinner","Set a reminder and eat something small at a set time","Wait until you feel hungry"], a:1, why:"Eating by the clock keeps your energy steady when hunger cues are quiet."} },
+  { id:"hab4", title:"Tiny habits & habit stacking", mins:7,
+    idea:`<p>Big habit goals ("work out every day!") collapse fast. Make the habit <b>tiny</b> and attach it to something you already do: <b>"After I ___, I will ___."</b></p>
+    <ul><li>Make it so small it takes under 2 minutes.</li><li>Anchor it to a solid daily event (coffee, brushing teeth, sitting in the car).</li><li>Celebrate right after: a fist pump, a "nice!" It wires the habit in.</li><li>Missed a day? Just restart. Never miss twice is a good goal.</li></ul>`,
+    example:`<p>"After I pour my coffee, I'll take my meds." "After I brush my teeth, I'll write tomorrow's top task on a sticky note."</p>`,
+    tryTitle:"Build a habit stack", widget:{type:"stack"},
+    quiz:{q:"Which is the best tiny habit to start with?", o:["Read for an hour daily","After I get into bed, I'll read one page","Read more"], a:1, why:"It's tiny, specific and anchored to something you already do."} },
+  { id:"hab5", title:"Your dopamine menu", mins:8,
+    idea:`<p>When you're bored or stuck, it's easy to reach for the quickest hit, often endless scrolling. A <b>dopamine menu</b> is a pre-made list of better options, written while you're calm, so you don't have to decide in the moment.</p>
+    <ul><li><b>Starters</b>: 1–5 min quick boosts (a song, cold water on your face, a stretch)</li><li><b>Mains</b>: bigger, nourishing activities (a walk, a hobby, a call with a friend)</li><li><b>Sides</b>: things that make boring tasks better (podcast, music, a fidget)</li><li><b>Desserts</b>: fun treats with a time limit (one episode, 15 min of games)</li></ul>`,
+    example:`<p>Stuck at 3 pm, <b>Kim</b> checks her menu, picks the "starter" walk around the block, then uses a "side" (her favorite playlist) to get through emails.</p>`,
+    tryTitle:"Build your dopamine menu", widget:{type:"menu"},
+    quiz:{q:"When is the best time to write your dopamine menu?", o:["When you're bored and stuck","When you're calm, ahead of time","Never; just go with the flow"], a:1, why:"Deciding ahead removes the in-the-moment choice, which is exactly when ADHD brains grab the easiest option."} },
+  { id:"hab6", title:"Taming your phone", mins:6,
+    idea:`<p>Phones are designed to be endlessly novel, which makes them especially sticky for ADHD brains. You don't need willpower; you need <b>friction</b>.</p>
+    <ul><li>Turn off all non-human notifications.</li><li>Move tempting apps off your home screen or into a folder.</li><li>Use grayscale mode or app timers.</li><li>Keep the phone out of reach during sprints and in bed.</li></ul>`,
+    example:`<p><b>Alex</b> moved social apps to the last page and logged out after each use. Having to type a password was just enough friction to cut scrolling time in half.</p>`,
+    tryTitle:"Phone friction checklist", widget:{type:"checklist", key:"phone", items:["Turn off notifications from apps (keep calls and messages)","Move 3 most tempting apps off the home screen","Set a daily timer on your biggest time-sink app","Try grayscale for one day","Charge your phone outside the bedroom"]},
+    quiz:{q:"What's the most reliable way to scroll less?", o:["Use more willpower","Add friction so the habit is harder","Delete your phone"], a:1, why:"Making the habit a little harder works better than relying on willpower in the moment."} }
+  ]},
+{ id:"skills", title:"Life Skills", color:"--c-skills",
+  blurb:"Plan your day, organize your space, handle money and work with people.",
+  lessons:[
+  { id:"sk1", title:"Plan your day with the Rule of 3", mins:6,
+    idea:`<p>Long to-do lists overwhelm. Each morning (or the night before), pick just <b>3 things</b> that would make today a win. Give each a rough <b>time block</b>. Everything else is a bonus.</p>
+    <p>Put the hardest one where your energy is highest, often right after your morning routine or when medication is working well.</p>`,
+    example:`<p><b>Nora</b>'s three: "Send the invoice (9 am), call the landlord (lunch), 20 minutes on the essay (4 pm)." She did 2 of 3 and still counted it as a good day.</p>`,
+    tryTitle:"Your top 3 for today", widget:{type:"top3"},
+    quiz:{q:"Why only 3 priorities?", o:["Because 3 is lucky","A short list is easier to start and finish, so you build momentum","You shouldn't do more than 3 things a day"], a:1, why:"Fewer items reduce overwhelm and decision fatigue. You can still do more if you have energy."} },
+  { id:"sk2", title:"Organizing without perfection", mins:7,
+    idea:`<p>The goal is <b>"good enough to find things,"</b> not Pinterest-perfect.</p>
+    <ul><li><b>A home for everything</b>: if it has no home, it ends up on a pile.</li><li><b>See-through beats hidden</b>: open shelves, clear bins, labels.</li><li>For "doom piles," sort into 3 bins: trash, belongs elsewhere, needs action.</li><li>Do a daily <b>10-minute tidy</b> with music or a body double.</li></ul>`,
+    example:`<p><b>Ben</b> had a chair buried in clothes. He put an open basket next to it labelled "worn once." Now the chair stays clear and he knows where his jeans are.</p>`,
+    tryTitle:"10-minute tidy sprint", widget:{type:"sprint", presets:[5,10,15], label:"Pick one zone (a desk, a counter, one pile). Go until the timer ends, then stop, even if you're not done."},
+    quiz:{q:"A pile of random items sits on your desk. First step?", o:["Reorganize the whole room","Sort into trash / belongs elsewhere / needs action","Buy storage boxes"], a:1, why:"Three quick categories make the pile manageable without a big plan."} },
+  { id:"sk3", title:"Money and the 'ADHD tax'", mins:7,
+    idea:`<p>The "ADHD tax" is the money lost to late fees, forgotten subscriptions, impulse buys and replacing lost items. Systems beat willpower here too.</p>
+    <ul><li><b>Autopay</b> for every bill you can.</li><li>Do a <b>subscription audit</b> every 3 months.</li><li>Use a <b>24-hour rule</b> for non-essentials: add to cart, wait a day.</li><li>Have a separate "fun money" account so spending guilt-free has a limit.</li></ul>
+    <p class="small muted">General information only, not financial advice.</p>`,
+    example:`<p>A subscription audit showed <b>Jamie</b> was paying for 3 streaming services and an app he'd forgotten about. He cancelled two and set a calendar reminder for the next audit.</p>`,
+    tryTitle:"Impulse purchase checker", widget:{type:"impulse"},
+    quiz:{q:"You see a gadget you suddenly 'need.' What's the ADHD-friendly move?", o:["Buy it now before it's gone","Put it in the cart and wait 24 hours","Buy two"], a:1, why:"Waiting lets the novelty rush fade so you can decide with a clear head."} },
+  { id:"sk4", title:"Conversations and connection", mins:8,
+    idea:`<p>Interrupting, zoning out and forgetting what people said are common ADHD struggles, and they're not signs that you don't care. A few tools help:</p>
+    <ul><li><b>Hold the thought</b>: jot a word down or press a finger to your hand instead of interrupting.</li><li><b>Repeat back</b>: "So you're saying…" keeps you engaged.</li><li>It's okay to say "Sorry, I lost you there. Can you say that again?"</li><li>Write down important dates and details people share.</li></ul>`,
+    example:`<p>In meetings, <b>Omar</b> keeps a notepad and writes his idea down. When there's a pause, he shares it, and he no longer talks over people.</p>`,
+    tryTitle:"What would you do?", widget:{type:"scenarios", items:[
+      {q:"Your friend is telling a story and you suddenly think of something related and exciting.", o:["Jump in right away so you don't forget","Jot a quick note, wait for a pause, then share","Stay quiet and forget it"], a:1, why:"You keep the idea and the friend gets to finish."},
+      {q:"You realize you zoned out while your manager was explaining a task.", o:["Nod and guess later","Say: 'Sorry, I missed the last part. Can you repeat the deadline?'","Ask a coworker to explain the whole thing later"], a:1, why:"Asking straight away is honest and saves bigger mistakes later."},
+      {q:"You keep forgetting your partner's important appointments.", o:["Try to remember harder","Add them to a shared calendar with reminders","Ask them to stop telling you"], a:1, why:"A shared calendar removes the memory load and shows you care."}
+    ]},
+    quiz:{q:"What does 'repeat back' help with?", o:["Making the conversation longer","Staying engaged and checking you understood","Correcting the other person"], a:1, why:"Restating keeps your attention on the speaker and catches misunderstandings."} },
+  { id:"sk5", title:"Asking for what you need", mins:7,
+    idea:`<p>Self-advocacy means telling people what helps you do your best. You don't always need to share your diagnosis; you can focus on <b>what works</b>.</p>
+    <p>Common supports at work or school: instructions in writing, a quieter workspace, noise-cancelling headphones, regular check-ins, breaking projects into smaller deadlines, extra time on tests.</p>
+    <p>A simple formula: <b>"I work best when ___. Could we try ___?"</b></p>`,
+    example:`<p><b>Elena</b> told her manager: "I work best when I have instructions in writing. Could you send a quick email after our meetings?" Her manager said yes, and her missed tasks dropped.</p>`,
+    tryTitle:"Write your request", widget:{type:"script"},
+    quiz:{q:"Which request is clearest?", o:["I'm just bad at this","I work best with written steps. Could you email the task list?","Can you be less confusing?"], a:1, why:"It's specific, positive and gives the other person an easy action."} },
+  { id:"sk6", title:"Bouncing back", mins:8,
+    idea:`<p>Many adults with ADHD carry years of "you're lazy" or "you're not trying." Some also feel rejection or criticism very intensely, often called <b>rejection sensitivity</b>. Harsh self-talk makes it harder, not easier, to try again.</p>
+    <ul><li>Talk to yourself the way you'd talk to a good friend.</li><li>Separate the <b>behavior</b> from your <b>worth</b>: "I missed the deadline" vs. "I'm a failure."</li><li>Every day is a <b>restart</b>. A broken streak isn't a broken person.</li><li>Notice wins, even tiny ones.</li></ul>`,
+    example:`<p>After forgetting a bill, <b>Tom</b>'s first thought was "I'm hopeless." He reframed: "I forgot a bill. I'll pay it now and set up autopay so it can't happen again." The second version leads to action.</p>`,
+    tryTitle:"Reframe your inner critic", widget:{type:"reframe"},
+    quiz:{q:"Which thought is most likely to help you try again?", o:["I always mess everything up","I messed this up; here's one thing I'll change","Why bother"], a:1, why:"It's accurate, specific and points to a next step."} }
+  ]}
+];
+const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})));
+
+/* ---------- games ---------- */
+const GAMES = [
+  {id:"stroop", title:"Color Clash", skill:"Impulse control", desc:"Tap the ink color, not the word. Your brain will want to read. Don't let it!"},
+  {id:"nback", title:"Square Recall", skill:"Working memory", desc:"Squares light up one by one. Tap Match when the square is in the same spot as the one before (or two before)."},
+  {id:"simon", title:"Pattern Echo", skill:"Sequence memory", desc:"Watch the pads light up, then repeat the pattern. It gets one step longer each round."},
+  {id:"gonogo", title:"Green Light, Red Light", skill:"Attention & reaction", desc:"Tap fast for green. Freeze for red. Speed matters, but so does holding back."},
+  {id:"match", title:"Memory Match", skill:"Visual memory", desc:"Flip cards to find all 8 pairs in as few moves as you can."},
+  {id:"timer", title:"Inner Clock", skill:"Time awareness", desc:"Stop the hidden timer as close to the target as you can. Great practice for time blindness."},
+  {id:"odd", title:"Odd One Out", skill:"Visual focus", desc:"Find the one character that's different. The grid grows as you get faster."}
+];
+
+/* ---------- routing ---------- */
+let currentLesson = null, currentGame = null;
+function route(){
+  cleanup();
+  const h = (location.hash || "#home").slice(1);
+  const app = document.getElementById("app");
+  document.querySelectorAll("[data-nav]").forEach(a => {
+    const n = a.dataset.nav;
+    a.classList.toggle("on", n===h || (n==="courses" && COURSES.some(c=>c.id===h)) || (n==="games" && h==="games"));
+  });
+  const course = COURSES.find(c => c.id === h);
+  if (course) { if (!currentLesson || currentLesson.course.id !== course.id) currentLesson = null; currentLesson ? renderLesson(app, currentLesson) : renderCourse(app, course); }
+  else if (h === "courses") renderCourses(app);
+  else if (h === "games") { currentGame ? renderGame(app, currentGame) : renderGames(app); }
+  else renderHome(app);
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", () => { currentLesson = null; currentGame = null; route(); });
+
+function courseProgress(c){ const d = c.lessons.filter(l => S.done[l.id]).length; return {d, t:c.lessons.length, pct:Math.round(d/c.lessons.length*100)}; }
+function nextLesson(){ return ALL_LESSONS.find(l => !S.done[l.id]); }
+
+function courseCard(c){
+  const p = courseProgress(c);
+  return `<a class="card course-card" href="#${c.id}" style="--cc:var(${c.color})">
+    <span class="tag">${c.lessons.length} lessons · ${c.lessons.reduce((a,l)=>a+l.mins,0)} min</span>
+    <h3>${c.title}</h3><p class="muted small">${c.blurb}</p>
+    <div class="bar" aria-label="${p.pct}% complete"><span style="width:${p.pct}%"></span></div>
+    <span class="small muted">${p.d} of ${p.t} done</span></a>`;
+}
+
+function renderHome(app){
+  const done = Object.keys(S.done).filter(k => S.done[k]).length;
+  const nl = nextLesson();
+  const played = Object.keys(S.best).length;
+  app.innerHTML = `
+  <section class="hero">
+    <span class="tag" style="color:var(--accent)">Self-paced · start anywhere</span>
+    <h1>Small lessons, real tools, and games that train your brain</h1>
+    <p class="muted">Four short courses on focus, memory, healthy habits and life skills. Each lesson takes 5–10 minutes and ends with something to try. Skip around, repeat lessons, take breaks. There are no streaks to break here.</p>
+    <div class="row">${nl ? `<button class="btn" id="cont">${done ? "Continue" : "Start"}: ${esc(nl.title)}</button>` : `<span class="pill ok">All lessons complete. Nice work!</span>`}<a class="btn ghost" href="#games">Play a game</a></div>
+  </section>
+  <div class="stats">
+    <div class="stat"><b>${done}/${ALL_LESSONS.length}</b><span class="small muted">lessons done</span></div>
+    <div class="stat"><b>${played}/${GAMES.length}</b><span class="small muted">games tried</span></div>
+    <div class="stat"><b>${Math.round(done/ALL_LESSONS.length*100)}%</b><span class="small muted">overall</span></div>
+  </div>
+  <section class="section"><h2>Courses</h2><div class="grid">${COURSES.map(courseCard).join("")}</div></section>
+  <section class="card section">
+    <h3>How to use this lab with an ADHD brain</h3>
+    <ul class="list">
+      <li>Do <b>one</b> lesson, then stop. Momentum beats marathons.</li>
+      <li>Jump to whatever feels most useful today. Order doesn't matter.</li>
+      <li>Play a game as a warm-up or as a reward after a lesson.</li>
+      <li>Pick one tool from each lesson and try it for a week before adding more.</li>
+    </ul>
+  </section>`;
+  const b = document.getElementById("cont");
+  if (b) b.onclick = () => openLesson(nl);
+}
+function renderCourses(app){
+  app.innerHTML = `<section class="hero"><h1>Courses</h1><p class="muted">Pick a course, then any lesson inside it.</p></section><div class="grid">${COURSES.map(courseCard).join("")}</div>`;
+}
+function renderCourse(app, c){
+  const p = courseProgress(c);
+  app.innerHTML = `<div style="--cc:var(${c.color})" class="section">
+    <div class="crumbs"><a href="#courses">Courses</a><span class="muted">/</span><span>${c.title}</span></div>
+    <span class="tag">${p.d} of ${p.t} done</span>
+    <h1>${c.title}</h1><p class="muted" style="max-width:62ch">${c.blurb}</p>
+    <div class="bar"><span style="width:${p.pct}%"></span></div>
+    <div class="lesson-list">${c.lessons.map((l,i) => `
+      <button class="lesson-item ${S.done[l.id]?"done":""}" data-l="${l.id}">
+        <span class="num">${S.done[l.id] ? "✓" : i+1}</span>
+        <span class="grow"><b>${l.title}</b><br><span class="small muted">Try it: ${l.tryTitle}</span></span>
+        <span class="pill ${S.done[l.id]?"ok":""}">${S.done[l.id] ? "Done" : l.mins+" min"}</span>
+      </button>`).join("")}</div></div>`;
+  app.querySelectorAll("[data-l]").forEach(b => b.onclick = () => openLesson(ALL_LESSONS.find(l => l.id === b.dataset.l)));
+}
+function openLesson(l){
+  currentLesson = l;
+  if (location.hash !== "#"+l.course.id) { history.replaceState(null, "", "#"+l.course.id); }
+  route();
+}
+function renderLesson(app, l){
+  const c = l.course, idx = c.lessons.indexOf(l);
+  const q = l.quiz;
+  app.innerHTML = `<article class="lesson section" style="--cc:var(${c.color});gap:22px">
+    <div class="crumbs"><a href="#courses">Courses</a><span class="muted">/</span><a href="#${c.id}" id="backc">${c.title}</a></div>
+    <div class="section"><span class="tag">Lesson ${idx+1} of ${c.lessons.length} · ${l.mins} min</span><h1>${l.title}</h1></div>
+    <div class="section"><h3><span class="dot"></span>The idea</h3>${l.idea}</div>
+    <div class="section"><h3><span class="dot"></span>Example</h3><div class="example">${l.example}</div></div>
+    <div class="section"><h3><span class="dot"></span>Try it: ${l.tryTitle}</h3><div class="try" id="widget"></div></div>
+    <div class="section card"><h3>Quick check</h3><p>${q.q}</p>
+      <div class="choices" id="quiz">${q.o.map((o,i)=>`<button class="choice" data-i="${i}">${o}</button>`).join("")}</div>
+      <p class="feedback" id="qfb" aria-live="polite"></p></div>
+    <div class="row">
+      <button class="btn cc" id="done">${S.done[l.id] ? "Completed ✓" : "Mark lesson complete"}</button>
+      ${idx < c.lessons.length-1 ? `<button class="btn ghost" id="nextL">Next: ${c.lessons[idx+1].title}</button>` : `<a class="btn ghost" href="#games">Celebrate with a game</a>`}
+    </div></article>`;
+  document.getElementById("backc").onclick = e => { e.preventDefault(); currentLesson = null; route(); };
+  app.querySelectorAll("#quiz .choice").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, fb = document.getElementById("qfb");
+    app.querySelectorAll("#quiz .choice").forEach(x => x.classList.remove("right","wrong"));
+    if (i === q.a) { b.classList.add("right"); fb.className="feedback good"; fb.textContent = "Yes! " + q.why; }
+    else { b.classList.add("wrong"); fb.className="feedback bad"; fb.textContent = "Not quite. Give it another try."; }
+  });
+  document.getElementById("done").onclick = e => { S.done[l.id] = true; save(); e.target.textContent = "Completed ✓"; };
+  const nx = document.getElementById("nextL");
+  if (nx) nx.onclick = () => { S.done[l.id] = true; save(); openLesson(c.lessons[idx+1]); };
+  WIDGETS[l.widget.type](document.getElementById("widget"), l.widget, l);
+}
+
+/* ---------- lesson widgets ---------- */
+const WIDGETS = {
+incup(el){
+  const ideas = {
+    Interest:["Connect it to a topic you love (do the budget for your dream trip first)","Ask a 'why does this work?' question about it","Listen to a fascinating podcast while you do it"],
+    Novelty:["Work somewhere new: café, library, another room","Use a new pen, app or colored paper","Do it in a weird order (start at the end)"],
+    Challenge:["Race a timer: how much can you do in 15 minutes?","Set a score: 10 emails = 1 point each","Try to beat yesterday's time"],
+    Urgency:["Tell someone you'll send it by a set time","Set a deadline 2 hours from now","Book a body-double call that starts in 10 minutes"],
+    Passion:["Remind yourself who this helps","Link it to a bigger goal you care about","Write one sentence on why it matters to YOU"]
+  };
+  el.innerHTML = `<div class="field"><label for="incTask">A task you're avoiding</label><input id="incTask" type="text" placeholder="e.g. answer emails" value="${esc(getD("incTask",""))}"></div>
+  <p class="small muted">Pick an ingredient to add:</p><div class="chips">${Object.keys(ideas).map(k=>`<button class="chip" data-k="${k}">${k}</button>`).join("")}</div><div id="incOut" class="out muted">Tap an ingredient to see ideas.</div>`;
+  el.querySelector("#incTask").oninput = e => setD("incTask", e.target.value);
+  el.querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    el.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on", x===b));
+    const t = el.querySelector("#incTask").value.trim() || "your task";
+    el.querySelector("#incOut").innerHTML = `<b>Add ${b.dataset.k} to "${esc(t)}":</b><ul class="list">${ideas[b.dataset.k].map(i=>`<li>${i}</li>`).join("")}</ul>`;
+    el.querySelector("#incOut").classList.remove("muted");
+  });
+},
+timeguess(el, w){
+  let t0 = null; const tries = getD("tg", []);
+  el.innerHTML = `<p>Press <b>Start</b>, then press <b>Stop</b> when you think <b>${w.target} seconds</b> have passed. No counting out loud!</p>
+  <div class="row"><button class="btn cc" id="tgb">Start</button></div><div id="tgo" class="out" aria-live="polite">Your results will show here.</div>`;
+  const b = el.querySelector("#tgb"), o = el.querySelector("#tgo");
+  const show = () => { if (tries.length) o.innerHTML = "Recent tries: " + tries.slice(-5).map(x=>`<b>${x.toFixed(1)}s</b>`).join(", "); };
+  show();
+  b.onclick = () => {
+    if (t0 === null) { t0 = performance.now(); b.textContent = "Stop"; o.textContent = "Timing… press Stop when you think it's been " + w.target + " seconds."; }
+    else { const s = (performance.now()-t0)/1000; t0 = null; b.textContent = "Try again"; tries.push(s); setD("tg", tries.slice(-10));
+      const diff = s - w.target; const verdict = Math.abs(diff) < 2 ? "Excellent inner clock!" : diff < 0 ? "Time felt slower than it was: you stopped early." : "Time slipped by faster than you felt: you stopped late.";
+      o.innerHTML = `You stopped at <b>${s.toFixed(1)} s</b> (${diff>=0?"+":""}${diff.toFixed(1)} s). ${verdict}<br>` + "Recent tries: " + tries.slice(-5).map(x=>`<b>${x.toFixed(1)}s</b>`).join(", "); }
+  };
+},
+breaker(el){
+  let st = getD("breaker", {task:"Clean the kitchen", steps:[{t:"Put 5 dishes in the dishwasher",d:false},{t:"Wipe one counter",d:false},{t:"Take out the trash",d:false}]});
+  const draw = () => {
+    el.innerHTML = `<div class="field"><label for="bkTask">Big task</label><input id="bkTask" type="text" value="${esc(st.task)}"></div>
+    <div class="field"><label for="bkStep">Add a tiny step (under 5 minutes)</label><div class="row" style="flex-wrap:nowrap"><input id="bkStep" type="text" placeholder="e.g. open the laptop"><button class="btn cc" id="bkAdd">Add</button></div></div>
+    <div class="checks">${st.steps.map((s,i)=>`<label class="check"><input type="checkbox" data-i="${i}" ${s.d?"checked":""}><span>${esc(s.t)}</span></label>`).join("") || '<p class="muted">No steps yet.</p>'}</div>
+    <div class="row"><span class="small muted">${st.steps.filter(s=>s.d).length} of ${st.steps.length} done</span><button class="btn ghost" id="bkClear">Clear list</button></div>`;
+    el.querySelector("#bkTask").oninput = e => { st.task = e.target.value; setD("breaker", st); };
+    const add = () => { const v = el.querySelector("#bkStep").value.trim(); if (!v) return; st.steps.push({t:v,d:false}); setD("breaker", st); draw(); el.querySelector("#bkStep").focus(); };
+    el.querySelector("#bkAdd").onclick = add;
+    el.querySelector("#bkStep").onkeydown = e => { if (e.key === "Enter") add(); };
+    el.querySelectorAll(".check input").forEach(c => c.onchange = () => { st.steps[+c.dataset.i].d = c.checked; setD("breaker", st); draw(); });
+    el.querySelector("#bkClear").onclick = () => { st = {task:"", steps:[]}; setD("breaker", st); draw(); };
+  };
+  draw();
+},
+sprint(el, w){
+  let total = w.presets[1]*60, left = total, running = false, id = null;
+  el.innerHTML = `${w.label ? `<p>${w.label}</p>` : `<div class="field"><label for="spGoal">This sprint is for…</label><input id="spGoal" type="text" placeholder="e.g. first paragraph of the report" value="${esc(getD("spGoal",""))}"></div>`}
+  <div class="chips">${w.presets.map(m=>`<button class="chip ${m===w.presets[1]?"on":""}" data-m="${m}">${m} min</button>`).join("")}</div>
+  <div class="biglabel" id="spT" aria-live="off"></div><div class="bar"><span id="spB" style="width:0%"></span></div>
+  <div class="row"><button class="btn cc" id="spGo">Start</button><button class="btn ghost" id="spReset">Reset</button></div><p id="spMsg" class="feedback good" aria-live="polite"></p>`;
+  const g = el.querySelector("#spGoal"); if (g) g.oninput = e => setD("spGoal", e.target.value);
+  const T = el.querySelector("#spT"), B = el.querySelector("#spB"), go = el.querySelector("#spGo"), msg = el.querySelector("#spMsg");
+  const draw = () => { T.textContent = `${String(Math.floor(left/60)).padStart(2,"0")}:${String(left%60).padStart(2,"0")}`; B.style.width = ((total-left)/total*100)+"%"; };
+  const stop = () => { running = false; if (id) clearInterval(id); id = null; go.textContent = "Start"; };
+  cleanups.push(stop);
+  go.onclick = () => {
+    if (running) { stop(); go.textContent = "Resume"; return; }
+    running = true; go.textContent = "Pause"; msg.textContent = "";
+    let last = Date.now();
+    id = setInterval(() => { const now = Date.now(); if (now - last >= 1000) { left = Math.max(0, left - Math.round((now-last)/1000)); last = now; draw();
+      if (left === 0) { stop(); msg.textContent = "Sprint complete! Stand up, stretch, grab water. You earned the break."; } } }, 250);
+  };
+  el.querySelector("#spReset").onclick = () => { stop(); left = total; msg.textContent=""; draw(); };
+  el.querySelectorAll(".chip").forEach(c => c.onclick = () => { stop(); el.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on",x===c)); total = left = +c.dataset.m*60; draw(); });
+  draw();
+},
+parking(el){
+  let items = getD("parking", []);
+  const draw = () => {
+    el.innerHTML = `<div class="row" style="flex-wrap:nowrap"><input id="pkIn" type="text" placeholder="A thought that popped up…" aria-label="New thought"><button class="btn cc" id="pkAdd">Park it</button></div>
+    <div class="checks">${items.map((t,i)=>`<label class="check"><input type="checkbox" data-i="${i}"><span>${esc(t)}</span></label>`).join("") || '<p class="muted">Your lot is empty. Add anything on your mind right now, and try it during your next sprint.</p>'}</div>
+    ${items.length ? '<p class="small muted">Tick an item to clear it once handled.</p>' : ""}`;
+    const add = () => { const v = el.querySelector("#pkIn").value.trim(); if (!v) return; items.push(v); setD("parking", items); draw(); el.querySelector("#pkIn").focus(); };
+    el.querySelector("#pkAdd").onclick = add;
+    el.querySelector("#pkIn").onkeydown = e => { if (e.key==="Enter") add(); };
+    el.querySelectorAll(".check input").forEach(c => c.onchange = () => { items.splice(+c.dataset.i,1); setD("parking", items); draw(); });
+  };
+  draw();
+},
+breathe(el){
+  el.innerHTML = `<p>Breathe in for 4, hold for 4, out for 4, hold for 4. Follow the circle for 4 rounds (about a minute).</p>
+  <div class="breath" id="br">Ready</div><div class="row" style="justify-content:center"><button class="btn cc" id="brGo">Start</button></div><p class="small muted" style="text-align:center" id="brR"></p>`;
+  const c = el.querySelector("#br"), go = el.querySelector("#brGo"), r = el.querySelector("#brR");
+  let timer = null;
+  const stop = () => { if (timer) clearTimeout(timer); timer = null; c.style.transform = "scale(1)"; c.textContent = "Ready"; go.textContent = "Start"; };
+  cleanups.push(stop);
+  go.onclick = () => {
+    if (timer) { stop(); return; }
+    go.textContent = "Stop";
+    const phases = [["Breathe in",1.35],["Hold",1.35],["Breathe out",1],["Hold",1]];
+    let step = 0, n = 0;
+    const tick = () => {
+      if (step === 0 && n >= 4*4) { stop(); r.textContent = "Done. Notice how you feel now compared with a minute ago."; return; }
+      const [label, sc] = phases[step]; c.textContent = label; c.style.transform = `scale(${sc})`;
+      r.textContent = `Round ${Math.floor(n/4)+1} of 4`; step = (step+1)%4; n++;
+      timer = setTimeout(tick, 4000);
+    };
+    tick();
+  };
+},
+checklist(el, w){
+  const st = getD("cl_"+w.key, {});
+  const draw = () => {
+    el.innerHTML = `<div class="checks">${w.items.map((t,i)=>`<label class="check"><input type="checkbox" data-i="${i}" ${st[i]?"checked":""}><span>${t}</span></label>`).join("")}</div>
+    <p class="small muted">${Object.values(st).filter(Boolean).length} of ${w.items.length} set up. Do one today; come back for the rest.</p>`;
+    el.querySelectorAll(".check input").forEach(c => c.onchange = () => { st[c.dataset.i] = c.checked; setD("cl_"+w.key, st); draw(); });
+  };
+  draw();
+},
+chunk(el){
+  const gen = () => Array.from({length:12}, () => rand(10)).join("");
+  let num = gen(), mode = 0;
+  const draw = (phase) => {
+    if (phase === "intro") {
+      el.innerHTML = `<p>You'll see a 12-digit number for <b>5 seconds</b>. Round 1 shows it as one long string. Round 2 shows it in chunks. Notice the difference.</p><div class="row"><button class="btn cc" id="ckGo">Start round ${mode+1}</button></div><div id="ckRes"></div>`;
+      el.querySelector("#ckGo").onclick = () => draw("show");
+      const prev = getD("chunkRes", null); if (prev) el.querySelector("#ckRes").innerHTML = `<div class="out small">Last time: ${prev}</div>`;
+    } else if (phase === "show") {
+      const shown = mode === 0 ? num : num.match(/.{1,3}/g).join(" - ");
+      el.innerHTML = `<p class="muted">Memorize:</p><div class="digits" style="text-align:center">${shown}</div><div class="bar"><span id="ckB" style="width:100%;transition:width 5s linear"></span></div>`;
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ const b = el.querySelector("#ckB"); if (b) b.style.width = "0%"; }));
+      later(() => draw("ask"), 5000);
+    } else if (phase === "ask") {
+      el.innerHTML = `<div class="field"><label for="ckIn">Type the number</label><input id="ckIn" type="text" inputmode="numeric" autocomplete="off"></div><div class="row"><button class="btn cc" id="ckChk">Check</button></div>`;
+      const inp = el.querySelector("#ckIn"); inp.focus();
+      const check = () => {
+        const v = inp.value.replace(/\D/g,""); let ok = 0; for (let i=0;i<12;i++) if (v[i]===num[i]) ok++;
+        const res = `${mode===0?"Unchunked":"Chunked"}: ${ok}/12 digits in the right place`;
+        const prev = mode === 0 ? res : getD("chunkTmp","") + " · " + res;
+        setD("chunkTmp", res);
+        el.innerHTML = `<div class="out"><b>${ok}/12</b> correct. The number was <b>${mode===0?num:num.match(/.{1,3}/g).join(" ")}</b>.</div>`;
+        if (mode === 0) { mode = 1; num = gen(); el.innerHTML += `<div class="row"><button class="btn cc" id="ckNext">Now try it chunked</button></div>`; el.querySelector("#ckNext").onclick = () => draw("show"); }
+        else { setD("chunkRes", prev); el.innerHTML += `<p class="feedback good">${prev}. Most people do better with chunks: 4 groups of 3 instead of 12 loose digits.</p><div class="row"><button class="btn ghost" id="ckAgain">Play again</button></div>`;
+          el.querySelector("#ckAgain").onclick = () => { mode = 0; num = gen(); draw("intro"); }; }
+      };
+      el.querySelector("#ckChk").onclick = check; inp.onkeydown = e => { if (e.key==="Enter") check(); };
+    }
+  };
+  draw("intro");
+},
+palace(el){
+  const rooms = ["Front door","Hallway","Couch","Kitchen sink","Bed"];
+  const items = ["Batteries","Birthday card","Bananas","Call the dentist","Pay the phone bill"];
+  let imgs = getD("palace", ["","","","",""]);
+  const build = () => {
+    el.innerHTML = `<p>Memorize this to-do list by placing each item somewhere in your home. Write a <b>vivid, weird image</b> for each.</p>
+    ${rooms.map((r,i)=>`<div class="field"><label for="pl${i}">${r}: <span style="color:var(--cc)">${items[i]}</span></label><input type="text" id="pl${i}" data-i="${i}" placeholder="e.g. a giant ${items[i].toLowerCase()} ..." value="${esc(imgs[i])}"></div>`).join("")}
+    <div class="row"><button class="btn cc" id="plTest">Hide the list and test me</button></div>`;
+    el.querySelectorAll("input").forEach(inp => inp.oninput = () => { imgs[+inp.dataset.i] = inp.value; setD("palace", imgs); });
+    el.querySelector("#plTest").onclick = test;
+  };
+  const test = () => {
+    el.innerHTML = `<p>Walk through your home in your mind. What was at each spot?</p>
+    ${rooms.map((r,i)=>`<div class="field"><label for="pt${i}">${r}</label><input type="text" id="pt${i}" autocomplete="off"></div>`).join("")}
+    <div class="row"><button class="btn cc" id="plChk">Check answers</button></div><div id="plOut"></div>`;
+    el.querySelector("#plChk").onclick = () => {
+      let ok = 0;
+      const rows = rooms.map((r,i) => { const v = el.querySelector("#pt"+i).value.toLowerCase(); const key = items[i].toLowerCase().split(" ").filter(w=>w.length>3); const hit = key.some(k=>v.includes(k.slice(0,5))); if (hit) ok++; return `<li>${r}: ${items[i]} ${hit?"✓":"✗"}</li>`; });
+      el.querySelector("#plOut").innerHTML = `<div class="out"><b>${ok} of 5</b> remembered.<ul class="list">${rows.join("")}</ul></div><div class="row" style="margin-top:10px"><button class="btn ghost" id="plBack">Edit images and retry</button></div>`;
+      el.querySelector("#plBack").onclick = build;
+    };
+  };
+  build();
+},
+story(el){
+  const sets = [["penguin","ladder","spaghetti","trumpet","volcano","sock"],["cactus","bicycle","pancake","robot","ocean","crown"],["giraffe","phone","snowball","guitar","castle","lemon"]];
+  let words = sets[rand(sets.length)];
+  const build = () => {
+    el.innerHTML = `<p>Memorize these 6 words in order by writing a silly story where each one <b>does something</b> to the next.</p>
+    <div class="chips">${words.map(w=>`<span class="chip on">${w}</span>`).join("")}</div>
+    <div class="field"><label for="stTxt">Your story</label><textarea id="stTxt" placeholder="A ${words[0]} climbs a ${words[1]} and…"></textarea></div>
+    <div class="row"><button class="btn cc" id="stTest">Hide words and test me</button><button class="btn ghost" id="stNew">New words</button></div>`;
+    el.querySelector("#stNew").onclick = () => { words = sets[(sets.indexOf(words)+1)%sets.length]; build(); };
+    el.querySelector("#stTest").onclick = () => {
+      el.innerHTML = `<div class="field"><label for="stAns">Type the 6 words in order, separated by spaces</label><input id="stAns" type="text" autocomplete="off"></div><div class="row"><button class="btn cc" id="stChk">Check</button></div><div id="stOut"></div>`;
+      el.querySelector("#stChk").onclick = () => {
+        const a = el.querySelector("#stAns").value.toLowerCase().split(/[\s,]+/).filter(Boolean);
+        let ok = 0; words.forEach((w,i) => { if (a[i] && a[i].startsWith(w.slice(0,4))) ok++; });
+        el.querySelector("#stOut").innerHTML = `<div class="out"><b>${ok} of 6</b> in the right order. The words were: ${words.join(", ")}.</div><div class="row" style="margin-top:10px"><button class="btn ghost" id="stAgain">Try another set</button></div>`;
+        el.querySelector("#stAgain").onclick = () => { words = sets[(sets.indexOf(words)+1)%sets.length]; build(); };
+      };
+    };
+  };
+  build();
+},
+spaced(el){
+  const today = new Date().toISOString().slice(0,10);
+  el.innerHTML = `<div class="field"><label for="spTopic">What are you learning?</label><input id="spTopic" type="text" placeholder="e.g. chapter 4 vocab" value="${esc(getD("spTopic",""))}"></div>
+  <div class="field"><label for="spDate">Day you first studied it</label><input id="spDate" type="date" value="${getD("spDate",today)}"></div><div id="spOut" class="out"></div>
+  <p class="small muted">Add these dates to your calendar with a 10-minute "quiz myself" reminder.</p>`;
+  const draw = () => {
+    const t = el.querySelector("#spTopic").value || "your topic"; const d = el.querySelector("#spDate").value;
+    setD("spTopic", el.querySelector("#spTopic").value); setD("spDate", d);
+    if (!d) return;
+    const base = new Date(d+"T12:00:00");
+    const gaps = [[1,"Review 1"],[3,"Review 2"],[7,"Review 3"],[14,"Review 4"],[30,"Review 5"]];
+    el.querySelector("#spOut").innerHTML = `<b>Review plan for ${esc(t)}</b><ul class="list">${gaps.map(([g,n])=>{ const x = new Date(base); x.setDate(x.getDate()+g); return `<li>${n} (+${g} day${g>1?"s":""}): <b>${x.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})}</b></li>`; }).join("")}</ul>`;
+  };
+  el.querySelectorAll("input").forEach(i => i.oninput = draw); draw();
+},
+bedtime(el){
+  el.innerHTML = `<div class="field"><label for="btW">What time do you need to wake up?</label><input id="btW" type="time" value="${getD("btW","07:00")}"></div><div id="btO" class="out"></div>
+  <p class="small muted">Sleep runs in roughly 90-minute cycles, and most adults need 7–9 hours. This allows about 15 minutes to fall asleep.</p>`;
+  const fmt = m => { m = ((m % 1440) + 1440) % 1440; const h = Math.floor(m/60), mi = m%60; const ap = h>=12?"pm":"am"; return `${((h+11)%12)+1}:${String(mi).padStart(2,"0")} ${ap}`; };
+  const draw = () => {
+    const v = el.querySelector("#btW").value; if (!v) return; setD("btW", v);
+    const [h,m] = v.split(":").map(Number); const w = h*60+m;
+    const b6 = w - 6*90 - 15, b5 = w - 5*90 - 15;
+    el.querySelector("#btO").innerHTML = `<ul class="list"><li>In bed by <b>${fmt(b6)}</b> for 9 hours (6 cycles)</li><li>In bed by <b>${fmt(b5)}</b> for 7.5 hours (5 cycles)</li><li>Start winding down (screens off, lights low) at <b>${fmt(b5-45)}</b></li><li>Set a wind-down alarm for that time tonight.</li></ul>`;
+  };
+  el.querySelector("#btW").oninput = draw; draw();
+},
+movebreak(el){
+  const moves = ["Jumping jacks (or step-jacks)","Reach up high, then touch your toes","March in place, knees high","Arm circles, forwards then back","Shoulder rolls and a big neck stretch","Shake out your whole body"];
+  let id = null;
+  el.innerHTML = `<p>Six moves, 10 seconds each. Do them at your own pace; seated versions are fine.</p><div class="biglabel" id="mvT" style="text-align:center">60</div><h3 id="mvM" style="text-align:center">Ready when you are</h3><div class="row" style="justify-content:center"><button class="btn cc" id="mvGo">Start</button></div>`;
+  const T = el.querySelector("#mvT"), M = el.querySelector("#mvM"), go = el.querySelector("#mvGo");
+  const stop = () => { if (id) clearInterval(id); id = null; go.textContent = "Start"; };
+  cleanups.push(stop);
+  go.onclick = () => {
+    if (id) { stop(); T.textContent="60"; M.textContent="Ready when you are"; return; }
+    let left = 60; go.textContent = "Stop"; M.textContent = moves[0];
+    id = setInterval(() => { left--; T.textContent = left; M.textContent = left>0 ? moves[Math.min(5, Math.floor((60-left)/10))] : "Done! Feel the difference?"; if (left<=0) stop(); }, 1000);
+  };
+},
+stack(el){
+  let stacks = getD("stacks", ["After I pour my morning coffee, I will take my meds."]);
+  const anchors = ["pour my morning coffee","brush my teeth","sit down at my desk","get in the car","finish lunch","get into bed","hang up my keys"];
+  const draw = () => {
+    el.innerHTML = `<div class="field"><label for="hsA">After I…</label><select id="hsA">${anchors.map(a=>`<option>${a}</option>`).join("")}</select></div>
+    <div class="field"><label for="hsB">I will… (under 2 minutes)</label><input id="hsB" type="text" placeholder="e.g. drink a glass of water"></div>
+    <div class="row"><button class="btn cc" id="hsAdd">Save habit</button></div>
+    <div class="out"><b>My habit stacks</b>${stacks.length ? `<ul class="list">${stacks.map((s,i)=>`<li>${esc(s)} <button class="chip" style="min-height:30px;padding:2px 10px" data-i="${i}" aria-label="Remove">Remove</button></li>`).join("")}</ul>` : '<p class="muted">None yet.</p>'}</div>`;
+    el.querySelector("#hsAdd").onclick = () => { const b = el.querySelector("#hsB").value.trim(); if (!b) return; stacks.push(`After I ${el.querySelector("#hsA").value}, I will ${b.replace(/\.$/,"")}.`); setD("stacks", stacks); draw(); };
+    el.querySelectorAll("[data-i]").forEach(x => x.onclick = () => { stacks.splice(+x.dataset.i,1); setD("stacks", stacks); draw(); });
+  };
+  draw();
+},
+menu(el){
+  const cats = {Starters:["Play one favorite song loud","Splash cold water on your face","Stretch for 2 minutes"], Mains:["Walk outside for 20 minutes","Call a friend","Work on a hobby"], Sides:["Podcast while doing chores","Fidget toy during calls","Music while working"], Desserts:["One episode (then stop)","15 minutes of a game","Scroll for 10 minutes with a timer"]};
+  let m = getD("dmenu", cats);
+  const draw = () => {
+    el.innerHTML = Object.keys(m).map(k=>`<div class="field"><label>${k}</label><div class="chips">${m[k].map((it,i)=>`<button class="chip" data-k="${k}" data-i="${i}" title="Tap to remove">${esc(it)} ×</button>`).join("")}</div>
+      <div class="row" style="flex-wrap:nowrap"><input type="text" data-add="${k}" placeholder="Add a ${k.slice(0,-1).toLowerCase()}…" aria-label="Add to ${k}"><button class="btn ghost" data-addb="${k}">Add</button></div></div>`).join("") +
+      `<div class="row"><button class="btn cc" id="dmPick">I'm stuck: pick a starter for me</button></div><div id="dmOut" class="feedback good" aria-live="polite"></div>`;
+    el.querySelectorAll("[data-i]").forEach(b => b.onclick = () => { m[b.dataset.k].splice(+b.dataset.i,1); setD("dmenu", m); draw(); });
+    el.querySelectorAll("[data-addb]").forEach(b => b.onclick = () => { const k = b.dataset.addb; const inp = el.querySelector(`[data-add="${k}"]`); const v = inp.value.trim(); if (!v) return; m[k].push(v); setD("dmenu", m); draw(); });
+    el.querySelector("#dmPick").onclick = () => { const s = m.Starters; el.querySelector("#dmOut").textContent = s.length ? "Try this: " + s[rand(s.length)] : "Add a starter first!"; };
+  };
+  draw();
+},
+top3(el){
+  let t = getD("top3", [{t:"",b:"Morning",d:false},{t:"",b:"Afternoon",d:false},{t:"",b:"Evening",d:false}]);
+  const draw = () => {
+    el.innerHTML = t.map((x,i)=>`<div class="field"><label for="t3${i}">Win #${i+1}</label><div class="row" style="flex-wrap:nowrap"><input type="checkbox" data-c="${i}" ${x.d?"checked":""} style="width:26px;height:26px;accent-color:var(--cc)" aria-label="Done"><input type="text" id="t3${i}" data-i="${i}" value="${esc(x.t)}" placeholder="${["Hardest thing first","A quick win","Something for future you"][i]}"></div>
+      <div class="chips">${["Morning","Afternoon","Evening"].map(b=>`<button class="chip ${x.b===b?"on":""}" data-i="${i}" data-b="${b}">${b}</button>`).join("")}</div></div>`).join("") +
+      `<p class="small muted">${t.filter(x=>x.d).length} of 3 wins done. Two out of three is a good day.</p>`;
+    el.querySelectorAll("input[type=text]").forEach(i => i.oninput = () => { t[+i.dataset.i].t = i.value; setD("top3", t); });
+    el.querySelectorAll("[data-c]").forEach(c => c.onchange = () => { t[+c.dataset.c].d = c.checked; setD("top3", t); draw(); });
+    el.querySelectorAll("[data-b]").forEach(b => b.onclick = () => { t[+b.dataset.i].b = b.dataset.b; setD("top3", t); draw(); });
+  };
+  draw();
+},
+impulse(el){
+  const qs = ["Did I want this before I saw it today?","Do I have the money without touching bills or savings?","Will I still want it in a week?","Do I know where it will live in my home?","Am I calm right now (not bored, sad or stressed)?"];
+  let ans = {};
+  const draw = () => {
+    const yes = Object.values(ans).filter(v=>v).length, n = Object.keys(ans).length;
+    el.innerHTML = `<div class="field"><label for="imItem">What do you want to buy?</label><input id="imItem" type="text" placeholder="e.g. new headphones" value="${esc(getD("imItem",""))}"></div>
+    ${qs.map((q,i)=>`<div class="field"><span>${q}</span><div class="chips"><button class="chip ${ans[i]===true?"on":""}" data-i="${i}" data-v="1">Yes</button><button class="chip ${ans[i]===false?"on":""}" data-i="${i}" data-v="0">No</button></div></div>`).join("")}
+    <div class="out">${n<qs.length ? `Answer all ${qs.length} questions for a verdict.` : yes===5 ? "<b>Green light.</b> This looks like a considered purchase." : yes>=3 ? "<b>Wait 24 hours.</b> Leave it in the cart and check again tomorrow." : "<b>Skip it for now.</b> Add it to a wishlist and revisit in a week."}</div>`;
+    el.querySelector("#imItem").oninput = e => setD("imItem", e.target.value);
+    el.querySelectorAll("[data-v]").forEach(b => b.onclick = () => { ans[b.dataset.i] = b.dataset.v === "1"; draw(); });
+  };
+  draw();
+},
+scenarios(el, w){
+  el.innerHTML = w.items.map((s,si)=>`<div class="field"><span><b>${si+1}.</b> ${s.q}</span><div class="choices">${s.o.map((o,i)=>`<button class="choice" data-s="${si}" data-i="${i}">${o}</button>`).join("")}</div><p class="feedback" id="sc${si}"></p></div>`).join("");
+  el.querySelectorAll(".choice").forEach(b => b.onclick = () => {
+    const s = w.items[+b.dataset.s], fb = el.querySelector("#sc"+b.dataset.s);
+    el.querySelectorAll(`[data-s="${b.dataset.s}"]`).forEach(x=>x.classList.remove("right","wrong"));
+    if (+b.dataset.i === s.a) { b.classList.add("right"); fb.className="feedback good"; fb.textContent = "Good call. " + s.why; } else { b.classList.add("wrong"); fb.className="feedback bad"; fb.textContent = "There's a better option. Try again."; }
+  });
+},
+script(el){
+  const d = getD("script", {who:"my manager", best:"I get instructions in writing", ask:"send a quick email recap after our meetings"});
+  el.innerHTML = `<div class="field"><label for="scW">Who are you asking?</label><input id="scW" type="text" value="${esc(d.who)}"></div>
+  <div class="field"><label for="scB">I work best when…</label><input id="scB" type="text" value="${esc(d.best)}"></div>
+  <div class="field"><label for="scA">Could we try / could you…</label><input id="scA" type="text" value="${esc(d.ask)}"></div>
+  <div class="out" id="scO"></div><div class="row"><button class="btn cc" id="scCopy">Copy message</button><span class="small muted" id="scMsg" aria-live="polite"></span></div>`;
+  const out = () => { d.who = el.querySelector("#scW").value; d.best = el.querySelector("#scB").value; d.ask = el.querySelector("#scA").value; setD("script", d);
+    return `Hi! I've noticed I do my best work when ${d.best.replace(/\.$/,"")}. Could you ${d.ask.replace(/\.$/,"")}? I think it'll help me get things right the first time. Thanks!`; };
+  const draw = () => { el.querySelector("#scO").innerHTML = `<b>Message to ${esc(d.who||"them")}:</b><br>${esc(out())}`; };
+  el.querySelectorAll("input").forEach(i => i.oninput = draw); draw();
+  el.querySelector("#scCopy").onclick = async () => { const m = el.querySelector("#scMsg"); try { await navigator.clipboard.writeText(out()); m.textContent = "Copied."; } catch(e) { m.textContent = "Copy isn't available here. Select the text above instead."; } };
+},
+reframe(el){
+  const pairs = [["I'm so lazy.","I'm struggling to start. What's one tiny first step?"],["I always forget everything.","I forgot this one thing. What system would catch it next time?"],["Everyone else can do this easily.","My brain works differently. I can find a method that suits me."],["I ruined my streak, so why bother.","A missed day is just a missed day. I can restart today."],["They didn't reply, so they must be mad at me.","There are many reasons people don't reply. I'll check in later if it matters."]];
+  el.innerHTML = `<p>Tap a harsh thought to see a kinder, more accurate version.</p><div class="choices">${pairs.map((p,i)=>`<button class="choice" data-i="${i}">"${p[0]}"</button>`).join("")}</div><div class="out" id="rfO">Your reframe will appear here.</div>
+  <div class="field"><label for="rfMine">Now write one of your own: harsh thought → kind reframe</label><textarea id="rfMine" placeholder="Harsh: …&#10;Kind: …">${esc(getD("rfMine",""))}</textarea></div>`;
+  el.querySelectorAll(".choice").forEach(b => b.onclick = () => { el.querySelectorAll(".choice").forEach(x=>x.classList.toggle("right", x===b)); el.querySelector("#rfO").innerHTML = `<b>Try instead:</b> "${pairs[+b.dataset.i][1]}"`; });
+  el.querySelector("#rfMine").oninput = e => setD("rfMine", e.target.value);
+}
+};
+
+/* ---------- games UI ---------- */
+function bestText(id){
+  const b = S.best[id]; if (b == null) return "Not played yet";
+  return {stroop:`Best: ${b} points`, nback:`Best: ${b}% accuracy`, simon:`Best: ${b} steps`, gonogo:`Best: ${b}% accuracy`, match:`Best: ${b} moves`, timer:`Best: ${b}s average error`, odd:`Best: ${b} found`}[id];
+}
+function setBest(id, v, lowerIsBetter){
+  const b = S.best[id];
+  if (b == null || (lowerIsBetter ? v < b : v > b)) { S.best[id] = v; save(); return true; }
+  return false;
+}
+function renderGames(app){
+  app.innerHTML = `<section class="hero"><h1>Brain games</h1><p class="muted">Quick games (1–3 minutes) that exercise attention, memory and self-control. Use one as a warm-up before a focus sprint, or as a reward afterward. Have fun with them; they're practice, not a test.</p></section>
+  <div class="grid">${GAMES.map(g=>`<button class="card game-card" data-g="${g.id}"><span class="skill">${g.skill}</span><h3>${g.title}</h3><p class="small muted">${g.desc}</p><span class="pill">${bestText(g.id)}</span></button>`).join("")}</div>`;
+  app.querySelectorAll("[data-g]").forEach(b => b.onclick = () => { currentGame = b.dataset.g; route(); });
+}
+function renderGame(app, id){
+  const g = GAMES.find(x=>x.id===id);
+  app.innerHTML = `<div class="section"><div class="crumbs"><a href="#games" id="backg">Games</a><span class="muted">/</span><span>${g.title}</span></div>
+  <span class="tag" style="color:var(--accent)">${g.skill}</span><h1>${g.title}</h1><p class="muted" style="max-width:62ch">${g.desc}</p>
+  <div class="stage" id="stage"></div><p class="small muted" id="bestLine">${bestText(id)}</p></div>`;
+  document.getElementById("backg").onclick = e => { e.preventDefault(); currentGame = null; route(); };
+  GAME_FNS[id](document.getElementById("stage"));
+}
+function endScreen(stage, html, again){
+  stage.innerHTML = `<h2>Nice work!</h2><div>${html}</div><div class="row" style="justify-content:center"><button class="btn" id="again">Play again</button><a class="btn ghost" href="#games">All games</a></div>`;
+  stage.querySelector("#again").onclick = again;
+  const bl = document.getElementById("bestLine"); if (bl) bl.textContent = bestText(currentGame);
+}
+function startScreen(stage, html, onStart, extra){
+  stage.innerHTML = `<div style="max-width:52ch">${html}</div>${extra||""}<button class="btn" id="startG">Start</button>`;
+  stage.querySelector("#startG").onclick = onStart;
+}
+
+const COLORS = [{n:"RED",c:"#e0362c"},{n:"BLUE",c:"#2f6bff"},{n:"GREEN",c:"#14a36a"},{n:"YELLOW",c:"#e8b400"}];
+const GAME_FNS = {
+stroop(stage){
+  const start = () => {
+    let score = 0, miss = 0, left = 30, cur;
+    stage.innerHTML = `<div class="hud"><span>Time <b id="sT">30</b></span><span>Score <b id="sS">0</b></span><span>Misses <b id="sM">0</b></span></div>
+      <div class="stroop-word" id="sW" aria-live="polite"></div><p class="small muted">Tap the color of the ink</p>
+      <div class="cbtns">${COLORS.map((c,i)=>`<button data-i="${i}"><span class="sw" style="background:${c.c}"></span>${c.n}</button>`).join("")}</div>`;
+    const W = stage.querySelector("#sW");
+    const next = () => { const word = rand(4); let ink = Math.random()<0.75 ? (word + 1 + rand(3))%4 : word; cur = ink; W.textContent = COLORS[word].n; W.style.color = COLORS[ink].c; };
+    stage.querySelectorAll(".cbtns button").forEach(b => b.onclick = () => { if (+b.dataset.i === cur) { score++; stage.querySelector("#sS").textContent = score; } else { miss++; stage.querySelector("#sM").textContent = miss; W.animate && W.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}],{duration:200}); } next(); });
+    next();
+    every(() => { left--; const t = stage.querySelector("#sT"); if (t) t.textContent = left; if (left <= 0) { cleanup(); const pts = Math.max(0, score - miss); const nb = setBest("stroop", pts); endScreen(stage, `<p><b>${score}</b> correct, <b>${miss}</b> misses → <b>${pts} points</b>${nb?" · New best!":""}</p><p class="small muted">Slowing down slightly often gives a higher score. That's impulse control in action.</p>`, start); } }, 1000);
+  };
+  startScreen(stage, `<p>A color word appears, printed in a color of ink. Tap the button for the <b>ink color</b>, not the word. You have 30 seconds. Score = correct minus misses.</p><p class="stroop-word" style="color:${COLORS[1].c};font-size:2.2rem">RED</p><p class="small muted">Answer for this example: BLUE</p>`, start);
+},
+nback(stage){
+  let level = 1;
+  const intro = () => startScreen(stage, `<p>A square lights up every 2.5 seconds. Tap <b>Match</b> if it's in the <b>same spot as ${level===1?"the one before":"two squares ago"}</b>. 20 squares per round.</p>`, run,
+    `<div class="chips"><button class="chip ${level===1?"on":""}" data-lv="1">1-back (easier)</button><button class="chip ${level===2?"on":""}" data-lv="2">2-back (harder)</button></div>`);
+  const run = () => {
+    const N = 20 + level, seq = [];
+    for (let i=0;i<N;i++){ if (i>=level && Math.random()<0.3) seq.push(seq[i-level]); else { let p; do { p = rand(9); } while (i>=level && p===seq[i-level]); seq.push(p); } }
+    let i = -1, pressed = false, hits = 0, misses = 0, fa = 0, correctRej = 0;
+    stage.innerHTML = `<div class="hud"><span>Square <b id="nI">0</b>/${N}</span><span>Level <b>${level}-back</b></span></div><div class="nb-grid">${Array.from({length:9},()=>"<div></div>").join("")}</div><button class="btn" id="nM" style="min-width:180px">Match</button><p id="nF" class="feedback" aria-live="polite">&nbsp;</p>`;
+    const cells = stage.querySelectorAll(".nb-grid div"), F = stage.querySelector("#nF");
+    const score = () => { if (i >= level) { const isM = seq[i]===seq[i-level]; if (isM && !pressed) misses++; if (!isM && !pressed) correctRej++; } };
+    stage.querySelector("#nM").onclick = () => {
+      if (i < 0 || pressed) return; pressed = true;
+      const isM = i>=level && seq[i]===seq[i-level];
+      if (isM) { hits++; F.className="feedback good"; F.textContent="Match!"; } else { fa++; F.className="feedback bad"; F.textContent="Not a match"; }
+    };
+    const step = () => {
+      score(); i++; pressed = false; F.innerHTML = "&nbsp;";
+      if (i >= N) { cleanup(); const scored = N - level; const acc = Math.round((hits + correctRej)/scored*100); const nb = setBest("nback", acc);
+        endScreen(stage, `<p><b>${acc}%</b> accuracy (${hits} matches caught, ${misses} missed, ${fa} false alarms)${nb?" · New best!":""}</p><p class="small muted">${level===1 && acc>=85 ? "Ready for 2-back? Choose it on the start screen." : "Working memory improves with practice; try a few rounds this week."}</p>`, () => intro()); return; }
+      stage.querySelector("#nI").textContent = i+1;
+      cells.forEach(c=>c.classList.remove("lit")); cells[seq[i]].classList.add("lit");
+      later(() => cells.forEach(c=>c.classList.remove("lit")), 900);
+    };
+    step(); every(step, 2500);
+  };
+  intro();
+  stage.addEventListener("click", e => { const lv = e.target.dataset && e.target.dataset.lv; if (lv) { level = +lv; intro(); } });
+},
+simon(stage){
+  const cols = ["#e0362c","#2f6bff","#14a36a","#e8b400"];
+  let actx = null;
+  const beep = i => { try { actx = actx || new (window.AudioContext||window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = [330,392,494,587][i]; g.gain.value = 0.06; o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+0.18); } catch(e){} };
+  const start = () => {
+    let seq = [], pos = 0, accepting = false;
+    stage.innerHTML = `<div class="hud"><span>Length <b id="smL">1</b></span></div><p id="smS" class="feedback">Watch…</p><div class="pads">${cols.map((c,i)=>`<button data-i="${i}" style="background:${c}" aria-label="Pad ${i+1}"></button>`).join("")}</div>`;
+    const pads = stage.querySelectorAll(".pads button"), S_ = stage.querySelector("#smS");
+    const flash = (i, ms) => { pads[i].classList.add("lit"); beep(i); later(() => pads[i].classList.remove("lit"), ms); };
+    const round = () => {
+      seq.push(rand(4)); pos = 0; accepting = false; S_.textContent = "Watch…"; S_.className = "feedback"; stage.querySelector("#smL").textContent = seq.length;
+      const speed = Math.max(350, 650 - seq.length*20);
+      seq.forEach((p,k) => later(() => flash(p, speed*0.7), 600 + k*speed));
+      later(() => { accepting = true; S_.textContent = "Your turn"; S_.className = "feedback good"; }, 600 + seq.length*speed);
+    };
+    pads.forEach(b => b.onclick = () => {
+      if (!accepting) return; const i = +b.dataset.i; flash(i, 200);
+      if (i !== seq[pos]) { accepting = false; const got = seq.length-1; const nb = setBest("simon", got); later(() => { cleanup(); endScreen(stage, `<p>You remembered a pattern of <b>${got}</b> step${got===1?"":"s"}${nb?" · New best!":""}</p><p class="small muted">Tip: say the colors out loud or group them into chunks of 3.</p>`, start); }, 400); return; }
+      pos++; if (pos === seq.length) { accepting = false; S_.textContent = "Nice!"; later(round, 700); }
+    });
+    round();
+  };
+  startScreen(stage, `<p>Watch the four pads light up in order, then tap them back in the same order. Each round adds one more step. Sound plays if your device allows it.</p>`, start);
+},
+gonogo(stage){
+  const start = () => {
+    const N = 25; let t = 0, hits = 0, misses = 0, fa = 0, cr = 0, rts = [], state = null, shownAt = 0, tapped = false;
+    stage.innerHTML = `<div class="hud"><span>Round <b id="gI">0</b>/${N}</span><span>Avg speed <b id="gR">–</b></span></div><div class="gng-zone" id="gz" role="button" aria-label="Tap zone"><span class="muted">Get ready…</span></div><p id="gF" class="feedback" aria-live="polite">&nbsp;</p>`;
+    const Z = stage.querySelector("#gz"), F = stage.querySelector("#gF");
+    const finishTrial = () => { if (state === "go" && !tapped) { misses++; F.className="feedback bad"; F.textContent="Too slow!"; } if (state === "nogo" && !tapped) { cr++; F.className="feedback good"; F.textContent="Good freeze!"; } state = null; Z.innerHTML = ""; };
+    const tap = () => {
+      if (!state || tapped) return; tapped = true;
+      if (state === "go") { const rt = Math.round(performance.now()-shownAt); rts.push(rt); hits++; F.className="feedback good"; F.textContent = rt + " ms"; stage.querySelector("#gR").textContent = Math.round(rts.reduce((a,b)=>a+b,0)/rts.length)+" ms"; }
+      else { fa++; F.className="feedback bad"; F.textContent = "That was red!"; }
+      Z.innerHTML = "";
+    };
+    Z.addEventListener("pointerdown", e => { e.preventDefault(); tap(); });
+    const trial = () => {
+      if (t >= N) { cleanup(); const acc = Math.round((hits+cr)/N*100); const avg = rts.length ? Math.round(rts.reduce((a,b)=>a+b,0)/rts.length) : 0; const nb = setBest("gonogo", acc);
+        endScreen(stage, `<p><b>${acc}%</b> accuracy · average speed <b>${avg} ms</b>${nb?" · New best!":""}</p><p class="small muted">${fa} red taps, ${misses} missed greens. Balancing speed and holding back is a core self-control skill.</p>`, start); return; }
+      t++; stage.querySelector("#gI").textContent = t;
+      later(() => {
+        state = Math.random() < 0.72 ? "go" : "nogo"; tapped = false; shownAt = performance.now(); F.innerHTML = "&nbsp;";
+        Z.innerHTML = `<div class="gng-dot" style="background:${state==="go"?"#14a36a":"#e0362c"}"></div>`;
+        later(() => { finishTrial(); later(trial, 150); }, 900);
+      }, 500 + rand(900));
+    };
+    trial();
+  };
+  startScreen(stage, `<p>A circle appears in the box. <b style="color:#14a36a">Green: tap the box as fast as you can.</b> <b style="color:#e0362c">Red: don't tap.</b> 25 rounds.</p>`, start);
+},
+match(stage){
+  const icons = ["🍎","🚀","🎸","🐙","🌵","⚽","🍩","🦊"];
+  const start = () => {
+    const deck = shuffle([...icons, ...icons]); let open = [], got = 0, moves = 0, lock = false; const t0 = Date.now();
+    stage.innerHTML = `<div class="hud"><span>Moves <b id="mM">0</b></span><span>Pairs <b id="mP">0</b>/8</span></div><div class="mm-grid">${deck.map((ic,i)=>`<button data-i="${i}" aria-label="Card ${i+1}">${ic}</button>`).join("")}</div>`;
+    const cards = stage.querySelectorAll(".mm-grid button");
+    cards.forEach(b => b.onclick = () => {
+      if (lock || b.classList.contains("up") || b.classList.contains("got")) return;
+      b.classList.add("up"); open.push(b);
+      if (open.length === 2) { moves++; stage.querySelector("#mM").textContent = moves; lock = true;
+        const [a, c] = open;
+        if (deck[a.dataset.i] === deck[c.dataset.i]) { a.classList.replace("up","got"); c.classList.replace("up","got"); open = []; lock = false; got++; stage.querySelector("#mP").textContent = got;
+          if (got === 8) { const secs = Math.round((Date.now()-t0)/1000); const nb = setBest("match", moves, true); later(() => endScreen(stage, `<p>All pairs in <b>${moves} moves</b> and ${secs} seconds${nb?" · New best!":""}</p><p class="small muted">A perfect game is 8 moves. Try naming each card out loud as you flip it.</p>`, start), 500); } }
+        else later(() => { a.classList.remove("up"); c.classList.remove("up"); open = []; lock = false; }, 800);
+      }
+    });
+  };
+  startScreen(stage, `<p>Tap two cards to flip them. Find all 8 matching pairs using as few moves as possible.</p>`, start);
+},
+timer(stage){
+  const start = () => {
+    const rounds = [rand(6)+5, rand(6)+8, rand(6)+11]; let r = 0, errs = [], t0 = null;
+    const show = () => {
+      stage.innerHTML = `<div class="hud"><span>Round <b>${r+1}</b>/3</span></div><p>Target</p><div class="biglabel">${rounds[r]}.0 s</div><p class="small muted">Tap Start, then Stop when you think ${rounds[r]} seconds have passed. No counting out loud!</p><button class="btn" id="tB" style="min-width:180px">Start</button><p id="tO" class="feedback" aria-live="polite">&nbsp;</p>`;
+      const B = stage.querySelector("#tB"), O = stage.querySelector("#tO");
+      B.onclick = () => {
+        if (t0 === null) { t0 = performance.now(); B.textContent = "Stop"; O.textContent = "Timer running (hidden)…"; O.className = "feedback"; return; }
+        const s = (performance.now()-t0)/1000; t0 = null; const e = Math.abs(s - rounds[r]); errs.push(e);
+        O.className = e < 1 ? "feedback good" : "feedback bad"; O.textContent = `You stopped at ${s.toFixed(2)} s (${(s-rounds[r]>=0?"+":"")}${(s-rounds[r]).toFixed(2)} s)`;
+        B.disabled = true; r++;
+        later(() => { if (r < 3) show(); else { const avg = +(errs.reduce((a,b)=>a+b,0)/3).toFixed(2); const nb = setBest("timer", avg, true);
+          endScreen(stage, `<p>Average error: <b>${avg} s</b>${nb?" · New best!":""}</p><p class="small muted">${avg < 1 ? "Your inner clock is sharp!" : "Most people drift by a second or two. Practicing this makes time feel more concrete."}</p>`, start); } }, 1600);
+      };
+    };
+    show();
+  };
+  startScreen(stage, `<p>You'll get three target times. Stop the hidden timer as close to each target as possible. Your score is your average error; lower is better.</p>`, start);
+},
+odd(stage){
+  const pairs = [["O","Q"],["E","F"],["b","d"],["M","N"],["6","9"],["p","q"],["C","G"],["V","U"]];
+  const start = () => {
+    let found = 0, left = 60, size = 3;
+    stage.innerHTML = `<div class="hud"><span>Time <b id="oT">60</b></span><span>Found <b id="oF">0</b></span></div><div class="odd-grid" id="oG"></div><p id="oM" class="feedback" aria-live="polite">&nbsp;</p>`;
+    const G = stage.querySelector("#oG");
+    const board = () => {
+      size = Math.min(8, 3 + Math.floor(found/3)); const [a,b] = pairs[rand(pairs.length)]; const n = size*size, odd = rand(n);
+      G.style.gridTemplateColumns = `repeat(${size},1fr)`;
+      G.innerHTML = Array.from({length:n},(_,i)=>`<button data-o="${i===odd?1:0}">${i===odd?b:a}</button>`).join("");
+      G.querySelectorAll("button").forEach(x => x.onclick = () => { const M = stage.querySelector("#oM"); if (x.dataset.o === "1") { found++; stage.querySelector("#oF").textContent = found; M.className="feedback good"; M.textContent="Found it!"; board(); } else { left = Math.max(0,left-2); M.className="feedback bad"; M.textContent="−2 seconds"; } });
+    };
+    board();
+    every(() => { left--; const T = stage.querySelector("#oT"); if (T) T.textContent = Math.max(0,left); if (left <= 0) { cleanup(); const nb = setBest("odd", found); endScreen(stage, `<p>You found <b>${found}</b> odd ones out${nb?" · New best!":""}</p><p class="small muted">Scanning row by row usually beats jumping around.</p>`, start); } }, 1000);
+  };
+  startScreen(stage, `<p>Every grid has one character that's different from the rest, like a Q among O's. Tap it. Wrong taps cost 2 seconds. You have 60 seconds.</p>`, start);
+}
+};
+
+route();
+</script>
+</body>
+</html>
