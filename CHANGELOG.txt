@@ -6,7 +6,7 @@ Repository:  GitHub repo "adhd-skills-lab" (GitHub Pages, branch main, root fold
 Accounts:    Supabase project zxqynpnynhdysbpqpyvu
 Email:       Resend, sending from no-reply@magothymedia.com
 
-CURRENT VERSION: 1.2.0  (upload v1.2.0/index.html to GitHub)
+CURRENT VERSION: 1.3.0  (upload v1.3.0/index.html to GitHub)
 
 Each folder holds the complete index.html for that version. The first line
 inside every index.html names its version and date. Versions 1.1.0 and later
@@ -31,7 +31,29 @@ versions have no account connection, so signed-in learners would lose sync
 
 
 -----------------------------------------------------------------------------
-v1.2.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+v1.3.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+-----------------------------------------------------------------------------
+Type: Minor (new features, inspired by CogniFit)
+- 4 new brain games (11 total):
+  - Tower Planner (planning): match the goal in the fewest moves
+  - Quick Tap (hand-eye/speed): tap shrinking, later moving, targets
+  - Switch It (task switching): card color sets the rule; shows switch cost
+  - Night Watch (sustained attention): 2-4 minute watch for X; shows
+    whether attention dips toward the end
+- Adaptive levels 1-5 for 10 games: strong rounds level up, rough rounds
+  level down. Existing games start at their old difficulty. Square Recall's
+  1-back/2-back chips are now Level 1-5 chips. Inner Clock has no levels.
+- "My brain skills": Attention, Memory, Inhibition, Planning, Speed,
+  0-100 from your last 5 rounds, with trend. Practice scores, not a test.
+- "Today's workout": 3 games (~10 min) aimed at your two weakest skills,
+  new each day, with a Next button between games. Counts workouts this
+  week and all time; deliberately no streak.
+- Fixed: "All games" on the end-of-game screen did nothing.
+- Home button "Play a game" is now "Today's brain workout".
+- New saved items lv, gl, wo, wd (synced). No database changes.
+
+-----------------------------------------------------------------------------
+v1.2.0  -  2026-11-20                                     Superseded
 -----------------------------------------------------------------------------
 Type: Minor (feature improvement, from user feedback)
 - Color Clash: optional 15-second warm-up with matching words to measure

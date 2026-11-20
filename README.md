@@ -3,7 +3,8 @@
 Self-paced ADHD courses with exercises and brain games, in a single page (`index.html`) with no build step.
 
 - 4 courses, 24 micro-lessons: Focus & Executive Function, Memory Boosters, Healthy Habits, Life Skills
-- 7 brain games: Color Clash, Square Recall, Pattern Echo, Green Light Red Light, Memory Match, Inner Clock, Odd One Out
+- 11 brain games: Color Clash, Square Recall, Pattern Echo, Green Light Red Light, Memory Match, Inner Clock, Odd One Out, Tower Planner, Quick Tap, Switch It, Night Watch
+- Adaptive levels, a "My brain skills" profile (Attention, Memory, Inhibition, Planning, Speed) and a daily 10-minute workout
 - Optional free user accounts (Supabase): progress, saved tools and game scores sync across devices
 - Without accounts configured, progress is saved in each visitor's browser
 

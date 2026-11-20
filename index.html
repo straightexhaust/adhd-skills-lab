@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.2.0 (2026-11-20) -->
+<!-- ADHD Skills Lab v1.3.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -152,6 +152,38 @@ nav.tabs a.av{padding:3px}
 .linkbtn{background:none;border:0;color:var(--accent);font-weight:700;padding:4px 0;text-decoration:underline;min-height:0}
 .danger{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
 .btn.bad{background:var(--bad)}
+/* v1.3.0: brain skills, workout, new games */
+.sk-rows{display:flex;flex-direction:column;gap:12px}
+.sk-row{display:grid;grid-template-columns:92px 1fr 36px 104px;gap:10px;align-items:center}
+.sk-name{font-weight:700}
+.sk-track{height:12px;background:var(--line);border-radius:4px;overflow:hidden}
+.sk-track span{display:block;height:100%;background:var(--accent);border-radius:0 4px 4px 0;transition:width .4s}
+.sk-row b{font-family:var(--display);font-variant-numeric:tabular-nums;text-align:right;font-size:1.1rem}
+.sk-trend{font-size:.85rem;color:var(--muted);white-space:nowrap}
+details summary{cursor:pointer;font-weight:700}
+.tw-wrap{display:flex;gap:22px;align-items:flex-end;justify-content:center;flex-wrap:wrap}
+.tw-board{display:flex;gap:10px;align-items:flex-end;justify-content:center}
+.tw-peg{width:76px;border:2px solid var(--line);border-radius:12px 12px 6px 6px;background:var(--paper);display:flex;flex-direction:column-reverse;align-items:center;justify-content:flex-start;gap:4px;padding:6px 0;min-height:0}
+button.tw-peg:hover{border-color:var(--accent)}
+.tw-peg.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.tw-ball{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;transition:transform .12s}
+.tw-ball.lift{transform:translateY(-6px);box-shadow:0 0 0 3px var(--spark)}
+.tw-mini .tw-peg{width:42px;padding:3px 0;gap:2px;border-radius:8px 8px 4px 4px}
+.tw-mini .tw-ball{width:26px;height:26px;font-size:.72rem}
+.qt-arena{position:relative;width:100%;max-width:420px;height:320px;border-radius:18px;border:2px solid var(--line);background:var(--paper);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.qt-t{position:absolute;left:0;top:0;cursor:pointer;transform-origin:center}
+.qt-t i{position:absolute;inset:8px;border-radius:50%;background:var(--accent);border:5px solid var(--spark)}
+.sw-card{width:190px;height:170px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#fff;background:var(--muted);padding:10px}
+.sw-card span{font-weight:700;font-size:.95rem}
+.sw-card b{font-family:var(--display);font-size:4rem;line-height:1}
+.sw-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:380px}
+.sw-btns button{min-height:68px;border-radius:12px;border:2px solid var(--line);background:var(--paper);font-size:1.05rem;line-height:1.3}
+.nw-box{width:170px;height:170px;border-radius:22px;background:#0e1424;border:3px solid var(--line);display:grid;place-items:center;color:#ffd257;font-family:var(--display);font-weight:800;font-size:4.4rem;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+@media (max-width:560px){
+  .sk-row{grid-template-columns:84px 1fr 32px}
+  .sk-trend{grid-column:2 / -1;margin-top:-8px}
+  .tw-peg{width:66px} .tw-mini .tw-peg{width:38px}
+}
 @media (max-width:560px){
   h1{font-size:1.7rem}
   nav.tabs a{padding:6px 9px;font-size:.88rem}
@@ -177,7 +209,7 @@ nav.tabs a.av{padding:3px}
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.2.0</span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.3.0</span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -195,7 +227,7 @@ const SUPABASE_KEY = "sb_publishable_V3mD6zrbQuuBlWEH4-h-9w_oMOfx2Jy";   // publ
 let sb = null, user = null, syncStatus = "idle", syncTimer = null, recovery = false, authMode = "signin";
 try { if (SUPABASE_URL && SUPABASE_KEY && window.supabase) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { sb = null; }
 const SITE_URL = location.origin + location.pathname;
-const LOWER_IS_BETTER = {match:1, timer:1};
+const LOWER_IS_BETTER = {match:1, timer:1, switch:1};
 const emptyState = () => ({done:{}, best:{}, data:{}});
 
 function mergeState(r, l){
@@ -546,13 +578,17 @@ const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})))
 
 /* ---------- games ---------- */
 const GAMES = [
-  {id:"stroop", title:"Color Clash", skill:"Impulse control", desc:"Tap the ink color, not the word. Your brain will want to read. Don't let it!"},
-  {id:"nback", title:"Square Recall", skill:"Working memory", desc:"Squares light up one by one. Tap Match when the square is in the same spot as the one before (or two before)."},
-  {id:"simon", title:"Pattern Echo", skill:"Sequence memory", desc:"Watch the pads light up, then repeat the pattern. It gets one step longer each round."},
-  {id:"gonogo", title:"Green Light, Red Light", skill:"Attention & reaction", desc:"Tap fast for green. Freeze for red. Speed matters, but so does holding back."},
-  {id:"match", title:"Memory Match", skill:"Visual memory", desc:"Flip cards to find all 8 pairs in as few moves as you can."},
-  {id:"timer", title:"Inner Clock", skill:"Time awareness", desc:"Stop the hidden timer as close to the target as you can. Great practice for time blindness."},
-  {id:"odd", title:"Odd One Out", skill:"Visual focus", desc:"Find the one character that's different. The grid grows as you get faster."}
+  {id:"stroop", title:"Color Clash", skill:"Impulse control", skills:["inhibition","speed"], lv:3, desc:"Tap the ink color, not the word. Your brain will want to read. Don't let it!"},
+  {id:"nback", title:"Square Recall", skill:"Working memory", skills:["memory"], lv:1, desc:"Squares light up one by one. Tap Match when the square is in the same spot as one a few squares back."},
+  {id:"simon", title:"Pattern Echo", skill:"Sequence memory", skills:["memory"], lv:2, desc:"Watch the pads light up, then repeat the pattern. It gets one step longer each round."},
+  {id:"gonogo", title:"Green Light, Red Light", skill:"Attention & reaction", skills:["inhibition","attention"], lv:2, desc:"Tap fast for green. Freeze for red. Speed matters, but so does holding back."},
+  {id:"match", title:"Memory Match", skill:"Visual memory", skills:["memory"], lv:2, desc:"Flip cards to find all 8 pairs in as few moves as you can."},
+  {id:"timer", title:"Inner Clock", skill:"Time awareness", skills:["planning"], desc:"Stop the hidden timer as close to the target as you can. Great practice for time blindness."},
+  {id:"odd", title:"Odd One Out", skill:"Visual focus", skills:["attention","speed"], lv:1, desc:"Find the one character that's different. The grid grows as you get faster."},
+  {id:"tower", title:"Tower Planner", skill:"Planning", skills:["planning"], lv:1, desc:"Move the balls to match the goal picture in as few moves as possible. Think it through before your first move."},
+  {id:"tap", title:"Quick Tap", skill:"Hand-eye coordination", skills:["speed"], lv:1, desc:"Tap the targets before they shrink away. At higher levels they start to move."},
+  {id:"switch", title:"Switch It", skill:"Task switching", skills:["planning"], lv:1, desc:"The card's color tells you which question to answer. Keep up when the rule changes without warning."},
+  {id:"watch", title:"Night Watch", skill:"Sustained attention", skills:["attention"], lv:1, desc:"Watch letters flash by for a few minutes and tap only when an X appears. Stay sharp through the quiet stretches."}
 ];
 
 /* ---------- routing ---------- */
@@ -591,13 +627,13 @@ function courseCard(c){
 function renderHome(app){
   const done = Object.keys(S.done).filter(k => S.done[k]).length;
   const nl = nextLesson();
-  const played = Object.keys(S.best).length;
+  const gl = getD("gl", {}); const played = GAMES.filter(g => S.best[g.id] != null || (gl[g.id] || []).length).length;
   app.innerHTML = `
   <section class="hero">
     <span class="tag" style="color:var(--accent)">Self-paced · start anywhere</span>
     <h1>Small lessons, real tools, and games that train your brain</h1>
     <p class="muted">Four short courses on focus, memory, healthy habits and life skills. Each lesson takes 5–10 minutes and ends with something to try. Skip around, repeat lessons, take breaks. There are no streaks to break here.</p>
-    <div class="row">${nl ? `<button class="btn" id="cont">${done ? "Continue" : "Start"}: ${esc(nl.title)}</button>` : `<span class="pill ok">All lessons complete. Nice work!</span>`}<a class="btn ghost" href="#games">Play a game</a></div>
+    <div class="row">${nl ? `<button class="btn" id="cont">${done ? "Continue" : "Start"}: ${esc(nl.title)}</button>` : `<span class="pill ok">All lessons complete. Nice work!</span>`}<a class="btn ghost" href="#games">Today's brain workout</a></div>
     ${sb ? (user ? `<div class="row small"><span>Signed in as <b>${esc(displayName())}</b></span>${syncBadge()}</div>` : `<p class="small muted">Want your progress on every device? <a href="#account">Create a free account</a> or <a href="#account">sign in</a>.</p>`) : ""}
   </section>
   <div class="stats">
@@ -981,52 +1017,159 @@ reframe(el){
 }
 };
 
+/* ---------- skills, levels and daily workout (v1.3.0) ---------- */
+const SKILLS = [
+  {id:"attention", name:"Attention", what:"staying on target and noticing what matters"},
+  {id:"memory", name:"Memory", what:"holding and recalling information"},
+  {id:"inhibition", name:"Inhibition", what:"holding back the automatic response"},
+  {id:"planning", name:"Planning", what:"thinking ahead, switching rules and sensing time"},
+  {id:"speed", name:"Speed", what:"seeing and reacting quickly"}
+];
+const MAXLV = 5;
+const localDay = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const clamp = (v, a = 0, b = 100) => Math.max(a, Math.min(b, v));
+const lvNorm = (perf, lv) => clamp(clamp(perf)*0.75 + (lv-1)*6.25);   // a perfect round on level 5 = 100
+const gameById = id => GAMES.find(g => g.id === id);
+const skillNames = g => g.skills.map(s => SKILLS.find(k => k.id === s).name).join(" · ");
+function getLv(id){ const g = gameById(id); if (!g || !g.lv) return 0; return getD("lv", {})[id] || g.lv; }
+function setLv(id, v){ const o = Object.assign({}, getD("lv", {})); o[id] = v; setD("lv", o); const t = document.getElementById("lvTag"); if (t) t.textContent = v; }
+/* Log a finished round. norm = 0–100 practice score; verdict 1 = strong round (level up), -1 = rough round (level down). */
+function record(id, norm, verdict){
+  const g = gameById(id), lv = getLv(id);
+  const log = Object.assign({}, getD("gl", {})); const arr = (log[id] || []).slice(-9);
+  arr.push({t:Date.now(), n:Math.round(clamp(norm)), lv}); log[id] = arr; S.data.gl = log;
+  let msg = "";
+  if (g.lv) {
+    const nl = clamp(lv + verdict, 1, MAXLV);
+    const o = Object.assign({}, getD("lv", {})); o[id] = nl; S.data.lv = o;
+    msg = nl > lv ? `Level up! Next round is level ${nl}.`
+      : nl < lv ? `Next round drops to level ${nl} so you can build back up.`
+      : verdict > 0 ? `Top level. Keep it up!` : `You'll stay on level ${lv}.`;
+    const t = document.getElementById("lvTag"); if (t) t.textContent = nl;
+  }
+  const wo = getD("wo", null);
+  if (wo && wo.d === localDay() && wo.g.includes(id) && !wo.done.includes(id)) {
+    const w = Object.assign({}, wo, {done: wo.done.concat(id)}); S.data.wo = w;
+    if (w.g.every(x => w.done.includes(x))) { const wd = getD("wd", []); if (!wd.includes(w.d)) S.data.wd = wd.concat(w.d).slice(-120); }
+  }
+  save();
+  return msg ? `<p class="small"><b>${msg}</b></p>` : "";
+}
+function skillScores(){
+  const log = getD("gl", {});
+  const avg = a => a.length ? Math.round(a.reduce((x, r) => x + r.n, 0) / a.length) : null;
+  return SKILLS.map(sk => {
+    const games = GAMES.filter(g => g.skills.includes(sk.id));
+    const rounds = games.flatMap(g => log[g.id] || []).sort((a, b) => a.t - b.t);
+    const prev = rounds.slice(-10, -5);
+    return {...sk, games, n:rounds.length, score:avg(rounds.slice(-5)), before: prev.length >= 3 ? avg(prev) : null};
+  });
+}
+function todayWorkout(){
+  const d = localDay(); let wo = getD("wo", null);
+  if (wo && wo.d === d) return wo;
+  const log = getD("gl", {});
+  const lastPlayed = id => { const a = log[id]; return a && a.length ? a[a.length-1].t : 0; };
+  const order = shuffle(skillScores()).sort((a, b) => (a.score == null ? -1 : a.score) - (b.score == null ? -1 : b.score));
+  const focus = [order[0], order[1]], pick = [];
+  focus.forEach(sk => { const opts = sk.games.filter(g => !pick.includes(g.id)).sort((a, b) => lastPlayed(a.id) - lastPlayed(b.id)); if (opts.length) pick.push(opts[0].id); });
+  const rest = shuffle(GAMES.filter(g => !pick.includes(g.id) && !g.skills.some(s => focus.some(f => f.id === s))));
+  if (rest.length) pick.push(rest[0].id);
+  wo = {d, g:pick, done:[], focus:focus.map(f => f.id)};
+  setD("wo", wo); return wo;
+}
+function workoutCard(){
+  const wo = todayWorkout(), wd = getD("wd", []);
+  const weekAgo = localDay(new Date(Date.now() - 6*864e5)), week = wd.filter(x => x >= weekAgo).length;
+  const allDone = wo.g.every(x => wo.done.includes(x));
+  const sc = skillScores(), fs = wo.focus.map(f => sc.find(s => s.id === f));
+  const why = fs.every(f => f.score == null) ? "two skills you haven't tried yet"
+    : fs.some(f => f.score == null) ? "a skill you haven't tried yet and one of your lowest scores" : "your two lowest skill scores";
+  return `<section class="card section" style="--cc:var(--accent)">
+    <div class="row" style="justify-content:space-between"><h2>Today's workout</h2><span class="pill ${allDone ? "ok" : ""}">${allDone ? "Done for today ✓" : `${wo.done.length} of ${wo.g.length} done`}</span></div>
+    <p class="small muted">About 10 minutes. Today leans on <b>${fs[0].name}</b> and <b>${fs[1].name}</b>, ${why}, plus one game for variety.</p>
+    <div class="lesson-list">${wo.g.map((id, i) => { const g = gameById(id), dn = wo.done.includes(id);
+      return `<button class="lesson-item ${dn ? "done" : ""}" data-g="${id}"><span class="num">${dn ? "✓" : i+1}</span><span class="grow"><b>${g.title}</b><br><span class="small muted">${skillNames(g)}${g.lv ? ` · Level ${getLv(id)}` : ""}</span></span><span class="pill ${dn ? "ok" : ""}">${dn ? "Done" : "Play"}</span></button>`; }).join("")}</div>
+    <p class="small muted">Workouts finished in the last 7 days: <b>${week}</b> · all time: <b>${wd.length}</b>. Missed a day? No problem. Every day starts fresh.</p></section>`;
+}
+function skillsCard(){
+  const sc = skillScores();
+  const rows = sc.map(s => {
+    let trend = "";
+    if (s.score != null && s.before != null) { const d = s.score - s.before; trend = Math.abs(d) < 3 ? "→ steady" : d > 0 ? `▲ up ${d}` : `▼ down ${-d}`; }
+    else if (s.score != null) trend = "building up";
+    const tip = s.score == null ? `${s.name}: not played yet. Try ${s.games.map(g => g.title).join(" or ")}.` : `${s.name}: ${s.score} from your last ${Math.min(5, s.n)} round${s.n === 1 ? "" : "s"}${s.before != null ? ` (earlier rounds: ${s.before})` : ""}. Games: ${s.games.map(g => g.title).join(", ")}.`;
+    return `<div class="sk-row" title="${esc(tip)}"><span class="sk-name">${s.name}</span><div class="sk-track" role="img" aria-label="${esc(tip)}"><span style="width:${s.score || 0}%"></span></div><b>${s.score == null ? "–" : s.score}</b><span class="sk-trend">${s.score == null ? "not played" : trend}</span></div>`;
+  }).join("");
+  return `<section class="card section"><h2>My brain skills</h2>
+    <div class="sk-rows">${rows}</div>
+    <details class="small muted"><summary>How these scores work</summary>
+      <p style="margin-top:8px">Each score runs from 0 to 100 and averages your last 5 rounds of the games that train that skill. Higher game levels count for more. The arrow compares those rounds with the 5 before them.</p>
+      <ul class="list" style="margin-top:6px">${SKILLS.map(s => `<li><b>${s.name}</b> (${s.what}): ${GAMES.filter(g => g.skills.includes(s.id)).map(g => g.title).join(", ")}</li>`).join("")}</ul>
+      <p style="margin-top:6px">These are practice scores for tracking your own progress. They aren't a medical test, and they don't compare you with other people.</p></details></section>`;
+}
+
 /* ---------- games UI ---------- */
 function bestText(id){
   const b = S.best[id]; if (b == null) return "Not played yet";
-  return {stroop:`Best: ${b} points`, nback:`Best: ${b}% accuracy`, simon:`Best: ${b} steps`, gonogo:`Best: ${b}% accuracy`, match:`Best: ${b} moves`, timer:`Best: ${b}s average error`, odd:`Best: ${b} found`}[id];
+  return {stroop:`Best: ${b} points`, nback:`Best: ${b}% accuracy`, simon:`Best: ${b} steps`, gonogo:`Best: ${b}% accuracy`, match:`Best: ${b} moves`, timer:`Best: ${b}s average error`, odd:`Best: ${b} found`,
+    tower:`Best: ${b}% efficiency`, tap:`Best: ${b} hits`, switch:`Best: ${(b/1000).toFixed(2)} s per answer`, watch:`Best: ${b}% caught`}[id];
 }
 function setBest(id, v, lowerIsBetter){
   const b = S.best[id];
   if (b == null || (lowerIsBetter ? v < b : v > b)) { S.best[id] = v; save(); return true; }
   return false;
 }
+function openGame(id){ currentGame = id; route(); }
 function renderGames(app){
-  app.innerHTML = `<section class="hero"><h1>Brain games</h1><p class="muted">Quick games (1–3 minutes) that exercise attention, memory and self-control. Use one as a warm-up before a focus sprint, or as a reward afterward. Have fun with them; they're practice, not a test.</p></section>
-  <div class="grid">${GAMES.map(g=>`<button class="card game-card" data-g="${g.id}"><span class="skill">${g.skill}</span><h3>${g.title}</h3><p class="small muted">${g.desc}</p><span class="pill">${bestText(g.id)}</span></button>`).join("")}</div>`;
-  app.querySelectorAll("[data-g]").forEach(b => b.onclick = () => { currentGame = b.dataset.g; route(); });
+  app.innerHTML = `<section class="hero"><h1>Brain games</h1><p class="muted">Quick games (1–4 minutes) for attention, memory, self-control, planning and speed. Each game moves up or down a level as you play, and your results build up your brain skills profile. Have fun with them; they're practice, not a test.</p></section>
+  ${workoutCard()}
+  ${skillsCard()}
+  <section class="section"><h2>All games</h2><div class="grid">${GAMES.map(g => `<button class="card game-card" data-g="${g.id}"><span class="skill">${g.skill}</span><h3>${g.title}</h3><p class="small muted">${g.desc}</p><div class="row">${g.lv ? `<span class="pill">Level ${getLv(g.id)}</span>` : ""}<span class="pill">${bestText(g.id)}</span></div></button>`).join("")}</div></section>`;
+  app.querySelectorAll("[data-g]").forEach(b => b.onclick = () => openGame(b.dataset.g));
 }
 function renderGame(app, id){
-  const g = GAMES.find(x=>x.id===id);
+  const g = gameById(id);
   app.innerHTML = `<div class="section"><div class="crumbs"><a href="#games" id="backg">Games</a><span class="muted">/</span><span>${g.title}</span></div>
-  <span class="tag" style="color:var(--accent)">${g.skill}</span><h1>${g.title}</h1><p class="muted" style="max-width:62ch">${g.desc}</p>
+  <span class="tag" style="color:var(--accent)">${g.skill}${g.lv ? ` · Level <span id="lvTag">${getLv(id)}</span> of ${MAXLV}` : ""}</span><h1>${g.title}</h1><p class="muted" style="max-width:62ch">${g.desc}</p>
   <div class="stage" id="stage"></div><p class="small muted" id="bestLine">${bestText(id)}</p></div>`;
   document.getElementById("backg").onclick = e => { e.preventDefault(); currentGame = null; route(); };
   GAME_FNS[id](document.getElementById("stage"));
 }
 function endScreen(stage, html, again){
-  stage.innerHTML = `<h2>Nice work!</h2><div>${html}</div><div class="row" style="justify-content:center"><button class="btn" id="again">Play again</button><a class="btn ghost" href="#games">All games</a></div>`;
+  const wo = getD("wo", null); let woHtml = "", next = null;
+  if (wo && wo.d === localDay() && wo.g.includes(currentGame)) {
+    next = wo.g.find(x => !wo.done.includes(x));
+    woHtml = next ? `<p class="small">Today's workout: <b>${wo.done.length} of ${wo.g.length}</b> done.</p><button class="btn" id="woNext">Next: ${gameById(next).title}</button>`
+      : `<p class="feedback good">Today's workout is done. Nice work!</p>`;
+  }
+  stage.innerHTML = `<h2>Nice work!</h2><div>${html}</div>${woHtml ? `<div class="out" style="display:flex;flex-direction:column;gap:8px;align-items:center">${woHtml}</div>` : ""}<div class="row" style="justify-content:center"><button class="btn ${next ? "ghost" : ""}" id="again">Play again</button><a class="btn ghost" href="#games" id="allG">All games</a></div>`;
   stage.querySelector("#again").onclick = again;
+  stage.querySelector("#allG").onclick = e => { e.preventDefault(); currentGame = null; route(); };
+  const nx = stage.querySelector("#woNext"); if (nx) nx.onclick = () => openGame(next);
   const bl = document.getElementById("bestLine"); if (bl) bl.textContent = bestText(currentGame);
 }
 function startScreen(stage, html, onStart, extra){
   stage.innerHTML = `<div style="max-width:52ch">${html}</div>${extra||""}<button class="btn" id="startG">Start</button>`;
   stage.querySelector("#startG").onclick = onStart;
 }
+const lvLine = (id, text) => `<p class="small muted">Level ${getLv(id)} of ${MAXLV}: ${text}</p>`;
 
 const COLORS = [{n:"RED",c:"#e0362c"},{n:"BLUE",c:"#2f6bff"},{n:"GREEN",c:"#14a36a"},{n:"YELLOW",c:"#e8b400"}];
 const GAME_FNS = {
 stroop(stage){
   let warm = getD("stroopWarm", true);
+  const MIS = [0.5, 0.65, 0.75, 0.85, 0.95];
   const fmt = ms => (ms/1000).toFixed(2) + " s";
   const avg = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : 0;
   const round = (secs, match, label, done) => {
+    const mis = MIS[getLv("stroop")-1];
     let score = 0, miss = 0, left = secs, cur, shown = 0; const times = [];
     stage.innerHTML = `<p class="tag" style="color:var(--accent)">${label}</p><div class="hud"><span>Time <b id="sT">${secs}</b></span><span>Correct <b id="sS">0</b></span><span>Misses <b id="sM">0</b></span></div>
       <div class="stroop-word" id="sW" aria-live="polite"></div><p class="small muted">Tap the color of the ink</p>
       <div class="cbtns">${COLORS.map((c,i)=>`<button data-i="${i}"><span class="sw" style="background:${c.c}"></span>${c.n}</button>`).join("")}</div>`;
     const W = stage.querySelector("#sW");
-    const next = () => { const word = rand(4); const ink = match ? word : (Math.random()<0.75 ? (word + 1 + rand(3))%4 : word); cur = ink; W.textContent = COLORS[word].n; W.style.color = COLORS[ink].c; shown = performance.now(); };
+    const next = () => { const word = rand(4); const ink = match ? word : (Math.random()<mis ? (word + 1 + rand(3))%4 : word); cur = ink; W.textContent = COLORS[word].n; W.style.color = COLORS[ink].c; shown = performance.now(); };
     stage.querySelectorAll(".cbtns button").forEach(b => b.onclick = () => {
       if (+b.dataset.i === cur) { score++; times.push(performance.now()-shown); stage.querySelector("#sS").textContent = score; }
       else { miss++; stage.querySelector("#sM").textContent = miss; W.animate && W.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}],{duration:200}); }
@@ -1035,20 +1178,22 @@ stroop(stage){
     every(() => { left--; const t = stage.querySelector("#sT"); if (t) t.textContent = left; if (left <= 0) { cleanup(); done({score, miss, avg:avg(times)}); } }, 1000);
   };
   const results = (w, m) => {
+    const lv = getLv("stroop");
     const pts = Math.max(0, m.score - m.miss); const nb = setBest("stroop", pts);
     const slow = w && w.avg && m.avg ? Math.round((m.avg - w.avg) / w.avg * 100) : null;
-    const hist = getD("stroopHist", []); hist.push({pts, avg:Math.round(m.avg), slow}); setD("stroopHist", hist.slice(-5));
+    const hist = getD("stroopHist", []); hist.push({pts, avg:Math.round(m.avg), slow, lv}); setD("stroopHist", hist.slice(-5));
     const total = m.score + m.miss, missRate = total ? m.miss/total : 0;
     const tip = m.miss === 0 ? "No misses. Next round, push your speed until a miss slips in. That's where your limit is."
       : missRate <= 0.1 ? "Good balance of speed and accuracy. Try to beat your points next time."
       : "Slow down a touch: each miss cancels out a correct answer.";
+    const lvMsg = record("stroop", lvNorm(pts/35*100, lv), missRate <= 0.1 && pts >= 18 ? 1 : missRate > 0.25 ? -1 : 0);
     endScreen(stage, `<p><b>${m.score}</b> correct, <b>${m.miss}</b> misses → <b>${pts} points</b>${nb?" · New best!":""}</p>
       <div class="out small" style="text-align:left;max-width:440px;margin:10px auto;display:flex;flex-direction:column;gap:6px">
         <span>Average time per correct answer: <b>${m.avg ? fmt(m.avg) : "–"}</b></span>
         ${slow !== null ? `<span>Matching words (warm-up): <b>${fmt(w.avg)}</b> · Mixed-up words: <b>${fmt(m.avg)}</b></span>
         <span><b>${slow > 0 ? `Mixed-up words slowed you by ${slow}%.` : "Mixed-up words didn't slow you down at all."}</b> This is your interference cost. Smaller is better, and it usually shrinks with practice.</span>` : `<span class="muted">Turn on the warm-up to see how much the mixed-up words slow you down.</span>`}
         <span>${hist.length > 1 ? `Your last ${hist.slice(-5).length} rounds` : "This round"}: ${hist.slice(-5).map(h=>`<b>${h.pts}</b>`).join(" · ")} points</span>
-      </div><p class="small muted" style="max-width:52ch;margin:0 auto">${tip}</p>`, intro);
+      </div><p class="small muted" style="max-width:52ch;margin:0 auto">${tip}</p>${lvMsg}`, intro);
   };
   const run = () => {
     if (!warm) { round(30, false, "Real round", m => results(null, m)); return; }
@@ -1060,17 +1205,23 @@ stroop(stage){
   const intro = () => {
     startScreen(stage, `<p>A color word appears, printed in a color of ink. Tap the button for the <b>ink color</b>, not the word. 30 seconds. Score = correct minus misses.</p>
       <p class="stroop-word" style="color:${COLORS[1].c};font-size:2.2rem">RED</p><p class="small muted">Answer for this example: BLUE</p>
-      <p class="small" style="text-align:left"><b>Where's the impulse?</b> Reading is automatic, so your brain wants to tap the word it reads. Holding that back and answering with the ink color is the impulse control this game trains. Getting good at telling them apart quickly is the skill, not a shortcut.</p>`, run,
+      <p class="small" style="text-align:left"><b>Where's the impulse?</b> Reading is automatic, so your brain wants to tap the word it reads. Holding that back and answering with the ink color is the impulse control this game trains. Getting good at telling them apart quickly is the skill, not a shortcut.</p>
+      ${lvLine("stroop", `about ${Math.round(MIS[getLv("stroop")-1]*100)}% of words don't match their ink.`)}`, run,
       `<label class="check" style="max-width:52ch;text-align:left"><input type="checkbox" id="stWarm" ${warm?"checked":""}><span>Start with a 15-second warm-up where words match their colors. It measures your personal baseline (recommended).</span></label>`);
     stage.querySelector("#stWarm").onchange = e => { warm = e.target.checked; setD("stroopWarm", warm); };
   };
   intro();
 },
 nback(stage){
-  let level = 1;
-  const intro = () => startScreen(stage, `<p>A square lights up every 2.5 seconds. Tap <b>Match</b> if it's in the <b>same spot as ${level===1?"the one before":"two squares ago"}</b>. 20 squares per round.</p>`, run,
-    `<div class="chips"><button class="chip ${level===1?"on":""}" data-lv="1">1-back (easier)</button><button class="chip ${level===2?"on":""}" data-lv="2">2-back (harder)</button></div>`);
+  const NB = [{n:1,ms:2500},{n:1,ms:2000},{n:2,ms:2500},{n:2,ms:2000},{n:3,ms:2500}];
+  const back = n => n===1 ? "the one before" : n===2 ? "two squares ago" : "three squares ago";
+  const desc = L => `${L.n}-back, a new square every ${(L.ms/1000).toFixed(1)} s`;
+  const intro = () => { const lv = getLv("nback"), L = NB[lv-1];
+    startScreen(stage, `<p>A square lights up every ${(L.ms/1000).toFixed(1)} seconds. Tap <b>Match</b> if it's in the <b>same spot as ${back(L.n)}</b>. ${20+L.n} squares per round.</p>
+      ${lvLine("nback", desc(L))}<p class="small muted">You move up a level after a round of 85% or better, and down after a round under 60%. You can also pick a level yourself.</p>`, run,
+      `<div class="chips" role="group" aria-label="Choose a level">${NB.map((x,i)=>`<button class="chip ${lv===i+1?"on":""}" data-lv="${i+1}" title="${desc(x)}">Level ${i+1}</button>`).join("")}</div>`); };
   const run = () => {
+    const lv = getLv("nback"), L = NB[lv-1], level = L.n;
     const N = 20 + level, seq = [];
     for (let i=0;i<N;i++){ if (i>=level && Math.random()<0.3) seq.push(seq[i-level]); else { let p; do { p = rand(9); } while (i>=level && p===seq[i-level]); seq.push(p); } }
     let i = -1, pressed = false, hits = 0, misses = 0, fa = 0, correctRej = 0;
@@ -1085,42 +1236,49 @@ nback(stage){
     const step = () => {
       score(); i++; pressed = false; F.innerHTML = "&nbsp;";
       if (i >= N) { cleanup(); const scored = N - level; const acc = Math.round((hits + correctRej)/scored*100); const nb = setBest("nback", acc);
-        endScreen(stage, `<p><b>${acc}%</b> accuracy (${hits} matches caught, ${misses} missed, ${fa} false alarms)${nb?" · New best!":""}</p><p class="small muted">${level===1 && acc>=85 ? "Ready for 2-back? Choose it on the start screen." : "Working memory improves with practice; try a few rounds this week."}</p>`, () => intro()); return; }
+        const lvMsg = record("nback", lvNorm(acc, lv), acc >= 85 ? 1 : acc < 60 ? -1 : 0);
+        endScreen(stage, `<p><b>${acc}%</b> accuracy (${hits} matches caught, ${misses} missed, ${fa} false alarms)${nb?" · New best!":""}</p>${lvMsg}<p class="small muted">Working memory improves with practice; try a few rounds this week.</p>`, () => intro()); return; }
       stage.querySelector("#nI").textContent = i+1;
       cells.forEach(c=>c.classList.remove("lit")); cells[seq[i]].classList.add("lit");
-      later(() => cells.forEach(c=>c.classList.remove("lit")), 900);
+      later(() => cells.forEach(c=>c.classList.remove("lit")), Math.min(900, L.ms - 600));
     };
-    step(); every(step, 2500);
+    step(); every(step, L.ms);
   };
   intro();
-  stage.addEventListener("click", e => { const lv = e.target.dataset && e.target.dataset.lv; if (lv) { level = +lv; intro(); } });
+  stage.addEventListener("click", e => { const lv = e.target.dataset && e.target.dataset.lv; if (lv) { setLv("nback", +lv); intro(); } });
 },
 simon(stage){
   const cols = ["#e0362c","#2f6bff","#14a36a","#e8b400"];
+  const BASE = [750, 650, 560, 480, 420];
   let actx = null;
   const beep = i => { try { actx = actx || new (window.AudioContext||window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = [330,392,494,587][i]; g.gain.value = 0.06; o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime+0.18); } catch(e){} };
   const start = () => {
+    const lv = getLv("simon"), base = BASE[lv-1];
     let seq = [], pos = 0, accepting = false;
     stage.innerHTML = `<div class="hud"><span>Length <b id="smL">1</b></span></div><p id="smS" class="feedback">Watch…</p><div class="pads">${cols.map((c,i)=>`<button data-i="${i}" style="background:${c}" aria-label="Pad ${i+1}"></button>`).join("")}</div>`;
     const pads = stage.querySelectorAll(".pads button"), S_ = stage.querySelector("#smS");
     const flash = (i, ms) => { pads[i].classList.add("lit"); beep(i); later(() => pads[i].classList.remove("lit"), ms); };
     const round = () => {
       seq.push(rand(4)); pos = 0; accepting = false; S_.textContent = "Watch…"; S_.className = "feedback"; stage.querySelector("#smL").textContent = seq.length;
-      const speed = Math.max(350, 650 - seq.length*20);
+      const speed = Math.max(Math.round(base*0.55), base - seq.length*20);
       seq.forEach((p,k) => later(() => flash(p, speed*0.7), 600 + k*speed));
       later(() => { accepting = true; S_.textContent = "Your turn"; S_.className = "feedback good"; }, 600 + seq.length*speed);
     };
     pads.forEach(b => b.onclick = () => {
       if (!accepting) return; const i = +b.dataset.i; flash(i, 200);
-      if (i !== seq[pos]) { accepting = false; const got = seq.length-1; const nb = setBest("simon", got); later(() => { cleanup(); endScreen(stage, `<p>You remembered a pattern of <b>${got}</b> step${got===1?"":"s"}${nb?" · New best!":""}</p><p class="small muted">Tip: say the colors out loud or group them into chunks of 3.</p>`, start); }, 400); return; }
+      if (i !== seq[pos]) { accepting = false; const got = seq.length-1; const nb = setBest("simon", got);
+        const lvMsg = record("simon", lvNorm(got/12*100, lv), got >= 7 ? 1 : got <= 3 ? -1 : 0);
+        later(() => { cleanup(); endScreen(stage, `<p>You remembered a pattern of <b>${got}</b> step${got===1?"":"s"}${nb?" · New best!":""}</p>${lvMsg}<p class="small muted">Tip: say the colors out loud or group them into chunks of 3.</p>`, start); }, 400); return; }
       pos++; if (pos === seq.length) { accepting = false; S_.textContent = "Nice!"; later(round, 700); }
     });
     round();
   };
-  startScreen(stage, `<p>Watch the four pads light up in order, then tap them back in the same order. Each round adds one more step. Sound plays if your device allows it.</p>`, start);
+  startScreen(stage, `<p>Watch the four pads light up in order, then tap them back in the same order. Each round adds one more step. Sound plays if your device allows it.</p>${lvLine("simon", `${["slow","steady","quicker","fast","very fast"][getLv("simon")-1]} playback.`)}`, start);
 },
 gonogo(stage){
+  const SHOW = [1000, 900, 800, 700, 600], NOGO = [0.25, 0.28, 0.3, 0.33, 0.36];
   const start = () => {
+    const lv = getLv("gonogo");
     const N = 25; let t = 0, hits = 0, misses = 0, fa = 0, cr = 0, rts = [], state = null, shownAt = 0, tapped = false;
     stage.innerHTML = `<div class="hud"><span>Round <b id="gI">0</b>/${N}</span><span>Avg speed <b id="gR">–</b></span></div><div class="gng-zone" id="gz" role="button" aria-label="Tap zone"><span class="muted">Get ready…</span></div><p id="gF" class="feedback" aria-live="polite">&nbsp;</p>`;
     const Z = stage.querySelector("#gz"), F = stage.querySelector("#gF");
@@ -1134,21 +1292,24 @@ gonogo(stage){
     Z.addEventListener("pointerdown", e => { e.preventDefault(); tap(); });
     const trial = () => {
       if (t >= N) { cleanup(); const acc = Math.round((hits+cr)/N*100); const avg = rts.length ? Math.round(rts.reduce((a,b)=>a+b,0)/rts.length) : 0; const nb = setBest("gonogo", acc);
-        endScreen(stage, `<p><b>${acc}%</b> accuracy · average speed <b>${avg} ms</b>${nb?" · New best!":""}</p><p class="small muted">${fa} red taps, ${misses} missed greens. Balancing speed and holding back is a core self-control skill.</p>`, start); return; }
+        const lvMsg = record("gonogo", lvNorm(acc*0.7 + (avg ? clamp((700-avg)/4) : 0)*0.3, lv), acc >= 92 ? 1 : acc < 72 ? -1 : 0);
+        endScreen(stage, `<p><b>${acc}%</b> accuracy · average speed <b>${avg} ms</b>${nb?" · New best!":""}</p><p class="small muted">${fa} red taps, ${misses} missed greens. Balancing speed and holding back is a core self-control skill.</p>${lvMsg}`, start); return; }
       t++; stage.querySelector("#gI").textContent = t;
       later(() => {
-        state = Math.random() < 0.72 ? "go" : "nogo"; tapped = false; shownAt = performance.now(); F.innerHTML = "&nbsp;";
+        state = Math.random() < 1 - NOGO[lv-1] ? "go" : "nogo"; tapped = false; shownAt = performance.now(); F.innerHTML = "&nbsp;";
         Z.innerHTML = `<div class="gng-dot" style="background:${state==="go"?"#14a36a":"#e0362c"}"></div>`;
-        later(() => { finishTrial(); later(trial, 150); }, 900);
+        later(() => { finishTrial(); later(trial, 150); }, SHOW[lv-1]);
       }, 500 + rand(900));
     };
     trial();
   };
-  startScreen(stage, `<p>A circle appears in the box. <b style="color:#14a36a">Green: tap the box as fast as you can.</b> <b style="color:#e0362c">Red: don't tap.</b> 25 rounds.</p>`, start);
+  startScreen(stage, `<p>A circle appears in the box. <b style="color:#14a36a">Green: tap the box as fast as you can.</b> <b style="color:#e0362c">Red: don't tap.</b> 25 rounds.</p>${lvLine("gonogo", `each circle shows for ${(SHOW[getLv("gonogo")-1]/1000).toFixed(1)} s.`)}`, start);
 },
 match(stage){
   const icons = ["🍎","🚀","🎸","🐙","🌵","⚽","🍩","🦊"];
+  const VIEW = [1100, 800, 650, 500, 400];
   const start = () => {
+    const lv = getLv("match");
     const deck = shuffle([...icons, ...icons]); let open = [], got = 0, moves = 0, lock = false; const t0 = Date.now();
     stage.innerHTML = `<div class="hud"><span>Moves <b id="mM">0</b></span><span>Pairs <b id="mP">0</b>/8</span></div><div class="mm-grid">${deck.map((ic,i)=>`<button data-i="${i}" aria-label="Card ${i+1}">${ic}</button>`).join("")}</div>`;
     const cards = stage.querySelectorAll(".mm-grid button");
@@ -1158,12 +1319,14 @@ match(stage){
       if (open.length === 2) { moves++; stage.querySelector("#mM").textContent = moves; lock = true;
         const [a, c] = open;
         if (deck[a.dataset.i] === deck[c.dataset.i]) { a.classList.replace("up","got"); c.classList.replace("up","got"); open = []; lock = false; got++; stage.querySelector("#mP").textContent = got;
-          if (got === 8) { const secs = Math.round((Date.now()-t0)/1000); const nb = setBest("match", moves, true); later(() => endScreen(stage, `<p>All pairs in <b>${moves} moves</b> and ${secs} seconds${nb?" · New best!":""}</p><p class="small muted">A perfect game is 8 moves. Try naming each card out loud as you flip it.</p>`, start), 500); } }
-        else later(() => { a.classList.remove("up"); c.classList.remove("up"); open = []; lock = false; }, 800);
+          if (got === 8) { const secs = Math.round((Date.now()-t0)/1000); const nb = setBest("match", moves, true);
+            const lvMsg = record("match", lvNorm((30-moves)/22*100, lv), moves <= 13 ? 1 : moves > 22 ? -1 : 0);
+            later(() => endScreen(stage, `<p>All pairs in <b>${moves} moves</b> and ${secs} seconds${nb?" · New best!":""}</p><p class="small muted">A perfect game is 8 moves. Try naming each card out loud as you flip it.</p>${lvMsg}`, start), 500); } }
+        else later(() => { a.classList.remove("up"); c.classList.remove("up"); open = []; lock = false; }, VIEW[lv-1]);
       }
     });
   };
-  startScreen(stage, `<p>Tap two cards to flip them. Find all 8 matching pairs using as few moves as possible.</p>`, start);
+  startScreen(stage, `<p>Tap two cards to flip them. Find all 8 matching pairs using as few moves as possible.</p>${lvLine("match", `cards that don't match stay face up for ${(VIEW[getLv("match")-1]/1000).toFixed(1)} s.`)}`, start);
 },
 timer(stage){
   const start = () => {
@@ -1177,6 +1340,7 @@ timer(stage){
         O.className = e < 1 ? "feedback good" : "feedback bad"; O.textContent = `You stopped at ${s.toFixed(2)} s (${(s-rounds[r]>=0?"+":"")}${(s-rounds[r]).toFixed(2)} s)`;
         B.disabled = true; r++;
         later(() => { if (r < 3) show(); else { const avg = +(errs.reduce((a,b)=>a+b,0)/3).toFixed(2); const nb = setBest("timer", avg, true);
+          record("timer", 100 - avg*40, 0);
           endScreen(stage, `<p>Average error: <b>${avg} s</b>${nb?" · New best!":""}</p><p class="small muted">${avg < 1 ? "Your inner clock is sharp!" : "Most people drift by a second or two. Practicing this makes time feel more concrete."}</p>`, start); } }, 1600);
       };
     };
@@ -1186,20 +1350,226 @@ timer(stage){
 },
 odd(stage){
   const pairs = [["O","Q"],["E","F"],["b","d"],["M","N"],["6","9"],["p","q"],["C","G"],["V","U"]];
+  const START = [3, 4, 5, 6, 7];
   const start = () => {
+    const lv = getLv("odd");
     let found = 0, left = 60, size = 3;
     stage.innerHTML = `<div class="hud"><span>Time <b id="oT">60</b></span><span>Found <b id="oF">0</b></span></div><div class="odd-grid" id="oG"></div><p id="oM" class="feedback" aria-live="polite">&nbsp;</p>`;
     const G = stage.querySelector("#oG");
     const board = () => {
-      size = Math.min(8, 3 + Math.floor(found/3)); const [a,b] = pairs[rand(pairs.length)]; const n = size*size, odd = rand(n);
+      size = Math.min(8, START[lv-1] + Math.floor(found/3)); const [a,b] = pairs[rand(pairs.length)]; const n = size*size, odd = rand(n);
       G.style.gridTemplateColumns = `repeat(${size},1fr)`;
       G.innerHTML = Array.from({length:n},(_,i)=>`<button data-o="${i===odd?1:0}">${i===odd?b:a}</button>`).join("");
       G.querySelectorAll("button").forEach(x => x.onclick = () => { const M = stage.querySelector("#oM"); if (x.dataset.o === "1") { found++; stage.querySelector("#oF").textContent = found; M.className="feedback good"; M.textContent="Found it!"; board(); } else { left = Math.max(0,left-2); M.className="feedback bad"; M.textContent="−2 seconds"; } });
     };
     board();
-    every(() => { left--; const T = stage.querySelector("#oT"); if (T) T.textContent = Math.max(0,left); if (left <= 0) { cleanup(); const nb = setBest("odd", found); endScreen(stage, `<p>You found <b>${found}</b> odd ones out${nb?" · New best!":""}</p><p class="small muted">Scanning row by row usually beats jumping around.</p>`, start); } }, 1000);
+    every(() => { left--; const T = stage.querySelector("#oT"); if (T) T.textContent = Math.max(0,left); if (left <= 0) { cleanup(); const nb = setBest("odd", found);
+      const lvMsg = record("odd", lvNorm(found/25*100, lv), found >= 15 ? 1 : found < 7 ? -1 : 0);
+      endScreen(stage, `<p>You found <b>${found}</b> odd ones out${nb?" · New best!":""}</p><p class="small muted">Scanning row by row usually beats jumping around.</p>${lvMsg}`, start); } }, 1000);
   };
-  startScreen(stage, `<p>Every grid has one character that's different from the rest, like a Q among O's. Tap it. Wrong taps cost 2 seconds. You have 60 seconds.</p>`, start);
+  startScreen(stage, `<p>Every grid has one character that's different from the rest, like a Q among O's. Tap it. Wrong taps cost 2 seconds. You have 60 seconds.</p>${lvLine("odd", `grids start at ${START[getLv("odd")-1]} × ${START[getLv("odd")-1]}.`)}`, start);
+},
+tower(stage){
+  const CAP = [3, 2, 1], RANGE = [[2,3],[3,4],[4,5],[5,6],[6,8]], N = 5;
+  const BALLS = [{c:"#e0362c",t:"#fff",l:"R",n:"red"},{c:"#2f6bff",t:"#fff",l:"B",n:"blue"},{c:"#e8b400",t:"#15203b",l:"Y",n:"yellow"}];
+  const key = s => s.map(p => p.join("")).join("|");
+  const movesFrom = s => { const out = []; for (let a=0;a<3;a++) if (s[a].length) for (let b=0;b<3;b++) if (a!==b && s[b].length < CAP[b]) { const n = s.map(p=>p.slice()); n[b].push(n[a].pop()); out.push(n); } return out; };
+  const bfs = s => { const d = new Map([[key(s),0]]), all = [s], q = [s]; while (q.length) { const c = q.shift(), dc = d.get(key(c)); for (const n of movesFrom(c)) { const k = key(n); if (!d.has(k)) { d.set(k, dc+1); q.push(n); all.push(n); } } } return {d, all}; };
+  const ALL = bfs([[0,1,2],[],[]]).all;
+  const makePuzzle = (lo, hi) => { for (let tries = 0; tries < 300; tries++) { const s = ALL[rand(ALL.length)]; const {d, all} = bfs(s); const goals = all.filter(g => { const x = d.get(key(g)); return x >= lo && x <= hi; }); if (goals.length) { const g = goals[rand(goals.length)]; return {start:s, goal:g, min:d.get(key(g))}; } } };
+  const pegs = (s, mini, sel) => `<div class="tw-board ${mini ? "tw-mini" : ""}">${s.map((p,i) => { const tag = mini ? "div" : "button";
+    return `<${tag} class="tw-peg ${sel===i ? "sel" : ""}" ${mini ? "" : `data-p="${i}" aria-label="Peg ${i+1}: holds ${CAP[i]}, has ${p.length ? p.map(b=>BALLS[b].n).join(", ") : "nothing"}"`} style="height:${CAP[i]*(mini?30:54)+(mini?8:14)}px">${p.map((b,j)=>`<span class="tw-ball ${sel===i && j===p.length-1 ? "lift" : ""}" style="background:${BALLS[b].c};color:${BALLS[b].t}">${BALLS[b].l}</span>`).join("")}</${tag}>`; }).join("")}</div>`;
+  const start = () => {
+    const lv = getLv("tower"), [lo, hi] = RANGE[lv-1];
+    let k = 0, sumMin = 0, sumMoves = 0, perfect = 0; const plans = [];
+    const finish = () => {
+      cleanup();
+      const eff = Math.round(sumMin/sumMoves*100), nb = setBest("tower", eff);
+      const avgPlan = plans.length ? plans.reduce((a,b)=>a+b,0)/plans.length/1000 : 0;
+      const lvMsg = record("tower", lvNorm(eff*0.6 + perfect/N*40, lv), perfect >= 4 ? 1 : perfect <= 1 ? -1 : 0);
+      endScreen(stage, `<p><b>${perfect} of ${N}</b> puzzles in the fewest moves · efficiency <b>${eff}%</b>${nb?" · New best!":""}</p>
+        <p class="small muted" style="max-width:52ch;margin:0 auto">Average thinking time before your first move: <b>${avgPlan.toFixed(1)} s</b>. ${perfect >= 4 ? "Your planning is paying off." : "Try picturing the whole sequence before you touch anything. A few seconds of planning usually saves moves."}</p>${lvMsg}`, start);
+    };
+    const puzzle = () => {
+      const P = makePuzzle(lo, hi); let s = P.start.map(p=>p.slice()), sel = null, moves = 0, first = null, solved = false; const t0 = performance.now();
+      const draw = (msg, cls) => {
+        stage.innerHTML = `<div class="hud"><span>Puzzle <b>${k+1}</b>/${N}</span><span>Moves <b>${moves}</b></span><span>Fewest possible <b>${P.min}</b></span></div>
+          <div class="tw-wrap"><div><p class="small muted">Goal</p>${pegs(P.goal, true)}</div><div><p class="small muted">Your board</p>${pegs(s, false, sel)}</div></div>
+          <p class="feedback ${cls||""}" aria-live="polite">${msg || "Tap a peg to lift its top ball, then tap where it goes."}</p>
+          <button class="linkbtn" id="twR">Start this puzzle over</button>`;
+        stage.querySelectorAll("[data-p]").forEach(b => b.onclick = () => tap(+b.dataset.p));
+        stage.querySelector("#twR").onclick = () => { if (solved) return; s = P.start.map(p=>p.slice()); sel = null; draw("Back to the start. Moves you've made still count.", ""); };
+      };
+      const tap = i => {
+        if (solved) return;
+        if (sel === null) { if (!s[i].length) return draw("That peg is empty. Pick one with a ball on it.", "bad"); sel = i; return draw("Now tap the peg to move it to.", ""); }
+        if (sel === i) { sel = null; return draw(); }
+        if (s[i].length >= CAP[i]) return draw(`That peg only holds ${CAP[i]}. Pick another.`, "bad");
+        s[i].push(s[sel].pop()); sel = null; moves++;
+        if (first === null) { first = performance.now() - t0; plans.push(first); }
+        if (key(s) === key(P.goal)) {
+          solved = true; sumMin += P.min; sumMoves += moves; const pf = moves === P.min; if (pf) perfect++;
+          draw(pf ? `Solved in ${moves} moves. Perfect!` : `Solved in ${moves} moves (fewest possible: ${P.min}).`, pf ? "good" : "");
+          k++; later(() => k < N ? puzzle() : finish(), 1300); return;
+        }
+        draw();
+      };
+      draw();
+    };
+    puzzle();
+  };
+  startScreen(stage, `<p>Move the balls on your board until it matches the <b>goal</b> picture. Tap a peg to lift its top ball, then tap another peg to drop it there. The left peg holds 3 balls, the middle 2, the right 1.</p>
+    <p>Each puzzle shows the <b>fewest moves possible</b>. Try to match it, and plan before your first move. ${N} puzzles per round.</p>
+    ${lvLine("tower", `puzzles need ${RANGE[getLv("tower")-1].join("–")} moves.`)}`, start);
+},
+tap(stage){
+  const LIFE = [1700, 1450, 1250, 1050, 900], SIZE = [84, 76, 68, 60, 54], SPD = [0, 45, 75, 105, 135], SECS = 30;
+  const start = () => {
+    const lv = getLv("tap"); let hits = 0, missed = 0, strays = 0, left = SECS, tgt = null, raf = 0, alive = true, last = performance.now(); const rts = [];
+    stage.innerHTML = `<div class="hud"><span>Time <b id="qT">${SECS}</b></span><span>Hits <b id="qH">0</b></span><span>Got away <b id="qM">0</b></span></div><div class="qt-arena" id="qA" aria-label="Target area"></div><p class="small muted">Tap each target before it shrinks away.</p>`;
+    const A = stage.querySelector("#qA");
+    cleanups.push(() => { alive = false; cancelAnimationFrame(raf); });
+    const spawn = () => {
+      if (!alive) return;
+      const W = A.clientWidth, H = A.clientHeight, box = SIZE[lv-1] + 16, ang = Math.random()*Math.PI*2;
+      const el = document.createElement("div"); el.className = "qt-t"; el.style.width = el.style.height = box + "px"; el.innerHTML = "<i></i>";
+      tgt = {el, box, x: 6 + Math.random()*(W-box-12), y: 6 + Math.random()*(H-box-12), vx: Math.cos(ang)*SPD[lv-1], vy: Math.sin(ang)*SPD[lv-1], t0: performance.now()};
+      el.style.transform = `translate(${tgt.x}px,${tgt.y}px)`;
+      el.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); if (!alive || !tgt || tgt.el !== el) return;
+        rts.push(performance.now() - tgt.t0); hits++; stage.querySelector("#qH").textContent = hits; el.remove(); tgt = null; later(spawn, 250); });
+      A.appendChild(el);
+    };
+    A.addEventListener("pointerdown", e => { if (alive && e.target === A) strays++; });
+    const loop = now => {
+      if (!alive) return;
+      const dt = Math.min(50, Math.max(0, now - last))/1000; last = now;
+      if (tgt) {
+        const W = A.clientWidth, H = A.clientHeight;
+        tgt.x += tgt.vx*dt; tgt.y += tgt.vy*dt;
+        if (tgt.x < 0) { tgt.x = 0; tgt.vx = Math.abs(tgt.vx); } if (tgt.x > W - tgt.box) { tgt.x = W - tgt.box; tgt.vx = -Math.abs(tgt.vx); }
+        if (tgt.y < 0) { tgt.y = 0; tgt.vy = Math.abs(tgt.vy); } if (tgt.y > H - tgt.box) { tgt.y = H - tgt.box; tgt.vy = -Math.abs(tgt.vy); }
+        const age = (now - tgt.t0)/LIFE[lv-1];
+        if (age >= 1) { tgt.el.remove(); tgt = null; missed++; stage.querySelector("#qM").textContent = missed; later(spawn, 250); }
+        else tgt.el.style.transform = `translate(${tgt.x}px,${tgt.y}px) scale(${(1 - 0.65*age).toFixed(3)})`;
+      }
+      raf = requestAnimationFrame(loop);
+    };
+    later(spawn, 400); raf = requestAnimationFrame(loop);
+    every(() => { left--; const T = stage.querySelector("#qT"); if (T) T.textContent = Math.max(0, left); if (left <= 0) { cleanup(); finish(); } }, 1000);
+    const finish = () => {
+      const shown = hits + missed, rate = shown ? hits/shown : 0, avg = rts.length ? Math.round(rts.reduce((a,b)=>a+b,0)/rts.length) : 0;
+      const nb = setBest("tap", hits);
+      const lvMsg = record("tap", lvNorm(rate*70 + (avg ? clamp((1000-avg)/6) : 0)*0.3 - strays*2, lv), rate >= 0.85 && strays <= 3 ? 1 : rate < 0.6 ? -1 : 0);
+      endScreen(stage, `<p><b>${hits}</b> hits, <b>${missed}</b> got away${nb?" · New best!":""}</p>
+        <p class="small muted">You caught ${Math.round(rate*100)}% of targets${avg ? ` in an average of <b>${avg} ms</b>` : ""}. ${strays ? `${strays} tap${strays===1?"":"s"} missed the target.` : "Every tap landed on a target."}</p>${lvMsg}`, start);
+    };
+  };
+  startScreen(stage, `<p>Targets pop up one at a time and shrink away. Tap each one before it disappears. 30 seconds. Taps that miss the target are counted too, so aim before you tap.</p>
+    ${lvLine("tap", SPD[getLv("tap")-1] ? "targets move around and shrink faster." : "targets stay still.")}`, start);
+},
+switch(stage){
+  const SWP = [0.25, 0.33, 0.4, 0.5, 0.5], LIMIT = [0, 0, 0, 2500, 1800], N = 32;
+  const RULES = [{q:"ODD or EVEN?", bg:"#2f6bff", ans:n => n%2 ? 0 : 1, say:n => n%2 ? "Odd" : "Even"},
+                 {q:"LESS or MORE than 5?", bg:"#b4490f", ans:n => n < 5 ? 0 : 1, say:n => n < 5 ? "Less than 5" : "More than 5"}];
+  const start = () => {
+    const lv = getLv("switch"); let i = 0, rule = rand(2), prev = null, cur = null, t0 = 0, busy = true, timer = null, okN = 0; const rec = [];
+    stage.innerHTML = `<div class="hud"><span>Card <b id="wI">0</b>/${N}</span><span>Correct <b id="wC">0</b></span></div>
+      <div class="sw-card" id="wK"><span id="wQ">Get ready…</span><b id="wN">&nbsp;</b></div>
+      <div class="sw-btns"><button data-a="0"><b>Odd</b><br><span class="small">or less than 5</span></button><button data-a="1"><b>Even</b><br><span class="small">or more than 5</span></button></div>
+      <p id="wF" class="feedback" aria-live="polite">&nbsp;</p><p class="small muted">Keyboard: ← and → arrow keys</p>`;
+    const K = stage.querySelector("#wK"), F = stage.querySelector("#wF");
+    const next = () => {
+      if (i >= N) { cleanup(); return finish(); }
+      if (i > 0 && Math.random() < SWP[lv-1]) rule = 1 - rule;
+      let n; do { n = 1 + rand(9); } while (n === 5);
+      cur = {n, rule, sw: prev !== null && rule !== prev, first: prev === null}; prev = rule; i++;
+      stage.querySelector("#wI").textContent = i; K.style.background = RULES[rule].bg;
+      stage.querySelector("#wQ").textContent = RULES[rule].q; stage.querySelector("#wN").textContent = n;
+      t0 = performance.now(); busy = false;
+      if (LIMIT[lv-1]) { clearTimeout(timer); timer = later(() => answer(null), LIMIT[lv-1]); }
+    };
+    const answer = a => {
+      if (busy || !cur) return; busy = true; clearTimeout(timer);
+      const rt = performance.now() - t0, ok = a !== null && a === RULES[cur.rule].ans(cur.n);
+      rec.push({ok, rt, sw:cur.sw, first:cur.first}); if (ok) { okN++; stage.querySelector("#wC").textContent = okN; }
+      F.className = "feedback " + (ok ? "good" : "bad"); F.textContent = a === null ? `Too slow. It was: ${RULES[cur.rule].say(cur.n)}` : ok ? "✓" : `✗ It was: ${RULES[cur.rule].say(cur.n)}`;
+      later(next, ok ? 250 : 800);
+    };
+    stage.querySelectorAll("[data-a]").forEach(b => b.onclick = () => answer(+b.dataset.a));
+    const kh = e => { if (e.key === "ArrowLeft") { e.preventDefault(); answer(0); } else if (e.key === "ArrowRight") { e.preventDefault(); answer(1); } };
+    document.addEventListener("keydown", kh); cleanups.push(() => document.removeEventListener("keydown", kh));
+    later(next, 800);
+    const finish = () => {
+      const m = a => a.length ? a.reduce((x, r) => x + r.rt, 0)/a.length : 0;
+      const acc = Math.round(okN/N*100), good = rec.filter(r => r.ok), avg = Math.round(m(good));
+      const rep = m(good.filter(r => !r.sw && !r.first)), swi = m(good.filter(r => r.sw));
+      const cost = rep && swi ? Math.round((swi - rep)/rep*100) : null;
+      const nb = acc >= 85 && avg ? setBest("switch", avg, true) : false;
+      const lvMsg = record("switch", lvNorm(acc*0.6 + (avg ? clamp((1800-avg)/12) : 0)*0.4, lv), acc >= 90 ? 1 : acc < 75 ? -1 : 0);
+      const s = ms => (ms/1000).toFixed(2) + " s";
+      endScreen(stage, `<p><b>${acc}%</b> correct · average <b>${avg ? s(avg) : "–"}</b> per answer${nb?" · New best!":""}</p>
+        <div class="out small" style="text-align:left;max-width:440px;margin:10px auto;display:flex;flex-direction:column;gap:6px">
+          ${cost !== null ? `<span>Same rule as the card before: <b>${s(rep)}</b> · Rule just switched: <b>${s(swi)}</b></span>
+          <span><b>${cost > 0 ? `Switching slowed you by ${cost}%.` : "Switching didn't slow you down at all."}</b> This is your switch cost. Smaller is better, and it usually shrinks with practice.</span>` : `<span class="muted">Not enough rule switches this round to measure your switch cost.</span>`}
+        </div><p class="small muted" style="max-width:52ch;margin:0 auto">${acc < 85 ? "Accuracy first: glance at the card's color before you look at the number." : "Your best time only counts on rounds with 85% or more correct."}</p>${lvMsg}`, start);
+    };
+  };
+  startScreen(stage, `<p>A number appears on a colored card. The card tells you the rule:</p>
+    <p><span class="pill" style="background:#2f6bff;color:#fff;border:0">Blue card</span> Is the number <b>odd or even</b>?<br><span class="pill" style="background:#b4490f;color:#fff;border:0">Orange card</span> Is it <b>less or more than 5</b>?</p>
+    <p>Left button = odd / less. Right button = even / more. The rule can change from one card to the next. ${N} cards.</p>
+    ${lvLine("switch", `the rule changes on about ${Math.round(SWP[getLv("switch")-1]*100)}% of cards${LIMIT[getLv("switch")-1] ? `, and you have ${LIMIT[getLv("switch")-1]/1000} s per card` : ""}.`)}`, start);
+},
+watch(stage){
+  const DUR = [120, 180, 180, 180, 240], ISI = [1500, 1400, 1200, 1100, 1000], TGT = [0.18, 0.15, 0.15, 0.12, 0.12];
+  const PLAIN = "ACEHLNOTU", LOOK = "KYV";
+  const mmss = s => `${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,"0")}`;
+  const start = () => {
+    const lv = getLv("watch"), isi = ISI[lv-1], show = lv >= 3 ? 550 : 700, N = Math.round(DUR[lv-1]*1000/isi);
+    const seq = [];
+    for (let k = 0; k < N; k++) { const t = k > 1 && !seq[k-1].t && Math.random() < TGT[lv-1]*1.15;
+      seq.push({t, l: t ? "X" : (lv >= 3 && Math.random() < 0.3 ? LOOK[rand(LOOK.length)] : PLAIN[rand(PLAIN.length)])}); }
+    let k = -1, resp = false, hits = 0, fa = 0, tg = 0; const th = [0,1,2].map(() => ({t:0, h:0}));
+    const third = j => Math.min(2, Math.floor(j/N*3));
+    stage.innerHTML = `<div class="hud"><span>Time left <b id="nT">${mmss(N*isi/1000)}</b></span><span>Caught <b id="nH">0</b></span></div>
+      <div class="nw-box" id="nB" role="button" aria-label="Watch window. Tap when you see an X">&nbsp;</div>
+      <button class="btn" id="nS" style="min-width:200px">Spotted an X!</button><p id="nF" class="feedback" aria-live="polite">&nbsp;</p>
+      <p class="small muted">Space bar works too.</p><button class="linkbtn" id="nQ">Stop early</button>`;
+    const B = stage.querySelector("#nB"), F = stage.querySelector("#nF");
+    const spot = () => {
+      if (k < 0 || k >= N || resp) return; resp = true;
+      if (seq[k].t) { hits++; th[third(k)].h++; stage.querySelector("#nH").textContent = hits; F.className = "feedback good"; F.textContent = "Got it!"; }
+      else { fa++; F.className = "feedback bad"; F.textContent = "No X that time"; }
+    };
+    const step = () => {
+      if (k >= 0 && seq[k].t && !resp) { F.className = "feedback bad"; F.textContent = "Missed an X"; }
+      else if (k >= 0 && resp) F.innerHTML = "&nbsp;";
+      k++; if (k >= N) { cleanup(); return finish(false); }
+      resp = false; if (seq[k].t) { tg++; th[third(k)].t++; }
+      B.textContent = seq[k].l; later(() => { B.innerHTML = "&nbsp;"; }, show);
+      stage.querySelector("#nT").textContent = mmss((N - k - 1)*isi/1000);
+    };
+    B.addEventListener("pointerdown", e => { e.preventDefault(); spot(); });
+    stage.querySelector("#nS").onclick = spot;
+    const kh = e => { if (e.code === "Space" || e.key === " ") { e.preventDefault(); spot(); } };
+    document.addEventListener("keydown", kh); cleanups.push(() => document.removeEventListener("keydown", kh));
+    stage.querySelector("#nQ").onclick = () => { cleanup(); finish(true); };
+    later(() => { step(); every(step, isi); }, 1000);
+    const finish = early => {
+      if (early) { endScreen(stage, `<p>Stopped early. You caught <b>${hits}</b> of ${tg} X's so far.</p><p class="small muted">Rounds you stop early don't count toward your level or brain skills. Levels 1 and 2 have shorter watches.</p>`, start); return; }
+      const rate = tg ? hits/tg : 0, pct = Math.round(rate*100), tr = th.map(t => t.t ? Math.round(t.h/t.t*100) : null);
+      const drop = tr[0] != null && tr[2] != null ? tr[0] - tr[2] : 0;
+      const nb = setBest("watch", pct);
+      const lvMsg = record("watch", lvNorm(pct - fa*4, lv), rate >= 0.9 && fa <= 2 ? 1 : (rate < 0.7 || fa > 6) ? -1 : 0);
+      const f = v => v == null ? "–" : v + "%";
+      endScreen(stage, `<p>You caught <b>${pct}%</b> of the X's (${hits} of ${tg}) with <b>${fa}</b> false alarm${fa===1?"":"s"}${nb?" · New best!":""}</p>
+        <div class="out small" style="text-align:left;max-width:440px;margin:10px auto;display:flex;flex-direction:column;gap:6px">
+          <span>Caught at the start: <b>${f(tr[0])}</b> · middle: <b>${f(tr[1])}</b> · end: <b>${f(tr[2])}</b></span>
+          <span>${drop >= 15 ? "Your attention dipped toward the end. That's normal on a long, boring task, and it's exactly what this game trains. In real work, a quick stretch or a sip of water halfway through can reset it." : "You held your focus steady from start to finish."}</span>
+        </div>${lvMsg}`, start);
+    };
+  };
+  startScreen(stage, `<p>Letters flash up in the window one at a time. Tap <b>Spotted an X!</b> (or the window, or the space bar) only when you see an <b>X</b>. Most letters need nothing at all, and staying alert through the quiet stretches is the whole challenge.</p>
+    ${lvLine("watch", `a ${DUR[getLv("watch")-1]/60}-minute watch${getLv("watch") >= 3 ? ", with lookalike letters like K and Y" : ""}.`)}`, start);
 }
 };
 
