@@ -1,0 +1,127 @@
+ADHD SKILLS LAB - VERSION HISTORY AND CHANGELOG
+================================================
+
+Live site:   https://courses.magothymedia.com
+Repository:  GitHub repo "adhd-skills-lab" (GitHub Pages, branch main, root folder)
+Accounts:    Supabase project zxqynpnynhdysbpqpyvu
+Email:       Resend, sending from no-reply@magothymedia.com
+
+CURRENT VERSION: 1.2.0  (upload v1.2.0/index.html to GitHub)
+
+Each folder holds the complete index.html for that version. The first line
+inside every index.html names its version and date. Versions 1.1.0 and later
+also include supabase-setup.sql (the same file in every version; already run
+on the live database).
+
+
+VERSION NUMBERS
+---------------
+Format MAJOR.MINOR.PATCH
+  MAJOR  big redesigns or changes that break saved progress
+  MINOR  new features (new courses, games, accounts)
+  PATCH  bug fixes, wording and settings changes
+
+
+HOW TO ROLL BACK
+----------------
+Upload index.html from an older folder to GitHub to replace the current one,
+then commit. Do not roll back to 1.0.0 or 1.1.0 on the live site: those
+versions have no account connection, so signed-in learners would lose sync
+(their saved progress stays safe in Supabase).
+
+
+-----------------------------------------------------------------------------
+v1.2.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+-----------------------------------------------------------------------------
+Type: Minor (feature improvement, from user feedback)
+- Color Clash: optional 15-second warm-up with matching words to measure
+  each player's own baseline speed (on by default, remembered).
+- Times every correct answer; results show average time per answer,
+  warm-up vs mixed-up speed, and slowdown % ("interference cost").
+- Shows points from the last 5 rounds.
+- End-of-round tip now fits the result: no misses -> go faster;
+  few misses -> good balance; many misses -> slow down.
+  (Old tip always said to slow down.)
+- Start screen explains what "impulse" means in this game.
+- Footer shows Version 1.2.0. No database changes.
+
+-----------------------------------------------------------------------------
+v1.1.3  -  2026-11-19                                     Superseded
+-----------------------------------------------------------------------------
+Type: Patch
+- Footer now shows "Version 1.1.3" so you can confirm which version is live.
+- A version comment is added to the top of index.html in every version.
+- No changes to lessons, games, accounts or saved progress.
+
+-----------------------------------------------------------------------------
+v1.1.2  -  2026-11-18                                     Live before 1.1.3
+-----------------------------------------------------------------------------
+Type: Patch (bug fixes)
+- Fixed: the "Next: <lesson>" button at the end of each lesson did nothing.
+- Fixed: lesson header showed "Lesson 0 of 6" instead of the real number.
+- Fixed: in dark mode, outline buttons ("Next lesson", "Play a game",
+  "Sync now", "Delete my account" and others) had invisible dark text.
+
+-----------------------------------------------------------------------------
+v1.1.1  -  2026-11-18
+-----------------------------------------------------------------------------
+Type: Patch (configuration)
+- Connected the site to the live Supabase project
+  (project URL and publishable key added). Sign in button now appears.
+Known issues (fixed in 1.1.2): Next-lesson button broken; dark-mode
+  outline buttons unreadable.
+
+-----------------------------------------------------------------------------
+v1.1.0  -  2026-11-18
+-----------------------------------------------------------------------------
+Type: Minor (new feature: user accounts)
+- Added optional free user accounts using Supabase:
+  - Sign up, sign in, and forgot-password (email reset link)
+  - Progress, tool entries and best game scores sync across devices
+  - Progress made before signing up is merged into the new account
+  - Account page: change name or password, sync now, sign out,
+    permanently delete account and data
+  - Signing out clears progress from that browser (shared computers)
+  - Sync status indicator ("Saved to your account")
+- Added supabase-setup.sql: progress table with Row Level Security and a
+  delete-account function.
+- Added README.md with hosting, Supabase and Resend setup steps.
+- Email and password boxes now use the site's input styling.
+- Shipped with blank Supabase settings, so accounts stay hidden and the
+  site behaves like 1.0.0 until configured.
+Known issues (fixed in 1.1.2): Next-lesson button broken; dark-mode
+  outline buttons unreadable.
+
+-----------------------------------------------------------------------------
+v1.0.0  -  2026-11-13
+-----------------------------------------------------------------------------
+Type: Initial release
+- 4 self-paced courses, 24 lessons (5-10 min each), each with The idea,
+  an Example, an interactive Try-it exercise and a Quick check question:
+  1. Focus & Executive Function
+  2. Memory Boosters
+  3. Healthy Habits
+  4. Life Skills
+- 7 brain games with best scores: Color Clash, Square Recall,
+  Pattern Echo, Green Light Red Light, Memory Match, Inner Clock,
+  Odd One Out
+- Progress saved in the visitor's browser only (localStorage)
+- Light and dark themes, phone-friendly layout
+- 2026-11-18: packaged for GitHub Pages as index.html (no code changes)
+Known issues (fixed in 1.1.2): Next-lesson button broken; dark-mode
+  outline buttons unreadable.
+
+
+GOING FORWARD
+-------------
+For each new change:
+1. New folder vX.Y.Z with the full index.html (version comment on line 2,
+   version number in the footer).
+2. New entry at the top of this file: date, type, what changed, known issues.
+3. Optional: on GitHub, create a Release with the tag vX.Y.Z
+   (repo page > Releases > Draft a new release) so every version is also
+   stored in the repo.
+
+Note: 1.0.0 to 1.1.1 were rebuilt from the recorded edits, since the
+original files were overwritten during development. Each was checked to load
+and run without errors.

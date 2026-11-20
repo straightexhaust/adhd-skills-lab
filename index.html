@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.1.3 (2026-11-19) -->
+<!-- ADHD Skills Lab v1.2.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -177,7 +177,7 @@ nav.tabs a.av{padding:3px}
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.1.3</span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.2.0</span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -1017,18 +1017,54 @@ function startScreen(stage, html, onStart, extra){
 const COLORS = [{n:"RED",c:"#e0362c"},{n:"BLUE",c:"#2f6bff"},{n:"GREEN",c:"#14a36a"},{n:"YELLOW",c:"#e8b400"}];
 const GAME_FNS = {
 stroop(stage){
-  const start = () => {
-    let score = 0, miss = 0, left = 30, cur;
-    stage.innerHTML = `<div class="hud"><span>Time <b id="sT">30</b></span><span>Score <b id="sS">0</b></span><span>Misses <b id="sM">0</b></span></div>
+  let warm = getD("stroopWarm", true);
+  const fmt = ms => (ms/1000).toFixed(2) + " s";
+  const avg = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : 0;
+  const round = (secs, match, label, done) => {
+    let score = 0, miss = 0, left = secs, cur, shown = 0; const times = [];
+    stage.innerHTML = `<p class="tag" style="color:var(--accent)">${label}</p><div class="hud"><span>Time <b id="sT">${secs}</b></span><span>Correct <b id="sS">0</b></span><span>Misses <b id="sM">0</b></span></div>
       <div class="stroop-word" id="sW" aria-live="polite"></div><p class="small muted">Tap the color of the ink</p>
       <div class="cbtns">${COLORS.map((c,i)=>`<button data-i="${i}"><span class="sw" style="background:${c.c}"></span>${c.n}</button>`).join("")}</div>`;
     const W = stage.querySelector("#sW");
-    const next = () => { const word = rand(4); let ink = Math.random()<0.75 ? (word + 1 + rand(3))%4 : word; cur = ink; W.textContent = COLORS[word].n; W.style.color = COLORS[ink].c; };
-    stage.querySelectorAll(".cbtns button").forEach(b => b.onclick = () => { if (+b.dataset.i === cur) { score++; stage.querySelector("#sS").textContent = score; } else { miss++; stage.querySelector("#sM").textContent = miss; W.animate && W.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}],{duration:200}); } next(); });
+    const next = () => { const word = rand(4); const ink = match ? word : (Math.random()<0.75 ? (word + 1 + rand(3))%4 : word); cur = ink; W.textContent = COLORS[word].n; W.style.color = COLORS[ink].c; shown = performance.now(); };
+    stage.querySelectorAll(".cbtns button").forEach(b => b.onclick = () => {
+      if (+b.dataset.i === cur) { score++; times.push(performance.now()-shown); stage.querySelector("#sS").textContent = score; }
+      else { miss++; stage.querySelector("#sM").textContent = miss; W.animate && W.animate([{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"none"}],{duration:200}); }
+      next(); });
     next();
-    every(() => { left--; const t = stage.querySelector("#sT"); if (t) t.textContent = left; if (left <= 0) { cleanup(); const pts = Math.max(0, score - miss); const nb = setBest("stroop", pts); endScreen(stage, `<p><b>${score}</b> correct, <b>${miss}</b> misses → <b>${pts} points</b>${nb?" · New best!":""}</p><p class="small muted">Slowing down slightly often gives a higher score. That's impulse control in action.</p>`, start); } }, 1000);
+    every(() => { left--; const t = stage.querySelector("#sT"); if (t) t.textContent = left; if (left <= 0) { cleanup(); done({score, miss, avg:avg(times)}); } }, 1000);
   };
-  startScreen(stage, `<p>A color word appears, printed in a color of ink. Tap the button for the <b>ink color</b>, not the word. You have 30 seconds. Score = correct minus misses.</p><p class="stroop-word" style="color:${COLORS[1].c};font-size:2.2rem">RED</p><p class="small muted">Answer for this example: BLUE</p>`, start);
+  const results = (w, m) => {
+    const pts = Math.max(0, m.score - m.miss); const nb = setBest("stroop", pts);
+    const slow = w && w.avg && m.avg ? Math.round((m.avg - w.avg) / w.avg * 100) : null;
+    const hist = getD("stroopHist", []); hist.push({pts, avg:Math.round(m.avg), slow}); setD("stroopHist", hist.slice(-5));
+    const total = m.score + m.miss, missRate = total ? m.miss/total : 0;
+    const tip = m.miss === 0 ? "No misses. Next round, push your speed until a miss slips in. That's where your limit is."
+      : missRate <= 0.1 ? "Good balance of speed and accuracy. Try to beat your points next time."
+      : "Slow down a touch: each miss cancels out a correct answer.";
+    endScreen(stage, `<p><b>${m.score}</b> correct, <b>${m.miss}</b> misses → <b>${pts} points</b>${nb?" · New best!":""}</p>
+      <div class="out small" style="text-align:left;max-width:440px;margin:10px auto;display:flex;flex-direction:column;gap:6px">
+        <span>Average time per correct answer: <b>${m.avg ? fmt(m.avg) : "–"}</b></span>
+        ${slow !== null ? `<span>Matching words (warm-up): <b>${fmt(w.avg)}</b> · Mixed-up words: <b>${fmt(m.avg)}</b></span>
+        <span><b>${slow > 0 ? `Mixed-up words slowed you by ${slow}%.` : "Mixed-up words didn't slow you down at all."}</b> This is your interference cost. Smaller is better, and it usually shrinks with practice.</span>` : `<span class="muted">Turn on the warm-up to see how much the mixed-up words slow you down.</span>`}
+        <span>${hist.length > 1 ? `Your last ${hist.slice(-5).length} rounds` : "This round"}: ${hist.slice(-5).map(h=>`<b>${h.pts}</b>`).join(" · ")} points</span>
+      </div><p class="small muted" style="max-width:52ch;margin:0 auto">${tip}</p>`, intro);
+  };
+  const run = () => {
+    if (!warm) { round(30, false, "Real round", m => results(null, m)); return; }
+    round(15, true, "Warm-up · words match their colors", w => {
+      stage.innerHTML = `<h3>Warm-up done</h3><p>Average <b>${w.avg ? fmt(w.avg) : "–"}</b> per answer.</p><p>Now the real round: the words and colors won't match. Tap the <b>ink color</b>.</p><button class="btn" id="goReal">Start real round</button>`;
+      stage.querySelector("#goReal").onclick = () => round(30, false, "Real round", m => results(w, m));
+    });
+  };
+  const intro = () => {
+    startScreen(stage, `<p>A color word appears, printed in a color of ink. Tap the button for the <b>ink color</b>, not the word. 30 seconds. Score = correct minus misses.</p>
+      <p class="stroop-word" style="color:${COLORS[1].c};font-size:2.2rem">RED</p><p class="small muted">Answer for this example: BLUE</p>
+      <p class="small" style="text-align:left"><b>Where's the impulse?</b> Reading is automatic, so your brain wants to tap the word it reads. Holding that back and answering with the ink color is the impulse control this game trains. Getting good at telling them apart quickly is the skill, not a shortcut.</p>`, run,
+      `<label class="check" style="max-width:52ch;text-align:left"><input type="checkbox" id="stWarm" ${warm?"checked":""}><span>Start with a 15-second warm-up where words match their colors. It measures your personal baseline (recommended).</span></label>`);
+    stage.querySelector("#stWarm").onchange = e => { warm = e.target.checked; setD("stroopWarm", warm); };
+  };
+  intro();
 },
 nback(stage){
   let level = 1;
