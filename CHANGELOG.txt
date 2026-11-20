@@ -6,7 +6,7 @@ Repository:  GitHub repo "adhd-skills-lab" (GitHub Pages, branch main, root fold
 Accounts:    Supabase project zxqynpnynhdysbpqpyvu
 Email:       Resend, sending from no-reply@magothymedia.com
 
-CURRENT VERSION: 1.3.0  (upload v1.3.0/index.html to GitHub)
+CURRENT VERSION: 1.4.0  (upload v1.4.0/index.html to GitHub)
 
 Each folder holds the complete index.html for that version. The first line
 inside every index.html names its version and date. Versions 1.1.0 and later
@@ -31,7 +31,24 @@ versions have no account connection, so signed-in learners would lose sync
 
 
 -----------------------------------------------------------------------------
-v1.3.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+v1.4.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+-----------------------------------------------------------------------------
+Type: Minor (new feature: release notices)
+- "What's new" card on the home and Games pages for returning learners,
+  listing announced releases they haven't seen (learners from before
+  1.4.0 see the 1.3.0 news). Got it / button / All updates marks it seen;
+  synced across devices. First-time visitors don't see it.
+- Yellow "New" labels on new games and lessons until opened (max 30 days);
+  dot on the Games tab while there are new games; "New" on the workout
+  and brain skills headings until 2026-12-20.
+- New "What's new" page listing every release, linked from the footer.
+- To announce a release: set APP_VERSION and add it to RELEASES in
+  index.html (announce:false for patches); add added:"YYYY-MM-DD" to new
+  games/lessons.
+- New saved items seenV, opened. No database changes.
+
+-----------------------------------------------------------------------------
+v1.3.0  -  2026-11-20                                     Superseded
 -----------------------------------------------------------------------------
 Type: Minor (new features, inspired by CogniFit)
 - 4 new brain games (11 total):

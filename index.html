@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.3.0 (2026-11-20) -->
+<!-- ADHD Skills Lab v1.4.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -152,6 +152,11 @@ nav.tabs a.av{padding:3px}
 .linkbtn{background:none;border:0;color:var(--accent);font-weight:700;padding:4px 0;text-decoration:underline;min-height:0}
 .danger{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
 .btn.bad{background:var(--bad)}
+/* v1.4.0: what's new + New labels */
+.pill.new{background:var(--spark);border-color:var(--spark);color:#15203b}
+.wn{border-left:6px solid var(--spark);display:flex;flex-direction:column;gap:10px}
+.wn h3{margin-top:2px}
+nav.tabs a .ndot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--spark);margin-left:5px;vertical-align:2px}
 /* v1.3.0: brain skills, workout, new games */
 .sk-rows{display:flex;flex-direction:column;gap:12px}
 .sk-row{display:grid;grid-template-columns:92px 1fr 36px 104px;gap:10px;align-items:center}
@@ -209,7 +214,7 @@ button.tw-peg:hover{border-color:var(--accent)}
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.3.0</span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.4.0 · <a href="#updates">What's new</a></span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -576,6 +581,58 @@ const COURSES = [
 ];
 const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})));
 
+/* ---------- what's new and New labels (v1.4.0) ----------
+   To announce a release: add it to the top of RELEASES and set APP_VERSION.
+   announce:false = listed on the What's new page but no banner (e.g. patches).
+   To label new content: give a game or lesson added:"YYYY-MM-DD". It shows "New"
+   for NEW_DAYS days, or until the learner opens it. */
+const APP_VERSION = "1.4.0";
+const NEW_DAYS = 30;
+const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20"};
+const RELEASES = [
+  {v:"1.4.0", date:"2026-11-20", announce:false, title:"Never miss what's new", items:["A short note on the home page tells you when something new arrives.","New games and lessons wear a <b>New</b> label until you open them."]},
+  {v:"1.3.0", date:"2026-11-20", title:"Brain skills update", link:"#games", linkText:"Try today's workout", items:["Four new brain games: <b>Tower Planner</b> (planning), <b>Quick Tap</b> (hand-eye speed), <b>Switch It</b> (switching between rules) and <b>Night Watch</b> (staying focused).","Games now move up a level as you improve, and ease off after a rough round.","<b>My brain skills</b> shows how you're doing in attention, memory, inhibition, planning and speed.","<b>Today's workout</b> picks three games for you each day. It takes about 10 minutes."]},
+  {v:"1.2.0", date:"2026-11-20", title:"Smarter Color Clash", link:"#games", linkText:"Play Color Clash", items:["An optional warm-up measures your own baseline speed, then shows how much the mixed-up words slow you down.","Tips at the end of a round now fit how you played."]},
+  {v:"1.1.0", date:"2026-11-18", title:"Free accounts", link:"#account", linkText:"Create an account", items:["Create a free account to keep your lessons, tools and game scores on every device."]},
+  {v:"1.0.0", date:"2026-11-13", title:"ADHD Skills Lab opens", items:["Four courses with 24 short lessons, plus seven brain games."]}
+];
+const vcmp = (a, b) => { const x = a.split(".").map(Number), y = b.split(".").map(Number); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] - y[i]; return 0; };
+const fmtDate = d => new Date(d + "T12:00:00").toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"});
+function unseenReleases(){
+  let seen = S.data && S.data.seenV;
+  if (!seen) {
+    const returning = Object.keys(S.done).length || Object.keys(S.best).length;
+    if (!returning) { S.data.seenV = APP_VERSION; save(); return []; }  // first visit: nothing to catch up on
+    seen = "1.2.0";  // learners from before 1.4.0 had no way to see the 1.3.0 news
+  }
+  return RELEASES.filter(r => r.announce !== false && vcmp(r.v, seen) > 0);
+}
+function markSeen(){ if (getD("seenV", null) !== APP_VERSION) setD("seenV", APP_VERSION); }
+function whatsNewBanner(){
+  const rs = unseenReleases(); if (!rs.length) return "";
+  const top = rs[0];
+  return `<section class="card wn" aria-label="What's new">
+    <span class="tag" style="color:var(--accent)">What's new</span>
+    ${rs.map(r => `<h3>${r.title}</h3><ul class="list">${r.items.map(i => `<li>${i}</li>`).join("")}</ul>`).join("")}
+    <div class="row">${top.link ? `<a class="btn" href="${top.link}" data-wn="go">${top.linkText || "Take a look"}</a>` : ""}<button class="btn ghost" data-wn="close">Got it</button><a class="small" href="#updates" data-wn="go">All updates</a></div></section>`;
+}
+function wireBanner(app){
+  app.querySelectorAll("[data-wn]").forEach(el => el.addEventListener("click", e => {
+    markSeen();
+    if (el.dataset.wn === "close") { const b = app.querySelector(".wn"); if (b) b.remove(); return; }
+    if (el.getAttribute("href") === (location.hash || "#home")) { e.preventDefault(); currentGame = null; route(); }
+  }));
+}
+function renderUpdates(app){
+  app.innerHTML = `<section class="hero"><h1>What's new</h1><p class="muted">Every update to ADHD Skills Lab, newest first.</p></section>
+  ${RELEASES.map(r => `<section class="card section"><span class="tag" style="color:var(--accent)">Version ${r.v} · ${fmtDate(r.date)}</span><h3>${r.title}</h3><ul class="list">${r.items.map(i => `<li>${i}</li>`).join("")}</ul>${r.link ? `<p><a href="${r.link}">${r.linkText || "Take a look"}</a></p>` : ""}</section>`).join("")}`;
+  markSeen();
+}
+const isRecent = added => !!added && Date.now() - new Date(added + "T00:00:00").getTime() < NEW_DAYS*864e5;
+const isNew = (kind, item) => isRecent(item.added) && !getD("opened", {})[kind + ":" + item.id];
+const NEW_PILL = `<span class="pill new">New</span>`;
+function markOpened(kind, id){ const o = getD("opened", {}), k = kind + ":" + id; if (!o[k]) setD("opened", Object.assign({}, o, {[k]:true})); }
+
 /* ---------- games ---------- */
 const GAMES = [
   {id:"stroop", title:"Color Clash", skill:"Impulse control", skills:["inhibition","speed"], lv:3, desc:"Tap the ink color, not the word. Your brain will want to read. Don't let it!"},
@@ -585,10 +642,10 @@ const GAMES = [
   {id:"match", title:"Memory Match", skill:"Visual memory", skills:["memory"], lv:2, desc:"Flip cards to find all 8 pairs in as few moves as you can."},
   {id:"timer", title:"Inner Clock", skill:"Time awareness", skills:["planning"], desc:"Stop the hidden timer as close to the target as you can. Great practice for time blindness."},
   {id:"odd", title:"Odd One Out", skill:"Visual focus", skills:["attention","speed"], lv:1, desc:"Find the one character that's different. The grid grows as you get faster."},
-  {id:"tower", title:"Tower Planner", skill:"Planning", skills:["planning"], lv:1, desc:"Move the balls to match the goal picture in as few moves as possible. Think it through before your first move."},
-  {id:"tap", title:"Quick Tap", skill:"Hand-eye coordination", skills:["speed"], lv:1, desc:"Tap the targets before they shrink away. At higher levels they start to move."},
-  {id:"switch", title:"Switch It", skill:"Task switching", skills:["planning"], lv:1, desc:"The card's color tells you which question to answer. Keep up when the rule changes without warning."},
-  {id:"watch", title:"Night Watch", skill:"Sustained attention", skills:["attention"], lv:1, desc:"Watch letters flash by for a few minutes and tap only when an X appears. Stay sharp through the quiet stretches."}
+  {id:"tower", added:"2026-11-20", title:"Tower Planner", skill:"Planning", skills:["planning"], lv:1, desc:"Move the balls to match the goal picture in as few moves as possible. Think it through before your first move."},
+  {id:"tap", added:"2026-11-20", title:"Quick Tap", skill:"Hand-eye coordination", skills:["speed"], lv:1, desc:"Tap the targets before they shrink away. At higher levels they start to move."},
+  {id:"switch", added:"2026-11-20", title:"Switch It", skill:"Task switching", skills:["planning"], lv:1, desc:"The card's color tells you which question to answer. Keep up when the rule changes without warning."},
+  {id:"watch", added:"2026-11-20", title:"Night Watch", skill:"Sustained attention", skills:["attention"], lv:1, desc:"Watch letters flash by for a few minutes and tap only when an X appears. Stay sharp through the quiet stretches."}
 ];
 
 /* ---------- routing ---------- */
@@ -606,7 +663,10 @@ function route(){
   else if (h === "courses") renderCourses(app);
   else if (h === "games") { currentGame ? renderGame(app, currentGame) : renderGames(app); }
   else if (h === "account") renderAccount(app);
+  else if (h === "updates") renderUpdates(app);
   else renderHome(app);
+  const gt = document.querySelector('nav.tabs a[data-nav="games"]');
+  if (gt) gt.innerHTML = "Games" + (GAMES.some(g => isNew("g", g)) ? `<i class="ndot" title="New games"></i><span style="position:absolute;left:-9999px"> (new)</span>` : "");
   setSync(syncStatus);
   window.scrollTo(0,0);
 }
@@ -621,14 +681,14 @@ function courseCard(c){
     <span class="tag">${c.lessons.length} lessons · ${c.lessons.reduce((a,l)=>a+l.mins,0)} min</span>
     <h3>${c.title}</h3><p class="muted small">${c.blurb}</p>
     <div class="bar" aria-label="${p.pct}% complete"><span style="width:${p.pct}%"></span></div>
-    <span class="small muted">${p.d} of ${p.t} done</span></a>`;
+    <span class="small muted">${p.d} of ${p.t} done${(n => n ? ` · </span><span class="pill new" style="align-self:flex-start">${n} new lesson${n>1?"s":""}` : "")(c.lessons.filter(l => isNew("l", l)).length)}</span></a>`;
 }
 
 function renderHome(app){
   const done = Object.keys(S.done).filter(k => S.done[k]).length;
   const nl = nextLesson();
   const gl = getD("gl", {}); const played = GAMES.filter(g => S.best[g.id] != null || (gl[g.id] || []).length).length;
-  app.innerHTML = `
+  app.innerHTML = `${whatsNewBanner()}
   <section class="hero">
     <span class="tag" style="color:var(--accent)">Self-paced · start anywhere</span>
     <h1>Small lessons, real tools, and games that train your brain</h1>
@@ -653,6 +713,7 @@ function renderHome(app){
   </section>`;
   const b = document.getElementById("cont");
   if (b) b.onclick = () => openLesson(nl);
+  wireBanner(app);
 }
 function renderCourses(app){
   app.innerHTML = `<section class="hero"><h1>Courses</h1><p class="muted">Pick a course, then any lesson inside it.</p></section><div class="grid">${COURSES.map(courseCard).join("")}</div>`;
@@ -667,7 +728,7 @@ function renderCourse(app, c){
     <div class="lesson-list">${c.lessons.map((l,i) => `
       <button class="lesson-item ${S.done[l.id]?"done":""}" data-l="${l.id}">
         <span class="num">${S.done[l.id] ? "✓" : i+1}</span>
-        <span class="grow"><b>${l.title}</b><br><span class="small muted">Try it: ${l.tryTitle}</span></span>
+        <span class="grow"><b>${l.title}</b>${isNew("l", l) ? " " + NEW_PILL : ""}<br><span class="small muted">Try it: ${l.tryTitle}</span></span>
         <span class="pill ${S.done[l.id]?"ok":""}">${S.done[l.id] ? "Done" : l.mins+" min"}</span>
       </button>`).join("")}</div></div>`;
   app.querySelectorAll("[data-l]").forEach(b => b.onclick = () => openLesson(ALL_LESSONS.find(l => l.id === b.dataset.l)));
@@ -679,6 +740,7 @@ function openLesson(l){
 }
 function renderLesson(app, l){
   const c = l.course, idx = c.lessons.findIndex(x => x.id === l.id);
+  markOpened("l", l.id);
   const q = l.quiz;
   app.innerHTML = `<article class="lesson section" style="--cc:var(${c.color});gap:22px">
     <div class="crumbs"><a href="#courses">Courses</a><span class="muted">/</span><a href="#${c.id}" id="backc">${c.title}</a></div>
@@ -1086,10 +1148,10 @@ function workoutCard(){
   const why = fs.every(f => f.score == null) ? "two skills you haven't tried yet"
     : fs.some(f => f.score == null) ? "a skill you haven't tried yet and one of your lowest scores" : "your two lowest skill scores";
   return `<section class="card section" style="--cc:var(--accent)">
-    <div class="row" style="justify-content:space-between"><h2>Today's workout</h2><span class="pill ${allDone ? "ok" : ""}">${allDone ? "Done for today ✓" : `${wo.done.length} of ${wo.g.length} done`}</span></div>
+    <div class="row" style="justify-content:space-between"><h2>Today's workout${isRecent(FEATURES_ADDED.workout) ? " " + NEW_PILL : ""}</h2><span class="pill ${allDone ? "ok" : ""}">${allDone ? "Done for today ✓" : `${wo.done.length} of ${wo.g.length} done`}</span></div>
     <p class="small muted">About 10 minutes. Today leans on <b>${fs[0].name}</b> and <b>${fs[1].name}</b>, ${why}, plus one game for variety.</p>
     <div class="lesson-list">${wo.g.map((id, i) => { const g = gameById(id), dn = wo.done.includes(id);
-      return `<button class="lesson-item ${dn ? "done" : ""}" data-g="${id}"><span class="num">${dn ? "✓" : i+1}</span><span class="grow"><b>${g.title}</b><br><span class="small muted">${skillNames(g)}${g.lv ? ` · Level ${getLv(id)}` : ""}</span></span><span class="pill ${dn ? "ok" : ""}">${dn ? "Done" : "Play"}</span></button>`; }).join("")}</div>
+      return `<button class="lesson-item ${dn ? "done" : ""}" data-g="${id}"><span class="num">${dn ? "✓" : i+1}</span><span class="grow"><b>${g.title}</b>${isNew("g", g) ? " " + NEW_PILL : ""}<br><span class="small muted">${skillNames(g)}${g.lv ? ` · Level ${getLv(id)}` : ""}</span></span><span class="pill ${dn ? "ok" : ""}">${dn ? "Done" : "Play"}</span></button>`; }).join("")}</div>
     <p class="small muted">Workouts finished in the last 7 days: <b>${week}</b> · all time: <b>${wd.length}</b>. Missed a day? No problem. Every day starts fresh.</p></section>`;
 }
 function skillsCard(){
@@ -1101,7 +1163,7 @@ function skillsCard(){
     const tip = s.score == null ? `${s.name}: not played yet. Try ${s.games.map(g => g.title).join(" or ")}.` : `${s.name}: ${s.score} from your last ${Math.min(5, s.n)} round${s.n === 1 ? "" : "s"}${s.before != null ? ` (earlier rounds: ${s.before})` : ""}. Games: ${s.games.map(g => g.title).join(", ")}.`;
     return `<div class="sk-row" title="${esc(tip)}"><span class="sk-name">${s.name}</span><div class="sk-track" role="img" aria-label="${esc(tip)}"><span style="width:${s.score || 0}%"></span></div><b>${s.score == null ? "–" : s.score}</b><span class="sk-trend">${s.score == null ? "not played" : trend}</span></div>`;
   }).join("");
-  return `<section class="card section"><h2>My brain skills</h2>
+  return `<section class="card section"><h2>My brain skills${isRecent(FEATURES_ADDED.skills) ? " " + NEW_PILL : ""}</h2>
     <div class="sk-rows">${rows}</div>
     <details class="small muted"><summary>How these scores work</summary>
       <p style="margin-top:8px">Each score runs from 0 to 100 and averages your last 5 rounds of the games that train that skill. Higher game levels count for more. The arrow compares those rounds with the 5 before them.</p>
@@ -1122,14 +1184,16 @@ function setBest(id, v, lowerIsBetter){
 }
 function openGame(id){ currentGame = id; route(); }
 function renderGames(app){
-  app.innerHTML = `<section class="hero"><h1>Brain games</h1><p class="muted">Quick games (1–4 minutes) for attention, memory, self-control, planning and speed. Each game moves up or down a level as you play, and your results build up your brain skills profile. Have fun with them; they're practice, not a test.</p></section>
+  app.innerHTML = `${whatsNewBanner()}<section class="hero"><h1>Brain games</h1><p class="muted">Quick games (1–4 minutes) for attention, memory, self-control, planning and speed. Each game moves up or down a level as you play, and your results build up your brain skills profile. Have fun with them; they're practice, not a test.</p></section>
   ${workoutCard()}
   ${skillsCard()}
-  <section class="section"><h2>All games</h2><div class="grid">${GAMES.map(g => `<button class="card game-card" data-g="${g.id}"><span class="skill">${g.skill}</span><h3>${g.title}</h3><p class="small muted">${g.desc}</p><div class="row">${g.lv ? `<span class="pill">Level ${getLv(g.id)}</span>` : ""}<span class="pill">${bestText(g.id)}</span></div></button>`).join("")}</div></section>`;
+  <section class="section"><h2>All games</h2><div class="grid">${GAMES.map(g => `<button class="card game-card" data-g="${g.id}"><span class="skill">${g.skill}</span><h3>${g.title}</h3><p class="small muted">${g.desc}</p><div class="row">${isNew("g", g) ? NEW_PILL : ""}${g.lv ? `<span class="pill">Level ${getLv(g.id)}</span>` : ""}<span class="pill">${bestText(g.id)}</span></div></button>`).join("")}</div></section>`;
   app.querySelectorAll("[data-g]").forEach(b => b.onclick = () => openGame(b.dataset.g));
+  wireBanner(app);
 }
 function renderGame(app, id){
   const g = gameById(id);
+  markOpened("g", id);
   app.innerHTML = `<div class="section"><div class="crumbs"><a href="#games" id="backg">Games</a><span class="muted">/</span><span>${g.title}</span></div>
   <span class="tag" style="color:var(--accent)">${g.skill}${g.lv ? ` · Level <span id="lvTag">${getLv(id)}</span> of ${MAXLV}` : ""}</span><h1>${g.title}</h1><p class="muted" style="max-width:62ch">${g.desc}</p>
   <div class="stage" id="stage"></div><p class="small muted" id="bestLine">${bestText(id)}</p></div>`;
