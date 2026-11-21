@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.7.0 (2026-11-20) -->
+<!-- ADHD Skills Lab v1.8.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -229,6 +229,36 @@ button.tw-peg:hover{border-color:var(--accent)}
   .pads{grid-template-columns:repeat(2,100px)} .pads button{width:100px;height:100px}
   .nb-grid{grid-template-columns:repeat(3,64px)} .nb-grid div{width:64px;height:64px}
 }
+/* supplements (v1.8.0) */
+.supp{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.supp>summary{list-style:none;padding:14px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-weight:400}
+.supp>summary::-webkit-details-marker{display:none}
+.supp>summary::after{content:"+";margin-left:auto;font-family:var(--display);font-weight:800;font-size:1.3rem;color:var(--muted)}
+.supp[open]>summary::after{content:"\2212"}
+.supp-name{font-family:var(--display);font-weight:600;font-size:1.1rem}
+.supp-aka{flex-basis:100%;order:3;font-size:.88rem;color:var(--muted)}
+.supp-tags{flex-basis:100%;order:4;display:flex;gap:6px;flex-wrap:wrap}
+.supp-tags span{font-size:.75rem;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--muted)}
+.supp-body{padding:4px 16px 18px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.supp-body h4{font-size:1rem;margin-bottom:2px}
+.supp-body p{max-width:68ch}
+.supp-box{border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.supp-box.dose{background:color-mix(in srgb,var(--accent) 9%,var(--card))}
+.supp-box.warn{background:color-mix(in srgb,var(--bad) 9%,var(--card))}
+.ev{font-size:.78rem;font-weight:700;padding:2px 10px;border-radius:99px;white-space:nowrap;border:1px solid}
+.ev.good{color:var(--good);border-color:var(--good)}
+.ev.mid{color:#8a5a00;border-color:#d49a00}
+.ev.low{color:var(--muted);border-color:var(--line)}
+.ev.no{color:var(--bad);border-color:var(--bad)}
+:root[data-theme="dark"] .ev.mid{color:#ffd257;border-color:#ffd257}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ev.mid{color:#ffd257;border-color:#ffd257}}
+.supp-group{margin-top:10px}
+@media (max-width:860px){
+  header.top .wrap{height:auto;flex-wrap:wrap;gap:4px 10px;padding-top:8px;padding-bottom:6px}
+  nav.tabs{margin-left:0;width:100%;overflow-x:auto;scrollbar-width:none;gap:2px;padding-bottom:2px}
+  nav.tabs::-webkit-scrollbar{display:none}
+  nav.tabs a{flex:none;padding:6px 8px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -242,12 +272,13 @@ button.tw-peg:hover{border-color:var(--accent)}
       <a href="#games" data-nav="games">Games</a>
       <a href="#library" data-nav="library">Library</a>
       <a href="#news" data-nav="news">News</a>
+      <a href="#supplements" data-nav="supplements">Supplements</a>
       <a href="#account" data-nav="account" id="acctBtn" hidden>Sign in</a>
     </nav>
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.7.0 · <a href="#updates">What's new</a></span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.8.0 · <a href="#updates">What's new</a></span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -962,10 +993,11 @@ const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})))
    announce:false = listed on the What's new page but no banner (e.g. patches).
    To label new content: give a game or lesson added:"YYYY-MM-DD". It shows "New"
    for NEW_DAYS days, or until the learner opens it. */
-const APP_VERSION = "1.7.0";
+const APP_VERSION = "1.8.0";
 const NEW_DAYS = 30;
-const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20", library:"2026-11-20", news:"2026-11-20"};
+const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20", library:"2026-11-20", news:"2026-11-20", supplements:"2026-11-20"};
 const RELEASES = [
+  {v:"1.8.0", date:"2026-11-20", title:"New: a guide to supplements", link:"#supplements", linkText:"Open the Supplements guide", items:["A new <b>Supplements</b> page covers 16 vitamins, minerals, herbs and other supplements people use for ADHD, from omega-3 and iron to melatonin and saffron.","Each one explains what it is, why people take it, how it might help ADHD, what research actually found, doses used in studies, safe upper limits, side effects and cautions, with sources.","Filter by what it's for (ADHD symptoms, or sleep, mood and body) or search by name."]},
   {v:"1.7.0", date:"2026-11-20", title:"Five new Library articles", link:"#library", linkText:"Open the Library", items:["New in <b>Living with ADHD</b>: teens and college students, driving, money, parenting when you have ADHD yourself, and ADHD in older adults.","Four more entries under <b>Landmark research</b> on the News page."]},
   {v:"1.6.0", date:"2026-11-20", title:"250 years of ADHD research", link:"#lib-history", linkText:"Read the history", items:["A new Library article, <b>A history of ADHD: 1775 to today</b>, traces how the condition was first described, named and treated.","<b>Landmark research</b> on the News page: 15 studies and milestones that shaped what we know, each with what it found and what it means for you."]},
   {v:"1.5.1", date:"2026-11-20", announce:false, title:"Library tidy-up", items:["Removed the crisis line box from the top of the Library page. Crisis lines and helplines are still listed in the <b>Find help now</b> article."]},
@@ -1048,11 +1080,14 @@ function route(){
   else if (h === "lib-glossary") renderGlossary(app);
   else if (h.startsWith("lib-")) renderArticle(app, h.slice(4));
   else if (h === "news") renderNews(app);
+  else if (h === "supplements") renderSupplements(app);
   else renderHome(app);
   const gt = document.querySelector('nav.tabs a[data-nav="games"]');
   if (gt) gt.innerHTML = "Games" + (GAMES.some(g => isNew("g", g)) ? `<i class="ndot" title="New games"></i><span style="position:absolute;left:-9999px"> (new)</span>` : "");
   const nt = document.querySelector('nav.tabs a[data-nav="news"]');
   if (nt) nt.innerHTML = "News" + (hasNewNews() ? `<i class="ndot" title="New updates"></i><span style="position:absolute;left:-9999px"> (new)</span>` : "");
+  const st = document.querySelector('nav.tabs a[data-nav="supplements"]');
+  if (st) st.innerHTML = "Supplements" + (isRecent(FEATURES_ADDED.supplements) && !getD("opened", {})["f:supplements"] ? `<i class="ndot" title="New section"></i><span style="position:absolute;left:-9999px"> (new)</span>` : "");
   setSync(syncStatus);
   window.scrollTo(0,0);
 }
@@ -1094,6 +1129,9 @@ function renderHome(app){
     <div class="chips">${["what-is-adhd","diagnosis","treatment-overview","myths","find-help"].map(id => `<a class="chip" href="#lib-${id}">${libById(id).title}</a>`).join("")}</div></section>
   <section class="section"><div class="row" style="justify-content:space-between"><h2>Research news${isRecent(FEATURES_ADDED.news) ? " " + NEW_PILL : ""}</h2><a href="#news" class="small">All updates and landmark research</a></div>
     ${NEWS.filter(n => n.kind !== "Landmark").slice(0, 2).map(n => newsCard(n, true)).join("")}</section>
+  <section class="section"><div class="row" style="justify-content:space-between"><h2>Supplements guide${isRecent(FEATURES_ADDED.supplements) ? " " + NEW_PILL : ""}</h2><a href="#supplements" class="small">See all ${SUPPS.length} supplements</a></div>
+    <p class="muted" style="max-width:62ch">What research really says about omega-3, iron, melatonin, magnesium and other supplements people use for ADHD, with doses studied, side effects and cautions.</p>
+    <div class="chips">${["omega3","micronutrients","iron","melatonin","magnesium"].map(id => `<a class="chip" href="#supplements" data-supp="${id}">${SUPPS.find(s => s.id === id).name.replace(/ \(.*\)/, "")}</a>`).join("")}</div></section>
   <section class="card section">
     <h3>How to use this lab with an ADHD brain</h3>
     <ul class="list">
@@ -1106,6 +1144,7 @@ function renderHome(app){
   const b = document.getElementById("cont");
   if (b) b.onclick = () => openLesson(nl);
   document.getElementById("homeQ").onsubmit = e => { e.preventDefault(); libQuery = document.getElementById("homeQi").value; location.hash = "#library"; };
+  app.querySelectorAll("[data-supp]").forEach(a => a.onclick = () => { suppOpen = a.dataset.supp; });
   wireBanner(app);
 }
 function renderCourses(app){
@@ -1709,7 +1748,7 @@ const LIB = [
   <h3>Mindfulness</h3>
   <p>Also promising but uncertain. Some people find short practices useful for noticing impulses and settling the mind.</p>
   <h3>Food and supplements</h3>
-  <p>Regular meals help keep energy and mood steady, which matters more if medication reduces your appetite. No specific diet or supplement has strong evidence as an ADHD treatment. Be cautious of anything marketed as a cure.</p>
+  <p>Regular meals help keep energy and mood steady, which matters more if medication reduces your appetite. No specific diet or supplement has strong evidence as an ADHD treatment. Be cautious of anything marketed as a cure. The <a href="#supplements">Supplements guide</a> goes through 16 of them one by one.</p>
   <h3>How to use this</h3>
   <p>Think of healthy habits as the <b>foundation</b> that makes other treatments work better, not as a replacement for them. The Healthy Habits course has step-by-step tools.</p>`,
   src:[S_.bmjUmb, S_.nihCell, S_.nimh], lessons:["sup2","emo6"] },
@@ -2164,6 +2203,367 @@ NEWS.push(
   url:"https://pubmed.ncbi.nlm.nih.gov/22323122/", lib:"history" }
 );
 
+/* ===== Supplements guide (v1.8.0) =====
+   One object per supplement.
+   group: "direct" (studied for ADHD symptoms) | "support" (supports sleep, mood, nutrition) | "no" (studied, not supported)
+   ev: "Promising" | "Mixed" | "Limited" | "Not supported"
+   Fields: id, name, aka, group, ev, what, general, adhd, found, dose, limit, side, caution, src [[label,url],...], lib (related Library ids, optional)
+*/
+/* Supplements guide (v1.8.0) marker */
+const SUPPS_REVIEWED = "2026-11-20";
+const SUPPS_ADDED = "2026-11-20";
+
+const SUPPS_INTRO = {
+  title: "Supplements and ADHD",
+  sum: "What research says about vitamins, minerals, herbs and other supplements that people use for ADHD, either for symptoms directly or for sleep, mood and nutrition that affect symptoms.",
+  key: [
+    "No supplement has been shown to work as well as ADHD medication or behavioral treatment. NIH's complementary health center says none has been conclusively shown to beat standard care.",
+    "The strongest case for a supplement is fixing a real shortfall, such as low iron or low vitamin D. A blood test tells you whether you have one.",
+    "\"Natural\" does not mean safe. Iron overdose can be dangerous for children, St. John's wort weakens many medicines, and ginkgo raises bleeding risk.",
+    "Supplements are not checked by the FDA before they're sold, and labels can be wrong. In one analysis, 22 of 25 melatonin gummies didn't contain what the label said.",
+    "Talk to a doctor or pharmacist before starting anything, especially for a child, during pregnancy, or alongside ADHD medication."
+  ],
+  doseNote: "Doses below are the amounts used in research studies, given so you can have an informed conversation with a doctor or pharmacist. They are not a recommendation for you or your child. Children's doses in studies were usually set by body weight and supervised by a clinician."
+};
+
+const SUPPS = [
+
+/* ---------- Studied for ADHD symptoms ---------- */
+{
+  id:"omega3", name:"Omega-3 fatty acids (fish oil)", aka:"EPA, DHA, fish oil, algae oil",
+  group:"direct", ev:"Mixed",
+  what:"Fats found in oily fish (salmon, sardines, mackerel) and algae. EPA and DHA are the two main types. DHA is a building block of brain cell membranes.",
+  general:"Omega-3s support heart health, help regulate inflammation, and are needed for normal brain and eye development.",
+  adhd:"On average, children with ADHD have lower omega-3 levels in their blood than other children. The idea is that topping them up helps brain cells signal normally.",
+  found:"This is the most studied supplement for ADHD, with dozens of trials, and the results disagree. An early analysis found a small benefit, largest with more EPA (about 450 to 600 mg a day or more). A 2023 Cochrane review of 36 placebo-controlled trials found little evidence of benefit overall, and a 2023 analysis of 22 trials found no clear effect, even at high EPA doses. Where benefits were found, they were smaller than with stimulant medication. Longer use (several months) may matter.",
+  dose:"Children's trials commonly used about 500 to 1,000 mg of combined EPA and DHA a day, often with EPA as the larger share, for 8 to 16 weeks or longer. Adult studies have used 1 to 2 g a day.",
+  limit:"The FDA considers up to 5 g a day of combined EPA and DHA from supplements safe for adults.",
+  side:"Fishy aftertaste or burps, upset stomach, loose stools. Taking it with food helps.",
+  caution:"High doses may add to bleeding risk with blood thinners. People with fish allergy can use algae-based products. Heavy doses have been linked to a higher risk of an irregular heart rhythm (atrial fibrillation) in adults with heart disease.",
+  src:[
+    ["Cochrane review: PUFA for ADHD in children (2023)","https://pubmed.ncbi.nlm.nih.gov/37058600/"],
+    ["Liu et al., J Clin Psychiatry meta-analysis (2023)","https://pubmed.ncbi.nlm.nih.gov/37656283/"],
+    ["NCCIH: ADHD and complementary health approaches","https://www.nccih.nih.gov/health/providers/digest/adhd-science"],
+    ["NIH ODS: Omega-3 fatty acids","https://ods.od.nih.gov/factsheets/Omega3FattyAcids-Consumer/"]
+  ]
+},
+{
+  id:"micronutrients", name:"Broad-spectrum micronutrients", aka:"multinutrient or vitamin-mineral formulas",
+  group:"direct", ev:"Promising",
+  what:"Formulas that combine many vitamins and minerals (often 30 or more ingredients) at doses higher than an ordinary multivitamin.",
+  general:"Vitamins and minerals are needed for making brain chemicals, producing energy in cells, and countless other body processes.",
+  adhd:"Instead of correcting one nutrient, these formulas supply many at once, on the theory that brain chemistry depends on several working together.",
+  found:"Several well-run placebo-controlled trials point in a positive direction. In the U.S.-Canadian MADDY trial (126 children, 8 weeks), clinicians blind to treatment rated 54% of children on micronutrients as much improved, about three times the rate on placebo. Parent ratings did not differ between groups. A New Zealand trial of 93 children found better attention, mood regulation and less aggression, but not less hyperactivity. A trial in 80 adults found improvement on self- and observer-rated ADHD scales but not on the clinician scale.",
+  dose:"Trials used specific commercial formulas at several capsules a day, split across meals, for 8 to 10 weeks. Because amounts are above standard daily values, these studies were run under medical supervision.",
+  limit:"Some ingredients in these formulas exceed the usual upper limits; this is why supervision matters. Don't stack them with other supplements.",
+  side:"Upset stomach, headache, trouble sleeping, irritability. In MADDY, side effects were similar to placebo, and children on micronutrients grew slightly more in height.",
+  caution:"Researchers report that micronutrients can strengthen the effects of psychiatric medicines, so people already on medication should only try them with their prescriber's involvement.",
+  src:[
+    ["Johnstone et al., MADDY trial, JAACAP (2022)","https://pmc.ncbi.nlm.nih.gov/articles/PMC8782920"],
+    ["MADDY responder analysis (2023)","https://pmc.ncbi.nlm.nih.gov/articles/PMC10539486"],
+    ["Rucklidge et al., children's trial, J Child Psychol Psychiatry (2018)","https://pmc.ncbi.nlm.nih.gov/articles/PMC7779340"],
+    ["Rucklidge et al., adult trial, Br J Psychiatry (2014)","https://pubmed.ncbi.nlm.nih.gov/24482441/"]
+  ]
+},
+{
+  id:"iron", name:"Iron", aka:"ferrous sulfate, ferritin",
+  group:"direct", ev:"Limited",
+  what:"A mineral the body uses to make hemoglobin, which carries oxygen in the blood. Ferritin is the protein that stores it; a ferritin blood test shows how full your iron stores are.",
+  general:"Iron prevents anemia and the tiredness, weakness and poor concentration that come with it.",
+  adhd:"Iron is needed to make dopamine, a brain chemical involved in attention. Some studies find lower ferritin in children with ADHD, and low iron is also linked to restless legs, which disturbs sleep.",
+  found:"Only helpful when iron is actually low. In a small French trial, 23 non-anemic children with low ferritin (under 30 ng/mL) took iron or placebo for 12 weeks; ADHD symptoms improved with iron, though some measures missed statistical significance. A 2021 trial in iron-deficient children already on methylphenidate also reported some improvement. There is no evidence that iron helps people whose iron is normal.",
+  dose:"The French trial used 80 mg a day of ferrous sulfate. Other studies dosed by weight. Iron should only be given after a blood test shows it is low.",
+  limit:"Upper limit from all sources: 40 mg a day for children up to 13, 45 mg a day for teens 14 and up and adults.",
+  side:"Constipation, nausea, stomach pain, dark stools. Taking it with vitamin C (or orange juice) helps absorption; taking it with milk, tea or calcium lowers it.",
+  caution:"Iron overdose is a serious poisoning risk for young children. Keep iron locked away. Never give iron to a child without a blood test and a doctor's advice.",
+  src:[
+    ["Konofal et al., Pediatric Neurology (2008)","https://pubmed.ncbi.nlm.nih.gov/18054688/"],
+    ["Iron adjunct to methylphenidate trial (2021)","https://pmc.ncbi.nlm.nih.gov/articles/PMC8553525"],
+    ["NIH ODS: Iron","https://ods.od.nih.gov/factsheets/Iron-Consumer/"]
+  ]
+},
+{
+  id:"zinc", name:"Zinc", aka:"zinc sulfate, zinc glycinate",
+  group:"direct", ev:"Mixed",
+  what:"A trace mineral involved in hundreds of enzymes, immune function and wound healing.",
+  general:"Zinc supports the immune system, growth in children, taste and smell, and skin repair.",
+  adhd:"Zinc helps regulate dopamine and melatonin. Lower zinc levels have been linked with more inattention in some studies.",
+  found:"Results are mixed and depend on where people live and how much zinc they already get. Trials in the Middle East, where zinc deficiency is more common, reported benefits, including as an add-on to methylphenidate. A U.S. trial found zinc alone didn't clearly improve symptoms, but children taking 30 mg a day needed a 37% lower amphetamine dose. A review concluded the one well-controlled trial did not show zinc improves ADHD.",
+  dose:"Trials used about 15 to 30 mg of elemental zinc a day for 6 to 13 weeks. Check the label for \"elemental\" zinc; the compound weight is higher.",
+  limit:"Upper limit: 12 mg a day (ages 4 to 8), 23 mg (9 to 13), 34 mg (14 to 18), 40 mg (adults).",
+  side:"Nausea, stomach upset and a metallic taste, especially on an empty stomach.",
+  caution:"Long-term high doses lower copper levels and can affect immunity. Zinc can reduce absorption of some antibiotics.",
+  src:[
+    ["Arnold et al., J Child Adolesc Psychopharmacol (2011)","https://pubmed.ncbi.nlm.nih.gov/21309695/"],
+    ["Akhondzadeh et al., zinc plus methylphenidate (2004)","https://pubmed.ncbi.nlm.nih.gov/15070418/"],
+    ["Systematic review of zinc trials, Eur J Clin Nutr","https://www.nature.com/articles/ejcn2012177"],
+    ["NIH ODS: Zinc","https://ods.od.nih.gov/factsheets/Zinc-Consumer/"]
+  ]
+},
+{
+  id:"vitd", name:"Vitamin D", aka:"vitamin D3, cholecalciferol",
+  group:"direct", ev:"Mixed",
+  what:"A vitamin the skin makes in sunlight, also found in oily fish and fortified foods.",
+  general:"Vitamin D keeps bones strong by helping the body absorb calcium, and supports muscle and immune function.",
+  adhd:"Vitamin D receptors are found in brain areas involved in attention and self-control. Children with ADHD, on average, have lower vitamin D levels.",
+  found:"Observational studies consistently find lower vitamin D in children with ADHD, but that doesn't prove it causes symptoms. A meta-analysis of four trials found a small improvement when vitamin D was added to methylphenidate, though the trials were low quality. Children who started out deficient seemed most likely to benefit.",
+  dose:"Trials used anything from 1,000 IU a day to 50,000 IU a week, for 6 to 12 weeks, as an add-on to medication.",
+  limit:"Upper limit: 3,000 IU a day (ages 4 to 8), 4,000 IU a day (9 and older, including adults). Very large weekly doses should only be used under medical supervision.",
+  side:"Usually none at normal doses. Too much over time raises calcium levels, causing nausea, weakness, confusion and kidney problems.",
+  caution:"A blood test (25-hydroxyvitamin D) shows whether you're low. Vitamin D can interact with some heart and diuretic medicines.",
+  src:[
+    ["Khoshbakht et al., Adv Nutr meta-analysis (2018)","https://pubmed.ncbi.nlm.nih.gov/29438455/"],
+    ["Carlat Report: vitamin D trials review","https://www.thecarlatreport.com/the-carlat-child-psychiatry-report/vitamin-d-for-adhd/"],
+    ["NIH ODS: Vitamin D","https://ods.od.nih.gov/factsheets/VitaminD-Consumer/"]
+  ]
+},
+{
+  id:"magnesium", name:"Magnesium", aka:"magnesium glycinate, citrate",
+  group:"direct", ev:"Limited",
+  what:"A mineral found in nuts, seeds, whole grains, beans and leafy greens.",
+  general:"Magnesium is involved in muscle and nerve function, blood sugar control, blood pressure and bone health, and is often used for sleep and muscle relaxation.",
+  adhd:"Magnesium helps calm nerve signaling. A meta-analysis found lower magnesium levels in children with ADHD, and low magnesium can add to restlessness and poor sleep.",
+  found:"The link between low magnesium and ADHD is fairly consistent, but treatment trials are few, small and mostly not double-blind. Reviews conclude there isn't enough evidence to recommend magnesium for ADHD itself. It may be worth checking for a deficiency, and some people use it for sleep.",
+  dose:"Small studies in children used about 200 mg a day, sometimes with vitamin B6, for several months.",
+  limit:"Upper limit from supplements (not food): 65 mg (ages 1 to 3), 110 mg (4 to 8), 350 mg (9 and older, including adults).",
+  side:"Diarrhea, nausea and cramping, especially with magnesium oxide or citrate. Glycinate tends to be gentler.",
+  caution:"People with kidney disease shouldn't take magnesium without medical advice. It reduces absorption of some antibiotics and osteoporosis drugs.",
+  src:[
+    ["Effatpanah et al., magnesium status meta-analysis (2019)","https://pubmed.ncbi.nlm.nih.gov/30807974/"],
+    ["Hariri & Azadbakht, systematic review of minerals (2015)","https://pmc.ncbi.nlm.nih.gov/articles/PMC4587068"],
+    ["NIH ODS: Magnesium","https://ods.od.nih.gov/factsheets/Magnesium-Consumer/"]
+  ]
+},
+{
+  id:"saffron", name:"Saffron", aka:"Crocus sativus",
+  group:"direct", ev:"Limited",
+  what:"A spice made from the dried stigmas of the crocus flower, sold as a standardized extract in capsules.",
+  general:"Saffron has been studied for mild depression and anxiety, with encouraging small trials.",
+  adhd:"Saffron appears to affect dopamine, norepinephrine and other brain chemicals that ADHD medicines also act on.",
+  found:"In a 6-week Iranian pilot trial, 54 children took either saffron or methylphenidate, and both groups improved by a similar amount. But there was no placebo group, so we can't tell how much was a real effect. A few later small trials have reported similar results. Larger placebo-controlled studies are needed.",
+  dose:"The trial used 20 mg a day for children under 30 kg and 30 mg a day for heavier children, for 6 weeks.",
+  limit:"No official upper limit. Extract doses used in studies (up to about 30 mg a day) are tiny compared with the grams that cause poisoning.",
+  side:"Generally mild: upset stomach, change in appetite, headache, dizziness. In the trial, side effects were similar to methylphenidate's.",
+  caution:"Avoid high doses in pregnancy. Saffron may add to the effect of blood thinners and blood pressure medicines.",
+  src:[
+    ["Baziar et al., J Child Adolesc Psychopharmacol (2019)","https://pubmed.ncbi.nlm.nih.gov/30741567/"],
+    ["Carlat Report review of the trial","https://www.thecarlatreport.com/the-carlat-child-psychiatry-report/crocus-sativus-vs-methylphenidate-for-adhd"]
+  ]
+},
+{
+  id:"ginkgo", name:"Ginkgo biloba", aka:"ginkgo leaf extract, EGb 761",
+  group:"direct", ev:"Limited",
+  what:"An extract from the leaves of the ginkgo tree, one of the best-selling herbal supplements.",
+  general:"Ginkgo has been studied for memory, dementia and circulation, with mostly disappointing results in large trials.",
+  adhd:"It may improve blood flow in the brain and affect dopamine signaling.",
+  found:"On its own, ginkgo was less effective than methylphenidate in a 6-week trial of 50 children. As an add-on to methylphenidate, a 2015 trial found more improvement in inattention than placebo. NCCIH says there isn't enough evidence to support it for ADHD.",
+  dose:"Children's trials used 80 to 120 mg a day; an open study used up to 240 mg a day.",
+  limit:"No official upper limit.",
+  side:"Headache, upset stomach, diarrhea, dizziness, allergic skin reactions.",
+  caution:"Ginkgo raises bleeding risk. Don't combine it with blood thinners, aspirin or ibuprofen without advice, and stop before surgery. Raw or roasted ginkgo seeds are poisonous.",
+  src:[
+    ["Salehi et al., ginkgo vs methylphenidate (2010)","https://pubmed.ncbi.nlm.nih.gov/19815048/"],
+    ["Shakibaei et al., ginkgo plus methylphenidate (2015)","https://pubmed.ncbi.nlm.nih.gov/25925875/"],
+    ["NCCIH: Ginkgo","https://www.nccih.nih.gov/health/ginkgo"]
+  ]
+},
+{
+  id:"pycnogenol", name:"Pycnogenol (French maritime pine bark)", aka:"pine bark extract",
+  group:"direct", ev:"Limited",
+  what:"A trademarked extract of pine bark rich in antioxidant plant compounds (polyphenols).",
+  general:"It has been studied for circulation, blood pressure and inflammation.",
+  adhd:"One theory is that oxidative stress plays a part in ADHD, and antioxidants could reduce it.",
+  found:"A 2006 trial gave 61 children Pycnogenol or placebo for a month and reported less hyperactivity and better attention, with symptoms returning a month after stopping. The study was small and short, and was co-sponsored by the manufacturer. NCCIH says there isn't enough evidence on effectiveness or safety.",
+  dose:"The trial used 1 mg per kg of body weight a day for 4 weeks.",
+  limit:"No official upper limit.",
+  side:"Usually mild: upset stomach, dizziness, headache.",
+  caution:"May affect blood clotting and blood sugar, and may interact with immune-suppressing medicines.",
+  src:[
+    ["Trebatická et al., Eur Child Adolesc Psychiatry (2006)","https://pubmed.ncbi.nlm.nih.gov/16699814/"],
+    ["NCCIH: 9 things to know about complementary approaches for ADHD in children","https://www.nccih.nih.gov/health/tips/things-to-know-about-complementary-health-approaches-for-adhd-for-children-and-teens"]
+  ]
+},
+{
+  id:"ps", name:"Phosphatidylserine", aka:"PS, PS-omega-3",
+  group:"direct", ev:"Limited",
+  what:"A fatty substance that is part of every cell membrane and is concentrated in the brain. Supplements are usually made from soy or sunflower.",
+  general:"It has been studied for memory in older adults and for the body's response to stress.",
+  adhd:"PS helps brain cells communicate. Some products attach omega-3s to PS to combine the two.",
+  found:"A trial of 36 children found 200 mg a day of soy PS for two months improved ADHD symptoms and short-term memory. A larger trial of 200 children used PS with omega-3 attached. A 2022 review concluded PS may reduce inattention, but the evidence is low quality and some studies were run by manufacturers.",
+  dose:"200 mg a day (soy PS) or 300 mg a day (PS-omega-3) in children's trials, for 2 to 4 months.",
+  limit:"No official upper limit.",
+  side:"Usually mild: stomach upset, trouble sleeping at higher doses.",
+  caution:"May add to the effect of blood thinners. Choose products made from soy or sunflower; older animal-brain sources are no longer used.",
+  src:[
+    ["Hirayama et al., J Hum Nutr Diet (2014)","https://pubmed.ncbi.nlm.nih.gov/23495677/"],
+    ["Manor et al., PS-omega-3 safety trial (2013)","https://pubmed.ncbi.nlm.nih.gov/23312676/"],
+    ["Systematic review of phosphatidylserine for ADHD (2022)","https://pmc.ncbi.nlm.nih.gov/articles/PMC9208377"]
+  ]
+},
+{
+  id:"bacopa", name:"Bacopa monnieri", aka:"brahmi, water hyssop",
+  group:"direct", ev:"Limited",
+  what:"A creeping herb used for centuries in Ayurvedic medicine as a memory tonic.",
+  general:"In adults, Bacopa has been studied for memory and learning, usually showing effects only after several weeks.",
+  adhd:"It may affect several brain chemicals and protect brain cells from oxidative stress.",
+  found:"Reviews report improvements in inattention, hyperactivity and memory, but many studies were small, open-label, or used blends of several herbs, so it's hard to tell what Bacopa did on its own. A 2025 review called it a possible add-on that cannot replace medication.",
+  dose:"Adult memory studies commonly use about 300 mg a day of a standardized extract, taken with food, for 12 weeks. Children's doses vary by product and study.",
+  limit:"No official upper limit.",
+  side:"Upset stomach, nausea, cramps, loose stools, tiredness. Taking it with food helps.",
+  caution:"May slow heart rate and interact with thyroid and sedating medicines. Not studied in pregnancy.",
+  src:[
+    ["Kean et al., Bacopa formulas in children, Medicines (2017)","https://pmc.ncbi.nlm.nih.gov/articles/PMC5750610"],
+    ["Supplements for ADHD systematic review, Nutrients (2025)","https://pubmed.ncbi.nlm.nih.gov/40362791/"]
+  ]
+},
+{
+  id:"carnitine", name:"Acetyl-L-carnitine and L-carnitine", aka:"ALCAR, ALC",
+  group:"direct", ev:"Limited",
+  what:"A nutrient the body makes from amino acids and gets from meat, used to move fats into cells' energy factories.",
+  general:"Carnitine is needed for energy production, especially in muscles, the heart and the brain.",
+  adhd:"The idea is that better brain energy use and support for fatty-acid metabolism could help attention.",
+  found:"A small 2002 trial in boys reported improved behavior at home and school. A larger 16-week trial of 112 children found no overall benefit, with a possible effect only in the inattentive type. A trial adding it to methylphenidate found no extra benefit. NCCIH says research hasn't shown carnitine improves ADHD symptoms.",
+  dose:"The larger trial used weight-based doses from 500 to 1,500 mg twice a day.",
+  limit:"No official upper limit; doses above about 3 g a day cause more side effects.",
+  side:"Nausea, stomach upset, diarrhea, a fishy body odor at high doses, restlessness.",
+  caution:"May interact with blood thinners and thyroid medicine. People with seizure disorders should ask a doctor first.",
+  src:[
+    ["Arnold et al., multi-site ALC trial (2007)","https://pubmed.ncbi.nlm.nih.gov/18315451/"],
+    ["Van Oudheusden & Scholte, carnitine trial (2002)","https://pubmed.ncbi.nlm.nih.gov/12213433/"],
+    ["NCCIH: ADHD at a glance","https://www.nccih.nih.gov/health/adhd"]
+  ]
+},
+
+/* ---------- Supports sleep, mood and body ---------- */
+{
+  id:"melatonin", name:"Melatonin", aka:"sleep hormone",
+  group:"support", ev:"Promising",
+  what:"A hormone the brain makes in the evening to signal that it's time to sleep. Supplements are synthetic.",
+  general:"Melatonin helps shift the body clock: for jet lag, shift work, and people whose natural bedtime runs late.",
+  adhd:"Up to a third of medication-free children with ADHD have trouble falling asleep, and stimulants can make it worse. Poor sleep makes attention, mood and behavior harder the next day.",
+  found:"Melatonin helps children with ADHD fall asleep sooner but does not treat ADHD symptoms themselves. In a Dutch trial of 105 children, those taking melatonin fell asleep about 27 minutes earlier, compared with about 10 minutes on placebo. NCCIH agrees the limited evidence supports it for sleep problems in children with ADHD.",
+  dose:"The Dutch trial used 3 mg (under 40 kg) or 6 mg (over 40 kg) at 7 p.m. Studies of sleep timing find smaller doses, taken a few hours before bedtime, often work as well. A health professional should set the dose and timing for a child.",
+  limit:"No official upper limit. Long-term safety in children is not well studied.",
+  side:"Morning grogginess, headache, dizziness, nausea, vivid dreams or nightmares.",
+  caution:"The American Academy of Sleep Medicine advises talking to a health professional before giving melatonin to a child, and treating it like a medicine: keep it out of reach. Product strength varies widely, so choose one with independent testing (such as a USP mark).",
+  src:[
+    ["Van der Heijden et al., trial registration (MACI study)","https://www.isrctn.com/ISRCTN47283236"],
+    ["AASM health advisory: melatonin in children and teens","https://aasm.org/advocacy/position-statements/melatonin-use-in-children-and-adolescents-health-advisory/"],
+    ["NCCIH: ADHD and complementary health approaches","https://www.nccih.nih.gov/health/providers/digest/adhd"],
+    ["NCCIH: Melatonin, what you need to know","https://www.nccih.nih.gov/health/melatonin-what-you-need-to-know"]
+  ]
+},
+{
+  id:"theanine", name:"L-theanine", aka:"green tea amino acid",
+  group:"support", ev:"Limited",
+  what:"An amino acid found in green and black tea.",
+  general:"It is used for calm alertness and relaxation without drowsiness, and is often paired with caffeine.",
+  adhd:"L-theanine may help with the restlessness and poor sleep that often come with ADHD.",
+  found:"In a 6-week trial of 98 boys with ADHD, 400 mg a day improved sleep efficiency (more of the night spent asleep, about 80% vs 76%) and reduced night waking, but didn't change how long it took to fall asleep. A tiny study of five boys found L-theanine with caffeine improved a sustained-attention task. Evidence for ADHD symptoms themselves is minimal.",
+  dose:"The sleep trial used 200 mg twice a day (400 mg total) as chewable tablets. Adult relaxation studies typically use 100 to 400 mg.",
+  limit:"No official upper limit. Doses up to 400 mg a day have been well tolerated for up to 8 weeks.",
+  side:"Usually mild: headache, drowsiness, upset stomach.",
+  caution:"May slightly lower blood pressure, adding to blood pressure medicines.",
+  src:[
+    ["Lyon et al., Altern Med Rev (2011)","https://pubmed.ncbi.nlm.nih.gov/22214254/"],
+    ["Kahathuduwa et al., L-theanine and caffeine in boys with ADHD (2020)","https://pmc.ncbi.nlm.nih.gov/articles/PMC7403383/"]
+  ]
+},
+{
+  id:"probiotics", name:"Probiotics and synbiotics", aka:"gut bacteria supplements",
+  group:"support", ev:"Limited",
+  what:"Live beneficial bacteria (probiotics), sometimes combined with fibers that feed them (synbiotics).",
+  general:"Some strains help with certain types of diarrhea, and the gut-brain connection is an active research area.",
+  adhd:"People with ADHD may have differences in gut bacteria and slightly higher inflammation, which could affect the brain through the gut-brain axis.",
+  found:"In a Swedish trial (BAMBA, 182 children and adults, 9 weeks), a synbiotic improved ADHD symptoms no more than placebo, though it reduced emotional dysregulation in adults and autistic traits in children. A European follow-up trial in adults with high irritability reported less irritability and inattention. Results so far apply to specific products, not probiotics in general.",
+  dose:"Trial doses are product-specific (billions of bacteria a day). There is no standard ADHD dose.",
+  limit:"No official upper limit.",
+  side:"Gas and bloating in the first weeks.",
+  caution:"People with weakened immune systems, central lines, or serious illness should avoid probiotics unless a doctor approves.",
+  src:[
+    ["Skott et al., BAMBA trial, Brain Behav Immun (2020)","https://pubmed.ncbi.nlm.nih.gov/32497779/"],
+    ["Karolinska Institutet: BAMBA and PROBIA studies","https://ki.se/en/mmk/bamba-treatment-of-adhd-with-probiotics"]
+  ]
+},
+
+/* ---------- Studied and not supported ---------- */
+{
+  id:"stjohns", name:"St. John's wort", aka:"Hypericum perforatum",
+  group:"no", ev:"Not supported",
+  what:"A flowering plant used as an herbal remedy, mainly for mild depression.",
+  general:"Some studies support it for mild to moderate depression in adults.",
+  adhd:"It affects norepinephrine and dopamine, the same brain chemicals as some ADHD medicines, so it seemed a logical candidate.",
+  found:"A well-run JAMA trial of 54 children and teens found 8 weeks of St. John's wort worked no better than placebo for ADHD symptoms. The researchers concluded it shouldn't be studied further for ADHD in that form.",
+  dose:"The trial used 300 mg three times a day. Not recommended for ADHD.",
+  limit:"No official upper limit.",
+  side:"Sun sensitivity, upset stomach, dizziness, dry mouth, trouble sleeping.",
+  caution:"St. John's wort weakens many medicines, including birth control pills, blood thinners, HIV drugs, some heart drugs and transplant drugs, and can cause a dangerous reaction with antidepressants. This is the most important reason to avoid it.",
+  src:[
+    ["Weber et al., JAMA (2008)","https://doi.org/10.1001/jama.299.22.2633"],
+    ["NCCIH: St. John's wort","https://www.nccih.nih.gov/health/st-johns-wort"]
+  ]
+}
+];
+
+/* ---------- Supplements page (v1.8.0) ---------- */
+const SUPP_TAGS = {omega3:["Focus","Mood","Heart"], micronutrients:["Focus","Mood","Emotions"], iron:["Focus","Energy","Sleep"], zinc:["Focus","Immunity"], vitd:["Focus","Bones","Mood"], magnesium:["Sleep","Calm","Muscles"], saffron:["Focus","Mood"], ginkgo:["Focus"], pycnogenol:["Focus"], ps:["Focus","Memory"], bacopa:["Focus","Memory"], carnitine:["Focus","Energy"], melatonin:["Sleep"], theanine:["Sleep","Calm"], probiotics:["Gut","Emotions"], stjohns:["Mood"]};
+const SUPP_FILTERS = [["all","All"],["direct","For ADHD symptoms"],["support","Sleep, mood & body"],["no","Not supported"]];
+const SUPP_GROUP_NAME = {direct:"Studied for ADHD symptoms", support:"Supports sleep, mood and body", no:"Studied and not supported"};
+const SUPP_GROUP_BLURB = {direct:"Tested in people with ADHD for attention, hyperactivity or impulsivity.", support:"Mainly help with problems that make ADHD harder, like poor sleep, restlessness or emotional ups and downs.", no:"Tested properly and found not to help ADHD."};
+const SUPP_EV = {"Promising":"good","Mixed":"mid","Limited":"low","Not supported":"no"};
+const SUPP_TEXT = {}; SUPPS.forEach(s => { SUPP_TEXT[s.id] = [s.name, s.aka, (SUPP_TAGS[s.id] || []).join(" "), s.what, s.general, s.adhd].join(" ").toLowerCase(); });
+let suppFilter = "all", suppQuery = "", suppOpen = null;
+function suppCard(s){
+  return `<details class="supp" id="supp-${s.id}" data-sid="${s.id}"${suppOpen === s.id ? " open" : ""}>
+    <summary><span class="supp-name">${esc(s.name)}</span><span class="ev ${SUPP_EV[s.ev]}">${s.ev}</span>
+      <span class="supp-aka">Also called: ${esc(s.aka)}</span><span class="supp-tags">${(SUPP_TAGS[s.id] || []).map(t => `<span>${t}</span>`).join("")}</span></summary>
+    <div class="supp-body">
+      <div><h4>What it is</h4><p>${esc(s.what)}</p></div>
+      <div><h4>Why people take it</h4><p>${esc(s.general)}</p></div>
+      <div><h4>How it might help ADHD</h4><p>${esc(s.adhd)}</p></div>
+      <div><h4>What research found</h4><p>${esc(s.found)}</p></div>
+      <div class="supp-box dose"><div><h4>Doses used in studies</h4><p>${esc(s.dose)}</p></div><div><h4>Safe upper limit</h4><p>${esc(s.limit)}</p></div></div>
+      <div><h4>Side effects</h4><p>${esc(s.side)}</p></div>
+      <div class="supp-box warn"><h4>Cautions and interactions</h4><p>${esc(s.caution)}</p></div>
+      <div><h4>Sources</h4>${sourceList(s.src)}</div>
+    </div></details>`;
+}
+function renderSupplements(app){
+  const I = SUPPS_INTRO; markOpened("f", "supplements");
+  app.innerHTML = `<section class="hero"><span class="tag" style="color:var(--accent)">Supplements guide</span><h1>${I.title}</h1><p class="muted">${I.sum}</p></section>
+    <div class="card keypts"><h3>Key points</h3><ul class="list">${I.key.map(k => `<li>${esc(k)}</li>`).join("")}</ul></div>
+    <div class="example"><b>About doses:</b> ${esc(I.doseNote)}</div>
+    <section class="section"><h3>How to read the evidence labels</h3>
+      <div class="row small"><span class="ev good">Promising</span><span>Several good trials point the same way, but it isn't proven.</span></div>
+      <div class="row small"><span class="ev mid">Mixed</span><span>Many studies, and they disagree.</span></div>
+      <div class="row small"><span class="ev low">Limited</span><span>Few, small or short studies.</span></div>
+      <div class="row small"><span class="ev no">Not supported</span><span>Tested properly and didn't help.</span></div></section>
+    <section class="section"><div class="field" style="max-width:520px"><label for="suppQ">Search supplements</label><input id="suppQ" type="text" placeholder="e.g. sleep, iron, calm" value="${esc(suppQuery)}" autocomplete="off"></div>
+      <div class="chips" role="group" aria-label="Filter supplements">${SUPP_FILTERS.map(f => `<button class="chip" data-sf="${f[0]}" aria-pressed="false">${f[1]}</button>`).join("")}</div></section>
+    <div id="suppOut" class="section" style="gap:22px"></div>
+    <section class="section"><h3>Before you try a supplement</h3><ul class="list">
+      <li>Ask for a blood test if you suspect a shortfall (iron/ferritin, vitamin D, sometimes zinc or magnesium). Fixing a real deficiency is where the evidence is best.</li>
+      <li>Tell your doctor and pharmacist everything you take, including ADHD medication. Bring the bottles.</li>
+      <li>Change one thing at a time and keep notes for 4 to 8 weeks, so you can tell what's helping.</li>
+      <li>Choose products with independent testing, such as a USP or NSF mark, because supplement labels aren't checked by the FDA.</li>
+      <li>Be wary of any product sold as an ADHD "cure" or a replacement for treatment.</li></ul>
+      <p class="small">More on treatment options: <a href="#lib-lifestyle">Sleep, exercise and food</a> · <a href="#lib-treatment-overview">ADHD treatment overview</a></p></section>
+    <p class="note">This guide is for education. It isn't medical advice and can't replace a doctor or pharmacist who knows your health and medicines. Facts were last checked on ${fmtDate(SUPPS_REVIEWED)}. Upper limits are U.S. values from the National Academies, as published by the NIH Office of Dietary Supplements.</p>`;
+  const out = app.querySelector("#suppOut");
+  const draw = () => {
+    const q = suppQuery.trim().toLowerCase(), words = q ? q.split(/\s+/) : [];
+    const list = SUPPS.filter(s => (suppFilter === "all" || s.group === suppFilter) && words.every(w => SUPP_TEXT[s.id].includes(w)));
+    app.querySelectorAll("[data-sf]").forEach(b => { const on = b.dataset.sf === suppFilter; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    const groups = suppFilter === "all" ? ["direct","support","no"] : [suppFilter];
+    out.innerHTML = (q ? `<p aria-live="polite"><b>${list.length}</b> result${list.length === 1 ? "" : "s"} for "${esc(suppQuery.trim())}"</p>` : "") +
+      (groups.map(g => { const items = list.filter(s => s.group === g); return items.length ? `<section class="section supp-group"><h2>${SUPP_GROUP_NAME[g]}</h2><p class="small muted">${SUPP_GROUP_BLURB[g]}</p>${items.map(suppCard).join("")}</section>` : ""; }).join("") || `<p class="muted">Nothing matched. Try a different word, or choose "All".</p>`);
+  };
+  app.querySelectorAll("[data-sf]").forEach(b => b.onclick = () => { suppFilter = b.dataset.sf; draw(); });
+  app.querySelector("#suppQ").oninput = e => { suppQuery = e.target.value; draw(); };
+  draw();
+  if (suppOpen) { const el = app.querySelector("#supp-" + suppOpen); suppOpen = null; if (el) setTimeout(() => el.scrollIntoView({block:"start"}), 0); }
+}
+
 /* ---------- Library and news pages (v1.5.0) ---------- */
 let libQuery = "";
 const libById = id => LIB.find(a => a.id === id);
@@ -2188,7 +2588,7 @@ function renderLibrary(app){
   const draw = () => {
     const r = libResults(libQuery);
     if (!r) {
-      out.innerHTML = LIB_CATS.map(c => `<section class="section"><h2>${c.name}</h2><p class="small muted">${c.blurb}</p><div class="grid">${LIB.filter(a => a.cat === c.id).map(libCard).join("")}</div></section>`).join("") +
+      out.innerHTML = LIB_CATS.map(c => `<section class="section"><h2>${c.name}</h2><p class="small muted">${c.blurb}</p><div class="grid">${LIB.filter(a => a.cat === c.id).map(libCard).join("")}${c.id === "tx" ? `<a class="card lib-card" href="#supplements"><h3>Supplements guide${isRecent(FEATURES_ADDED.supplements) ? " " + NEW_PILL : ""}</h3><p class="small muted">${SUPPS.length} supplements: what research found, doses studied, side effects and cautions.</p></a>` : ""}</div></section>`).join("") +
         `<section class="section"><h2>Glossary</h2><a class="card lib-card" href="#lib-glossary"><h3>ADHD terms in plain language</h3><p class="small muted">${GLOSSARY.length} terms, from "504 plan" to "working memory."</p></a></section>`;
       return;
     }

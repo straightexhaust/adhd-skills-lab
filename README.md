@@ -5,6 +5,7 @@ Self-paced ADHD courses with exercises and brain games, in a single page (`index
 - 8 courses, 48 micro-lessons: Focus & Executive Function, Memory Boosters, Healthy Habits, Life Skills, Understanding ADHD, Emotions & Self-Regulation, Work & Study, Getting Support: Diagnosis & Treatment
 - ADHD Library: 30 sourced reference articles (including a history of ADHD from 1775), glossary and search
 - Research news: plain-language summaries of new ADHD research, guidelines and policy, plus a Landmark research archive
+- Supplements guide: 16 supplements with what research found, doses used in studies, upper limits, side effects and sources
 - 11 brain games: Color Clash, Square Recall, Pattern Echo, Green Light Red Light, Memory Match, Inner Clock, Odd One Out, Tower Planner, Quick Tap, Switch It, Night Watch
 - Adaptive levels, a "My brain skills" profile (Attention, Memory, Inhibition, Planning, Speed) and a daily 10-minute workout
 - Optional free user accounts (Supabase): progress, saved tools and game scores sync across devices
