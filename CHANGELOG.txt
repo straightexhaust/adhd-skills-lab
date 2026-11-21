@@ -6,7 +6,7 @@ Repository:  GitHub repo "adhd-skills-lab" (GitHub Pages, branch main, root fold
 Accounts:    Supabase project zxqynpnynhdysbpqpyvu
 Email:       Resend, sending from no-reply@magothymedia.com
 
-CURRENT VERSION: 1.5.0  (upload v1.5.0/index.html to GitHub)
+CURRENT VERSION: 1.7.0  (upload v1.7.0/index.html to GitHub)
 
 Each folder holds the complete index.html for that version. The first line
 inside every index.html names its version and date. Versions 1.1.0 and later
@@ -31,7 +31,47 @@ versions have no account connection, so signed-in learners would lose sync
 
 
 -----------------------------------------------------------------------------
-v1.5.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+v1.7.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+-----------------------------------------------------------------------------
+Type: Minor (new content). Includes 1.5.1 and 1.6.0.
+- Library: 5 new articles under "Living with ADHD" (30 articles total):
+  ADHD in teens and college students; ADHD and driving; ADHD and money;
+  Parenting when you have ADHD yourself; ADHD in older adults.
+  Cross-links added from related articles.
+- News: 4 more Landmark research items (19 total): 2020 financial
+  records study, 2020 first game-based digital treatment, 2017 medication
+  and car crashes, 2017 ENIGMA brain-imaging study.
+- All figures checked against sources on 2026-11-20.
+- No new saved items. No database changes.
+
+-----------------------------------------------------------------------------
+v1.6.0  -  2026-11-20                                     Superseded (included in 1.7.0)
+-----------------------------------------------------------------------------
+Type: Minor (new content). Includes the 1.5.1 change.
+- Library: new article "A history of ADHD: 1775 to today" (timeline of
+  early descriptions, first treatments, name/definition changes and the
+  research era; 8 sources). Library now has 25 articles.
+- News: "Landmark research" archive of 15 studies and milestones from
+  1775 to 2023, in the same format as news items, shown after current
+  news with its own heading and a Landmark filter.
+- "Myths and facts" adds "ADHD is a modern invention"; "How common is
+  ADHD?" adds the worldwide figure (about 5%).
+- All dates and figures checked against sources on 2026-11-20.
+- No new saved items. No database changes.
+
+-----------------------------------------------------------------------------
+v1.5.1  -  2026-11-20                                     Superseded (included in 1.6.0)
+-----------------------------------------------------------------------------
+Type: Patch (content/layout)
+- Removed the "Need help right now?" crisis line box from the top of the
+  Library page.
+- Unchanged: the "Find help now" article (crisis lines, helplines) stays
+  in the Library, and lessons/articles that discuss self-harm still link
+  to it.
+- No data or database changes.
+
+-----------------------------------------------------------------------------
+v1.5.0  -  2026-11-20                                     Superseded
 -----------------------------------------------------------------------------
 Type: Minor (new features and content)
 - 4 new in-depth courses, 24 lessons (48 lessons in 8 courses total):

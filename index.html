@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.5.0 (2026-11-20) -->
+<!-- ADHD Skills Lab v1.7.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -165,7 +165,6 @@ details.deeper summary{color:var(--cc)}
 details.deeper .prose{margin-top:12px}
 .lib-card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;border-left:5px solid var(--accent)}
 .lib-card:hover{border-left-color:var(--spark)}
-.help-strip{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;border:2px solid var(--bad)}
 .keypts{border-left:6px solid var(--spark);display:flex;flex-direction:column;gap:8px}
 .gloss{margin:0;display:grid;grid-template-columns:minmax(120px,230px) 1fr;gap:10px 18px}
 .gloss dt{font-weight:700} .gloss dd{margin:0}
@@ -248,7 +247,7 @@ button.tw-peg:hover{border-color:var(--accent)}
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.5.0 · <a href="#updates">What's new</a></span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.7.0 · <a href="#updates">What's new</a></span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -963,10 +962,13 @@ const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})))
    announce:false = listed on the What's new page but no banner (e.g. patches).
    To label new content: give a game or lesson added:"YYYY-MM-DD". It shows "New"
    for NEW_DAYS days, or until the learner opens it. */
-const APP_VERSION = "1.5.0";
+const APP_VERSION = "1.7.0";
 const NEW_DAYS = 30;
 const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20", library:"2026-11-20", news:"2026-11-20"};
 const RELEASES = [
+  {v:"1.7.0", date:"2026-11-20", title:"Five new Library articles", link:"#library", linkText:"Open the Library", items:["New in <b>Living with ADHD</b>: teens and college students, driving, money, parenting when you have ADHD yourself, and ADHD in older adults.","Four more entries under <b>Landmark research</b> on the News page."]},
+  {v:"1.6.0", date:"2026-11-20", title:"250 years of ADHD research", link:"#lib-history", linkText:"Read the history", items:["A new Library article, <b>A history of ADHD: 1775 to today</b>, traces how the condition was first described, named and treated.","<b>Landmark research</b> on the News page: 15 studies and milestones that shaped what we know, each with what it found and what it means for you."]},
+  {v:"1.5.1", date:"2026-11-20", announce:false, title:"Library tidy-up", items:["Removed the crisis line box from the top of the Library page. Crisis lines and helplines are still listed in the <b>Find help now</b> article."]},
   {v:"1.5.0", date:"2026-11-20", title:"Four new courses, an ADHD Library and research news", link:"#library", linkText:"Open the Library", items:["Four in-depth courses: <b>Understanding ADHD</b>, <b>Emotions & Self-Regulation</b>, <b>Work & Study</b> and <b>Getting Support</b>. That's 24 new lessons.","The <b>ADHD Library</b>: clear, sourced answers on symptoms, diagnosis, treatment, rights and where to find help, with search and a glossary.","<b>Research news</b>: new studies, guidelines and medication updates explained in plain language."]},
   {v:"1.4.0", date:"2026-11-20", announce:false, title:"Never miss what's new", items:["A short note on the home page tells you when something new arrives.","New games and lessons wear a <b>New</b> label until you open them."]},
   {v:"1.3.0", date:"2026-11-20", title:"Brain skills update", link:"#games", linkText:"Try today's workout", items:["Four new brain games: <b>Tower Planner</b> (planning), <b>Quick Tap</b> (hand-eye speed), <b>Switch It</b> (switching between rules) and <b>Night Watch</b> (staying focused).","Games now move up a level as you improve, and ease off after a rough round.","<b>My brain skills</b> shows how you're doing in attention, memory, inhibition, planning and speed.","<b>Today's workout</b> picks three games for you each day. It takes about 10 minutes."]},
@@ -1090,8 +1092,8 @@ function renderHome(app){
     <p class="muted" style="max-width:62ch">Clear, sourced answers about ADHD: symptoms, diagnosis, treatment, your rights and where to get help.</p>
     <form id="homeQ" class="row" style="flex-wrap:nowrap;max-width:520px"><input type="text" id="homeQi" placeholder="Search the Library" aria-label="Search the Library" autocomplete="off"><button class="btn" type="submit">Search</button></form>
     <div class="chips">${["what-is-adhd","diagnosis","treatment-overview","myths","find-help"].map(id => `<a class="chip" href="#lib-${id}">${libById(id).title}</a>`).join("")}</div></section>
-  <section class="section"><div class="row" style="justify-content:space-between"><h2>Research news${isRecent(FEATURES_ADDED.news) ? " " + NEW_PILL : ""}</h2><a href="#news" class="small">All ${NEWS.length} updates</a></div>
-    ${NEWS.slice(0, 2).map(n => newsCard(n, true)).join("")}</section>
+  <section class="section"><div class="row" style="justify-content:space-between"><h2>Research news${isRecent(FEATURES_ADDED.news) ? " " + NEW_PILL : ""}</h2><a href="#news" class="small">All updates and landmark research</a></div>
+    ${NEWS.filter(n => n.kind !== "Landmark").slice(0, 2).map(n => newsCard(n, true)).join("")}</section>
   <section class="card section">
     <h3>How to use this lab with an ADHD brain</h3>
     <ul class="list">
@@ -1550,8 +1552,8 @@ const LIB = [
   <h3>Adults</h3>
   <p>In 2023, an estimated <b>15.5 million U.S. adults (6.0%)</b> reported a current ADHD diagnosis. About half received the diagnosis in adulthood. About one third were not receiving any treatment. Among adults taking a stimulant, 71.5% said they'd had trouble getting a prescription filled because the medication was unavailable.</p>
   <h3>Why the numbers vary</h3>
-  <p>Different surveys ask different questions of different people, and numbers based on "ever diagnosed" are higher than those based on current symptoms. Worldwide research estimates are often lower than U.S. survey figures. Rising numbers partly reflect better recognition, especially in girls, women and adults.</p>`,
-  src:[S_.cdcData, S_.fastats, S_.mmwr], lessons:["und1"] },
+  <p>Different surveys ask different questions of different people, and numbers based on "ever diagnosed" are higher than those based on current symptoms. Worldwide research estimates are often lower than U.S. survey figures: a 2007 analysis of 102 studies from every world region put the figure for children and teens at about 5%. Rising numbers partly reflect better recognition, especially in girls, women and adults.</p>`,
+  src:[S_.cdcData, S_.fastats, S_.mmwr, ["Polanczyk et al. (2007): The worldwide prevalence of ADHD","https://pubmed.ncbi.nlm.nih.gov/17541055/"]], lessons:["und1"] },
 { id:"causes", cat:"basics", title:"What causes ADHD?", sum:"Genes play the biggest part. Parenting and sugar don't cause it.",
   key:["ADHD is strongly inherited: twin studies estimate heritability at about 74%.","Many genes are involved, each with a small effect.","Parenting, sugar and screens don't cause ADHD."],
   body:`<h3>Genes</h3>
@@ -1577,7 +1579,8 @@ const LIB = [
   src:[S_.nihCell, S_.consensus], lessons:["und4","wrk2"] },
 { id:"myths", cat:"basics", title:"Myths and facts", sum:"Quick answers to the things people get wrong about ADHD.",
   key:["ADHD is real, well studied and not caused by parenting.","Adults have it too, and so do girls and women.","Treatment is linked to better and safer lives."],
-  body:`<p><b>Myth: ADHD isn't real.</b><br>Fact: It's one of the most studied conditions in medicine. In 2021, 80 researchers from 27 countries published 208 evidence-based conclusions about it.</p>
+  body:`<p><b>Myth: ADHD is a modern invention.</b><br>Fact: Doctors have described it since at least 1775. See <a href="#lib-history">A history of ADHD</a>.</p>
+  <p><b>Myth: ADHD isn't real.</b><br>Fact: It's one of the most studied conditions in medicine. In 2021, 80 researchers from 27 countries published 208 evidence-based conclusions about it.</p>
   <p><b>Myth: It's caused by bad parenting, sugar or screens.</b><br>Fact: ADHD is strongly genetic. Research doesn't support those causes.</p>
   <p><b>Myth: Only hyperactive boys have it.</b><br>Fact: Girls and women have ADHD too. Their symptoms are more often inattentive and more likely to be missed in childhood.</p>
   <p><b>Myth: Children grow out of it.</b><br>Fact: Symptoms often continue into adulthood, though they can look different. About 6% of U.S. adults have a current diagnosis.</p>
@@ -1586,6 +1589,38 @@ const LIB = [
   <p><b>Myth: ADHD medication is a shortcut or a crutch.</b><br>Fact: Medication is among the best-supported treatments. A large Swedish study linked it to lower rates of accidents, substance misuse and other serious harms. It's a medical decision to make with a prescriber.</p>
   <p><b>Myth: Everyone is "a little ADHD."</b><br>Fact: Everyone gets distracted. A diagnosis requires a lasting pattern since childhood that interferes across settings.</p>`,
   src:[S_.consensus, S_.genetics, S_.nimhAdults, S_.bmjSwe, S_.mmwr], lessons:["und1","emo5"] },
+{ id:"history", cat:"basics", added:"2026-11-20", title:"A history of ADHD: 1775 to today", sum:"ADHD isn't a modern invention. Doctors have been describing it for 250 years.",
+  key:["The first known medical description of attention problems dates from 1775.","Stimulants were found to help children's behavior and schoolwork in 1937.","The name has changed many times; \"ADHD\" dates from 1987.","Adults were recognized in the criteria much later than children."],
+  body:`<p>People sometimes assume ADHD was invented in the 1980s or 1990s. In fact, physicians have described the same pattern for about 250 years, under many different names.</p>
+  <h3>Early descriptions</h3>
+  <ul><li><b>1775:</b> The German physician Melchior Adam Weikard included a chapter on attention problems in a medical textbook. Historians now credit it as the earliest known description in the medical literature.</li>
+  <li><b>1798:</b> The Scottish physician Sir Alexander Crichton described people who couldn't keep their attention on any one thing, noted that it could begin early in life and interfere with schooling, and observed that it often eased with age.</li>
+  <li><b>1902:</b> The British pediatrician Sir George Still gave a series of lectures, published in <i>The Lancet</i>, about children with serious problems of attention and self-control that weren't explained by intelligence or upbringing. For decades this was treated as the starting point of ADHD's scientific history.</li></ul>
+  <h3>The first treatments</h3>
+  <ul><li><b>1937:</b> Dr. Charles Bradley, at a children's hospital in Rhode Island, gave the stimulant Benzedrine to children to relieve headaches and noticed something unexpected: 14 of 30 showed striking improvements in behavior and schoolwork within a week.</li>
+  <li><b>1944:</b> The chemist Leandro Panizzon made methylphenidate. It was later sold as Ritalin.</li>
+  <li><b>1955:</b> The FDA approved Ritalin, at first for conditions such as depression and fatigue in adults.</li>
+  <li><b>1961:</b> The FDA approved Ritalin for children with behavior problems, including hyperactivity.</li>
+  <li><b>1996:</b> The FDA approved Adderall for ADHD.</li>
+  <li><b>2002:</b> The FDA approved atomoxetine (Strattera), the first non-stimulant for ADHD and the first medication approved for adults with ADHD.</li></ul>
+  <h3>How the name and definition changed</h3>
+  <ul><li><b>1968:</b> The condition first appeared in the American Psychiatric Association's diagnostic manual (DSM-II) as "hyperkinetic reaction of childhood," with the focus on excess movement.</li>
+  <li><b>1980:</b> DSM-III renamed it <b>attention deficit disorder (ADD)</b>, with or without hyperactivity, and put attention at the center.</li>
+  <li><b>1987:</b> A revision introduced the name <b>attention-deficit/hyperactivity disorder (ADHD)</b>.</li>
+  <li><b>1994:</b> DSM-IV described three subtypes: inattentive, hyperactive-impulsive and combined.</li>
+  <li><b>2013:</b> DSM-5 raised the age by which symptoms must have appeared from 7 to 12, lowered the number of symptoms required for older teens and adults to five, added examples of how symptoms look in adults, and renamed the subtypes "presentations."</li></ul>
+  <h3>The research era</h3>
+  <ul><li><b>1999:</b> The first results of the MTA study, a large U.S. government-funded treatment trial in 579 children.</li>
+  <li><b>2006 to 2007:</b> The first solid estimates of how common ADHD is in U.S. adults (4.4%) and in children worldwide (about 5%).</li>
+  <li><b>2007:</b> Brain scans showed that the cortex matures in the normal pattern in ADHD, but about three years later in some regions.</li>
+  <li><b>2019 to 2023:</b> Genetic studies identified the first 12, then 27, regions of the genome linked to ADHD.</li>
+  <li><b>2021:</b> Eighty researchers from 27 countries published an international consensus statement with 208 evidence-based conclusions.</li></ul>
+  <p>Each of these is explained in more detail under <a href="#news">Landmark research</a> on the News page.</p>
+  <h3>Why the history matters</h3>
+  <ul><li>The same pattern has been recorded across centuries and countries, long before modern schools, screens or medications. That's strong evidence that ADHD is real.</li>
+  <li>The criteria were built mainly around children, and largely boys, for most of that time. This helps explain why many adults and many women were missed.</li>
+  <li>Names and definitions will keep changing as knowledge grows. That's how medicine is supposed to work.</li></ul>`,
+  src:[["Barkley & Peters (2012): The earliest reference to ADHD in the medical literature? Weikard, 1775","https://pubmed.ncbi.nlm.nih.gov/22323122/"],["Lange et al. (2010): The history of attention deficit hyperactivity disorder","https://pmc.ncbi.nlm.nih.gov/articles/PMC3000907"],["American Journal of Psychiatry (1998): Charles Bradley, M.D., 1902–1979","https://ajp.psychiatryonline.org/doi/10.1176/ajp.155.7.968"],["Embryo Project Encyclopedia, Arizona State University: Ritalin for ADHD treatment","https://embryo.asu.edu/pages/ritalin-adhd-treatment"],["Understood.org: History of ADHD medications","https://www.understood.org/en/articles/history-adhd-medications"],["Epstein & Loren (2013): Changes in the definition of ADHD in DSM-5","https://pmc.ncbi.nlm.nih.gov/articles/PMC3955126"],["CHADD: A short history of ADHD","https://chadd.org/adhd-weekly/more-fire-than-water-a-short-history-of-adhd/"],S_.consensus], lessons:["und1","und5"] },
 { id:"diagnosis", cat:"dx", title:"Getting diagnosed as an adult", sum:"Who can diagnose, what they look at, and how to prepare.",
   key:["There's no single test. Diagnosis comes from a thorough evaluation.","Adults need at least 5 symptoms, with some present before age 12.","Other conditions can look like ADHD and need to be ruled out or treated too.","It's never too late to seek an evaluation."],
   body:`<h3>Who can diagnose</h3>
@@ -1692,7 +1727,7 @@ const LIB = [
   src:[S_.fdaShort, S_.mmwr, S_.deaTele, ["McDermott law firm (2026): DEA appears close to finalizing telemedicine special registration","https://www.mcdermottlaw.com/insights/dea-appears-close-to-finalizing-telemedicine-special-registration/"]], lessons:["sup3"] },
 { id:"adults", cat:"life", title:"ADHD in adults", sum:"How it shows up at work, at home and in relationships.",
   key:["About half of adults with ADHD were diagnosed in adulthood.","Adult ADHD often looks like disorganization, lateness and restlessness.","About one in three adults with ADHD gets no treatment."],
-  body:`<p>ADHD doesn't end at 18. For many people it continues for life, though it changes shape.</p>
+  body:`<p>ADHD doesn't end at 18. For many people it continues for life, though it changes shape. See also <a href="#lib-teens-college">teens and college students</a>, <a href="#lib-money">money</a> and <a href="#lib-older-adults">older adults</a>.</p>
   <h3>Common adult experiences</h3>
   <ul><li><b>Work:</b> missed deadlines, trouble prioritizing, starting many things and finishing few, restlessness in meetings.</li><li><b>Home:</b> clutter, late bills, forgotten appointments.</li><li><b>Relationships:</b> forgetting what was said, interrupting, running late, strong emotional reactions.</li><li><b>Health:</b> irregular sleep, skipped check-ups, impulsive eating or spending.</li></ul>
   <h3>Diagnosis in adulthood</h3>
@@ -1761,8 +1796,75 @@ const LIB = [
   <h3>Later life</h3>
   <p>A 2026 study in <i>JAMA Psychiatry</i> linked ADHD with a higher chance of later cognitive impairment or dementia (6.7% of participants with ADHD versus 3.4% without). This shows an association, not a cause, and most participants with ADHD did not develop either.</p>
   <h3>Practical takeaways</h3>
-  <ul><li>Don't skip routine health checks. Put them in your calendar with reminders.</li><li>Take driving seriously: phone out of reach, and take medication as prescribed if you have it.</li><li>Sleep, movement and not smoking matter for everyone, and more so here.</li><li>If you're struggling, reach out. See <a href="#lib-find-help">Find help now</a>.</li></ul>`,
+  <ul><li>Don't skip routine health checks. Put them in your calendar with reminders.</li><li>Take driving seriously: phone out of reach, and take medication as prescribed if you have it. See <a href="#lib-driving">ADHD and driving</a>.</li><li>Sleep, movement and not smoking matter for everyone, and more so here.</li><li>If you're struggling, reach out. See <a href="#lib-find-help">Find help now</a>.</li></ul>`,
   src:[S_.ucl, S_.bmjSwe, ["University of Pittsburgh / EurekAlert (2026): ADHD and late-life cognitive impairment","https://www.eurekalert.org/news-releases/1146661"]], lessons:["und5"] },
+{ id:"teens-college", cat:"life", added:"2026-11-20", title:"ADHD in teens and college students", sum:"More independence, more demands: what changes and what helps.",
+  key:["For as many as two-thirds of teens with ADHD, significant symptoms continue into adulthood.","The teen years add driving, harder schoolwork and more independence all at once.","School plans don't carry over to college. Students have to ask for support themselves.","Taking stimulants without a prescription doesn't improve grades."],
+  body:`<h3>The teen years</h3>
+  <p>Almost 12% of U.S. teenagers have been diagnosed with ADHD. Hyperactivity often becomes less visible in these years, but demands on planning, organization and self-control rise sharply: more subjects, more homework, more freedom, and less adult supervision.</p>
+  <p>Research links teen ADHD with higher risks in several areas, including school and job difficulties, problems on the road, and other risky behavior. CHADD, the national ADHD organization, puts it well: these are risks, not prophecies. Many teens with ADHD become successful adults, and continued awareness and treatment make a difference.</p>
+  <h3>What helps teens</h3>
+  <ul><li><b>Keep treatment going.</b> Teens often want to drop medication or support. Talk it through with their clinician before stopping anything.</li><li><b>Shift responsibility gradually.</b> Hand over one thing at a time (their own alarm, their own calendar, their own refills) while you're still there as backup.</li><li><b>Agree on rules for the big risks</b> in advance, especially driving, phones and curfews. See <a href="#lib-driving">ADHD and driving</a>.</li><li><b>Involve them in decisions.</b> A plan a teen helped make is far more likely to be followed.</li></ul>
+  <h3>The move to college</h3>
+  <p>College removes most of the structure that home and high school provided, at the same moment that the work gets harder. Executive skills such as organizing, getting started and finishing are still developing, and may take longer to mature with ADHD.</p>
+  <ul><li><b>Supports don't transfer automatically.</b> IEPs and 504 plans end with high school. Students must register with the college's disability services office themselves, usually with documentation. In one review, at least a quarter of students using disability services had ADHD, so they're well used to it.</li><li><b>Use what's offered.</b> Research finds that many students with ADHD don't use the services available to them.</li><li><b>Plan medical care before leaving:</b> who will prescribe, where prescriptions will be filled, and how refills will work in another city or state.</li><li><b>Build structure on purpose:</b> fixed study times and places, a planner or calendar app, body doubling, and regular check-ins with someone.</li><li><b>Other paths are fine.</b> A lighter course load, community college first, or a planned year of work can give the brain more time to mature.</li></ul>
+  <h3>Stimulants on campus</h3>
+  <p>Using someone else's stimulant medication to study is common on campuses, and it's a bad trade. A study that followed 898 college students without ADHD found that those who took stimulants non-medically did not see their grades improve. Sharing or selling prescribed stimulants is illegal and unsafe. Students with a prescription should store it securely.</p>`,
+  src:[["CHADD: Teens and young adults","https://chadd.org/for-parents/teens-and-young-adults/"],["CHADD: Young adulthood and ADHD","https://chadd.org/attention-article/young-adulthood-and-adhd/"],["Kwon et al. (2014): ADHD in postsecondary students (review)","https://pmc.ncbi.nlm.nih.gov/articles/PMC4186490"],["Gormley et al.: First-year GPA and academic service use among college students with and without ADHD","https://pmc.ncbi.nlm.nih.gov/articles/PMC6209537"],["University of Tennessee summary of Arria et al. (2017): Do stimulants improve college GPA?","https://cehhs.utk.edu/klass/2018/04/27/do-stimulants-improve-college-student-gpa-who-dont-have-adhd"],S_.chaddEd], lessons:["wrk6","wrk5","sk1"] },
+{ id:"driving", cat:"life", added:"2026-11-20", title:"ADHD and driving", sum:"The crash risk is real, lower than once thought, and manageable.",
+  key:["Newly licensed teens with ADHD have about a 36% higher crash risk than other new drivers.","The risk is highest in the first month after getting a license.","Risky behaviors that can be changed, such as speeding and phone use, drive much of it.","In a large U.S. study, crash rates were about 40% lower in months when people took their ADHD medication."],
+  body:`<h3>What the research shows</h3>
+  <p>Driving needs sustained attention, quick decisions and impulse control, so it's no surprise that ADHD affects it. The best evidence comes from Children's Hospital of Philadelphia, which linked health records to licensing and crash data:</p>
+  <ul><li>Newly licensed adolescents with ADHD had a <b>36% higher crash risk</b> than other new drivers. That's much lower than older, smaller studies had suggested (up to four times higher). The researchers called it a manageable risk.</li><li>A follow-up study found crash rates were <b>62% higher in the first month</b> after licensing and 37% higher over the first four years.</li><li>Drivers with ADHD had more violations for speeding, not wearing a seat belt and using electronic devices, and their rate of alcohol-related crashes was about twice as high.</li><li>Teens with ADHD were also less likely to get licensed in the first six months after becoming eligible.</li></ul>
+  <h3>Medication and driving</h3>
+  <p>A study of more than 2.3 million U.S. adults with ADHD compared each person's months on and off medication. Men had a 38% lower risk of a crash, and women a 42% lower risk, in months when they were receiving ADHD medication. The authors estimated that up to 22% of the crashes could have been avoided if people had been medicated throughout.</p>
+  <p>In the Philadelphia study, only 12% of teens with ADHD had been prescribed medication in the month before they were licensed. This was an observational finding and can't prove cause, but it's a strong reason to discuss driving with your prescriber, including whether medication is active at the times you drive.</p>
+  <h3>Safer driving habits</h3>
+  <ul><li><b>Phone out of reach</b> and on Do Not Disturb before the engine starts. Set navigation and music first.</li><li><b>No alcohol or drugs</b> before driving. The risk is sharply higher with ADHD.</li><li><b>Know your worst times:</b> late at night, when tired, and when medication has worn off.</li><li><b>Limit passengers</b> while you're building experience.</li><li><b>Leave early.</b> Running late leads to speeding.</li><li><b>On long drives,</b> plan breaks before you need them.</li></ul>
+  <h3>For parents of new drivers</h3>
+  <ul><li>Don't rush the license. Readiness matters more than age.</li><li>Get in plenty of supervised practice hours in varied conditions.</li><li>Agree on written rules (phone, passengers, night driving, alcohol) and what happens if they're broken.</li><li>Ask your teen's clinician to add driving goals to the treatment plan.</li></ul>`,
+  src:[["Children's Hospital of Philadelphia: Crash risk is manageable for adolescent drivers with ADHD","https://injury.research.chop.edu/blog/posts/crash-risk-manageable-adolescent-drivers-adhd"],["Children's Hospital of Philadelphia (2019): Teens with ADHD get more traffic violations and have higher crash risk","https://www.chop.edu/news/teens-adhd-get-more-traffic-violations-risky-driving-have-higher-crash-risk-regardless-age-when"],["NIH/NICHD (2019): Adolescent drivers with ADHD have higher crash rate","https://www.nichd.nih.gov/newsroom/news/052219-adolescent-drivers-ADHD"],["Chang et al. (2017), JAMA Psychiatry: ADHD medication and risk of motor vehicle crashes","https://jamanetwork.com/journals/jamapsychiatry/fullarticle/2626505"]], lessons:["emo2","hab1","hab6"] },
+{ id:"money", cat:"life", added:"2026-11-20", title:"ADHD and money", sum:"Why finances are hard with ADHD, what studies show, and systems that help.",
+  key:["Paying bills on time and saving depend on the same skills ADHD affects.","Studies using real financial records show more missed payments and debt among adults with ADHD.","Medication alone doesn't appear to fix money problems. Systems and support do the work.","Money trouble is a serious stress. Asking for help early matters."],
+  body:`<h3>Why money is hard</h3>
+  <p>Managing money means remembering due dates, opening mail, resisting impulse buys, planning ahead and tracking details: a list of executive functions. The extra costs that pile up from late fees, forgotten subscriptions and impulse spending are often called the "ADHD tax."</p>
+  <h3>What studies show</h3>
+  <ul><li>A Swedish study combined mental health records for the whole adult population with credit data for a random sample of about 189,000 people. Adults with ADHD began adulthood with normal rates of missed payments, but by middle age their default rates had grown steeply, leaving poor credit scores. They were more than four times as likely as others to have problems such as bank overdrafts and unpaid taxes.</li><li>In the same study, having a stimulant prescription was <b>not</b> associated with better financial behavior.</li><li>A U.S. study followed 364 people diagnosed with ADHD in childhood and 240 without for nearly 20 years. At age 30, those with a history of ADHD had substantially worse results on most financial measures, and the gap had widened since age 25.</li></ul>
+  <p>These are averages across groups. They describe a risk to plan around, not a fate.</p>
+  <h3>Systems that help</h3>
+  <ul><li><b>Automate everything you can:</b> bill payments, savings transfers, minimum credit card payments.</li><li><b>Separate spending money.</b> Move a set amount to its own account or card each week. When it's gone, it's gone.</li><li><b>Add friction to spending:</b> delete saved cards from shopping sites and use a 24-hour rule for anything unplanned.</li><li><b>One short "money date" a week:</b> 15 minutes to open mail, check balances and deal with anything due. Do it with a partner or friend if that helps you show up.</li><li><b>Audit subscriptions</b> every few months.</li><li><b>Ask for help with the hard parts.</b> A trusted person, a nonprofit credit counselor or a financial coach can set up the system with you.</li></ul>
+  <h3>If you're already in trouble</h3>
+  <p>Debt and money worries weigh heavily, and the Swedish study found that financial distress was linked with a much higher risk of suicide among adults with ADHD. If money problems are making you feel hopeless, please tell someone and reach out for support. See <a href="#lib-find-help">Find help now</a>. Debts can be restructured, and creditors and nonprofit credit counseling agencies deal with this every day.</p>
+  <p class="small muted">This is general information, not financial advice.</p>`,
+  src:[["Beauchaine, Ben-David & Bos (2020), Science Advances: ADHD, financial distress, and suicide in adulthood","https://pmc.ncbi.nlm.nih.gov/articles/PMC7527218"],["Ohio State University (2020): Financial distress linked to suicide risk in people with ADHD","https://news.osu.edu/financial-distress-linked-to-suicide-risk-in-people-with-adhd/"],["Pelham et al. (2020): The long-term financial outcome of children diagnosed with ADHD","https://pmc.ncbi.nlm.nih.gov/articles/PMC6940517"]], lessons:["sk3","emo2","hab4"] },
+{ id:"parenting-with-adhd", cat:"life", added:"2026-11-20", title:"Parenting when you have ADHD yourself", sum:"ADHD runs in families, so many parents are managing their own alongside their child's.",
+  key:["Nearly half of children with ADHD have a parent who also has it.","Parent training asks for consistency and organization, which are harder with ADHD.","Treating a parent's ADHD helps the parent. Parenting skills usually need direct support as well.","Looking after your own ADHD is part of looking after your child."],
+  body:`<h3>It's very common</h3>
+  <p>ADHD is strongly inherited. Studies estimate that nearly half of children with ADHD have at least one parent who meets the criteria too, and many of those parents have never been diagnosed. A child's evaluation is often the moment a parent recognizes their own story.</p>
+  <h3>Why it's harder</h3>
+  <p>The best-supported help for children with ADHD is parent training in behavior management. It asks parents to stay calm, be consistent, plan ahead, track behavior and follow through, every day. Those are the things ADHD makes hard. Research has found that parent training tends to work less well when the parent has significant ADHD symptoms of their own.</p>
+  <p>That isn't a judgment of anyone's love or effort. It's a mismatch between what the program demands and what the parent has been given to work with.</p>
+  <h3>What research says about treating the parent</h3>
+  <ul><li>Treating a parent's ADHD, for example with medication, reliably improves the parent's own symptoms.</li><li>Whether that carries over to parenting and to the child's behavior is less clear. Studies are few and their results are mixed.</li><li>Researchers increasingly suggest supporting both together: the parent's ADHD <i>and</i> parenting skills.</li></ul>
+  <h3>What helps</h3>
+  <ul><li><b>Get your own evaluation</b> if you see yourself in your child's diagnosis.</li><li><b>Tell the person running your parent training</b> that you have ADHD (or think you might). They can adapt it: fewer strategies at a time, written summaries, reminders between sessions.</li><li><b>Put routines on the wall, not in your head.</b> Visual schedules, checklists by the door and phone alarms help you and your child at once.</li><li><b>Pick one rule to be consistent about</b> before adding another.</li><li><b>Plan for flashpoints.</b> Mornings, homework and bedtime go better with a pause plan for yourself.</li><li><b>Share the load</b> where you can, and play to each adult's strengths.</li><li><b>Repair quickly.</b> When you lose your temper or forget something, a simple apology teaches your child more than perfection would.</li></ul>
+  <h3>The upside</h3>
+  <p>You understand your child from the inside. Many parents with ADHD bring empathy, energy, humor and creativity to family life, and a child who watches a parent manage ADHD openly learns that it can be done.</p>`,
+  src:[["Friedman et al. (2020): Intergenerational ADHD and behavioral parent training outcomes","https://pmc.ncbi.nlm.nih.gov/articles/PMC7567125"],["Chronis-Tuscano et al. (2017): Parent ADHD and evidence-based treatment for their children (review)","https://pmc.ncbi.nlm.nih.gov/articles/PMC5357146"],["Wang et al. (2014): Treating child ADHD in the context of parental ADHD (review)","https://pmc.ncbi.nlm.nih.gov/articles/PMC4664577"],["Duke Center for Girls & Women with ADHD: Mothers' ADHD medication vs. behavioral training","https://psychiatry.duke.edu/duke-center-girls-women-adhd/research/research-spotlights/study-examines-effects-mothers-use-adhd"],S_.cdcCare], lessons:["emo2","emo5","sup5","hab4"] },
+{ id:"older-adults", cat:"life", added:"2026-11-20", title:"ADHD in older adults", sum:"ADHD doesn't retire. It's under-recognized after 50 and can be mistaken for memory decline.",
+  key:["An estimated 2% to 3% of older adults have ADHD symptoms; very few are diagnosed or treated.","ADHD can look like early memory problems. Lifelong history is the main clue.","Treatment can still help, with closer attention to heart health and other medications.","It's never too late to be evaluated."],
+  body:`<h3>How common it is</h3>
+  <p>ADHD was long treated as a childhood condition, but it continues for most people. A pooled analysis estimated that about 2.2% of older adults meet the threshold on validated rating scales. Only about 0.2% have a recorded clinical diagnosis, and fewer than half of those receive treatment. Most older adults with ADHD have never been told they have it.</p>
+  <h3>Why it's missed</h3>
+  <ul><li>They grew up before ADHD was widely recognized, particularly in girls and in quieter children.</li><li>The diagnostic criteria were designed around children, and few clinicians were trained to look for ADHD in later life.</li><li>Diagnosis requires symptoms dating from childhood, which is hard to establish decades later when memory has faded and parents or teachers can no longer be asked.</li><li>Retirement, bereavement or illness can remove the routines and people that kept things on track, so difficulties surface for the first time.</li></ul>
+  <h3>ADHD or memory decline?</h3>
+  <p>Forgetfulness, losing things and trouble concentrating are features of ADHD and also of mild cognitive impairment and early dementia. The key difference is the <b>timeline</b>. ADHD is lifelong and fairly steady. Cognitive impairment is a change from how you used to be, and it progresses.</p>
+  <p>A good evaluation looks at your whole life story, asks a relative or old friend where possible, and checks for other causes such as sleep problems, depression, thyroid problems and medication side effects. Recent research links ADHD with a higher chance of later cognitive impairment, so new or worsening memory problems always deserve a medical check, whatever your history. See <a href="#lib-health">Long-term health and safety</a>.</p>
+  <h3>Treatment later in life</h3>
+  <ul><li>Adults over 65 have mostly been left out of medication trials, so the evidence is thinner than for younger adults.</li><li>Clinicians pay closer attention to blood pressure, heart health and interactions with other medications.</li><li>Skills, routines, coaching and CBT carry no such risks and are worth trying at any age.</li><li>Experts have called for better screening and clearer treatment guidance for people over 50.</li></ul>
+  <h3>What you can do</h3>
+  <ul><li>If this sounds like your whole life and not only recent years, raise it with your doctor and use the word "ADHD."</li><li>Bring someone who has known you a long time, and any old school reports.</li><li>Bring a full list of your medications and health conditions.</li><li>Keep up the basics that protect both attention and long-term brain health: sleep, physical activity, social contact and regular check-ups.</li></ul>`,
+  src:[["Psychiatric Times (2025): ADHD and mild cognitive impairment/early dementia","https://www.psychiatrictimes.com/view/adhd-and-mild-cognitive-impairment-early-dementia-a-clinical-reality"],["Dobrosavljevic et al. (2023), Expert Review of Neurotherapeutics: ADHD in older adults","https://informahealthcare.com/doi/abs/10.1080/14737175.2023.2250913"],["Current Psychiatry (2023): ADHD in older adults: a closer look","https://www.mdedge.com/content/adhd-older-adults-closer-look"],["Expert Review of Neurotherapeutics (2024): ADHD in older adults, clinical perspectives","https://informahealthcare.com/doi/full/10.1080/14737175.2024.2385932"],["University of Pittsburgh / EurekAlert (2026): ADHD and late-life cognitive impairment","https://www.eurekalert.org/news-releases/1146661"]], lessons:["sup1","und5","mem1"] },
 { id:"work-rights", cat:"rights", title:"Rights at work (U.S.)", sum:"The ADA, reasonable accommodations and whether to disclose.",
   key:["ADHD can count as a disability under the ADA when it substantially limits a major life activity.","Employers must provide reasonable accommodations unless it causes undue hardship.","Disclosure is your choice. Put formal requests in writing.","JAN offers free, confidential advice."],
   body:`<h3>The law in brief</h3>
@@ -1799,7 +1901,7 @@ const LIB = [
   <h3>What helps</h3>
   <ul><li><b>Build systems together:</b> a shared calendar, a list on the fridge, a set place for keys. Systems work better than reminders, and they take you out of the role of nag.</li><li><b>Be specific:</b> "Please take the bins out before 8 tonight" works better than "You never help."</li><li><b>Pick your moment:</b> not in the middle of a task or an argument.</li><li><b>Say what's working.</b> Many people with ADHD hear far more criticism than praise.</li><li><b>Learn about ADHD.</b> It makes it easier to tell "can't" from "won't."</li></ul>
   <h3>For parents</h3>
-  <p>Parent training in behavior management is the best-supported approach for younger children. It teaches clear expectations, consistent routines and positive reinforcement. Ask your child's doctor for a referral.</p>
+  <p>Parent training in behavior management is the best-supported approach for younger children. It teaches clear expectations, consistent routines and positive reinforcement. Ask your child's doctor for a referral. If you have ADHD too, see <a href="#lib-parenting-with-adhd">Parenting when you have ADHD yourself</a>.</p>
   <h3>Your own needs</h3>
   <p>Supporting someone isn't the same as doing everything for them. It's fair to have limits and to ask for change. Support groups for families, such as those run by CHADD, can help.</p>`,
   src:[S_.cdcCare, S_.chadd, S_.aafp], lessons:["sup5"] },
@@ -1856,7 +1958,7 @@ const GLOSSARY = [
    Each item: id, date (YYYY-MM-DD), when (optional label, e.g. "September 2026"), kind, title, source, sum,
    means (what it means for you), note (keep in mind), url, lib (related Library article id).
    kind is one of: Research, Guideline, Medication, Policy. */
-const NEWS_KINDS = ["Research","Medication","Guideline","Policy"];
+const NEWS_KINDS = ["Research","Medication","Guideline","Policy","Landmark"];
 const NEWS = [
 { id:"n-sfn-2026", date:"2026-11-17", kind:"Research", title:"New brain research highlights time pressure and breathing patterns in ADHD",
   source:"Society for Neuroscience, Neuroscience 2026 meeting",
@@ -1944,13 +2046,130 @@ const NEWS = [
   url:"https://www.ucl.ac.uk/news/2025/jan/adults-diagnosed-adhd-may-have-reduced-life-expectancies", lib:"health" }
 ];
 
+/* Landmark research (v1.6.0): older studies and milestones, same format as news. kind:"Landmark", when = year label. */
+NEWS.push(
+{ id:"l-gwas-2023", date:"2023-02-01", when:"2023", kind:"Landmark", title:"Genetic study identifies 27 regions of the genome linked to ADHD",
+  source:"Nature Genetics (Demontis and colleagues)",
+  sum:"Comparing 38,691 people with ADHD and 186,843 without, researchers found 27 places in the genome associated with ADHD, up from the first 12 reported in 2019. The genes involved are especially active in the brain, including in dopamine-producing nerve cells.",
+  means:"ADHD has a biological basis that can be measured. It also confirms there's no single \"ADHD gene\": many genes each play a small part.",
+  note:"These findings explain only a small part of the inherited risk, and genetic tests can't diagnose ADHD.",
+  url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10914347", lib:"causes" },
+{ id:"l-consensus-2021", date:"2021-02-01", when:"2021", kind:"Landmark", title:"International consensus: 208 evidence-based conclusions about ADHD",
+  source:"World Federation of ADHD; Neuroscience & Biobehavioral Reviews",
+  sum:"Eighty researchers from 27 countries on six continents reviewed the strongest studies and agreed on 208 statements about ADHD, covering causes, diagnosis, risks and treatment. It was written to counter misconceptions and stigma.",
+  means:"When someone says ADHD isn't real or is just bad behavior, this is the document that answers them.",
+  note:"It summarizes evidence up to 2021. Newer findings appear above.",
+  url:"https://doi.org/10.1016/j.neubiorev.2021.01.022", lib:"myths" },
+{ id:"l-finance-2020", date:"2020-09-30", when:"2020", kind:"Landmark", title:"First study of real financial records: money trouble grows with age in ADHD",
+  source:"Science Advances (Beauchaine, Ben-David and Bos)",
+  sum:"Using mental health data for all of Sweden's adults and credit records for a random sample of about 189,000, researchers found that adults with ADHD start out with normal rates of missed payments, but that their default rates climb steeply by middle age. Stimulant prescriptions weren't associated with better financial behavior, and severe financial distress was linked with a much higher risk of suicide.",
+  means:"Money problems with ADHD are common and serious, and they aren't a personal failing. Systems like automatic payments matter, and so does asking for help early.",
+  note:"The data are from Sweden and show associations. If money worries are weighing on you, see Find help in the Library.",
+  url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC7527218", lib:"money" },
+{ id:"l-endeavor-2020", date:"2020-06-15", when:"2020", kind:"Landmark", title:"FDA authorizes the first game-based digital treatment",
+  source:"U.S. Food and Drug Administration",
+  sum:"The FDA permitted marketing of EndeavorRx, a prescription-only video game for children aged 8 to 12 with inattentive or combined-type ADHD. It was the first game-based treatment authorized for any condition. In the main trial of 348 children, 47% of those playing it for four weeks improved on a computerized attention test, compared with 32% playing a control game.",
+  means:"It opened a new category of non-drug treatment, intended to be used alongside other care and not instead of it.",
+  note:"The improvement was on a computer test of attention; effects on everyday symptoms are less clear. The games on this site are for practice and aren't a medical treatment.",
+  url:"https://psychnews.psychiatryonline.org/doi/10.1176/appi.pn.2020.8a5", lib:"treatment-overview" },
+{ id:"l-cortese-2018", date:"2018-08-07", when:"2018", kind:"Landmark", title:"Head-to-head comparison of ADHD medications across 133 trials",
+  source:"The Lancet Psychiatry (Cortese and colleagues)",
+  sum:"A network meta-analysis of 133 double-blind trials compared ADHD medications for effectiveness and side effects. Weighing both, it supported methylphenidate as the first choice for children and teens, and amphetamines for adults, for short-term treatment.",
+  means:"This study shaped many current prescribing guidelines. It's why those medications are often tried first.",
+  note:"Most trials lasted about 12 weeks. Averages across groups can't tell you which medication will suit you.",
+  url:"https://pubmed.ncbi.nlm.nih.gov/30097390/", lib:"meds-stimulants" },
+{ id:"l-crash-2017", date:"2017-05-10", when:"2017", kind:"Landmark", title:"Fewer car crashes in months when people took their ADHD medication",
+  source:"JAMA Psychiatry (Chang and colleagues)",
+  sum:"Among more than 2.3 million U.S. adults with ADHD, men had a 38% lower risk and women a 42% lower risk of a crash-related emergency visit in months when they were receiving medication, compared with their own unmedicated months. The authors estimated that up to 22% of the crashes could have been avoided.",
+  means:"Driving is one of the clearest places where treatment may protect you and others. It's worth asking whether your medication covers the hours you drive.",
+  note:"An observational study: it compared people with themselves, which is a strong design, but it can't prove cause.",
+  url:"https://jamanetwork.com/journals/jamapsychiatry/fullarticle/2626505", lib:"driving" },
+{ id:"l-enigma-2017", date:"2017-02-16", when:"2017", kind:"Landmark", title:"Largest brain-imaging study finds small differences in five brain regions",
+  source:"The Lancet Psychiatry (Hoogman and colleagues, ENIGMA ADHD Working Group)",
+  sum:"Combining brain scans of 1,713 people with ADHD and 1,529 without, from 23 sites, researchers found slightly smaller volumes in five deep-brain structures, including the amygdala and caudate, and in overall brain volume. The differences were clearest in children and weren't significant in adults.",
+  means:"It added to the evidence that ADHD is rooted in brain development, and it fits the idea of a delay in maturation and not permanent damage.",
+  note:"The differences were very small averages with lots of overlap between groups. They can't be used to diagnose anyone and say nothing about intelligence.",
+  url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC5933934", lib:"brain" },
+{ id:"l-dalsgaard-2015", date:"2015-02-26", when:"2015", kind:"Landmark", title:"Danish study links ADHD with a higher risk of early death, mostly from accidents",
+  source:"The Lancet (Dalsgaard and colleagues)",
+  sum:"Following 1.92 million people in Denmark, including 32,061 with ADHD, researchers found a death rate of 5.85 per 10,000 person-years with ADHD versus 2.21 without. Accidents were the most common cause.",
+  means:"It put safety on the agenda: driving, risk-taking and treating ADHD properly all matter.",
+  note:"The absolute risk was still very low. The risk was higher when other conditions, such as substance use problems, were also present.",
+  url:"https://pubmed.ncbi.nlm.nih.gov/25726514/", lib:"health" },
+{ id:"l-lichtenstein-2012", date:"2012-11-22", when:"2012", kind:"Landmark", title:"People with ADHD had fewer criminal convictions while taking medication",
+  source:"The New England Journal of Medicine (Lichtenstein and colleagues)",
+  sum:"Using Swedish national registers for 25,656 people with ADHD, researchers compared each person's periods on and off medication. Rates of criminal convictions were lower during the periods on medication.",
+  means:"It was one of the first large studies to suggest that treatment affects real-life outcomes, not only symptoms.",
+  note:"Comparing people with themselves removes many biases, but this is still observational evidence. A 2025 study (above) reached similar conclusions with stronger methods.",
+  url:"https://doi.org/10.1056/NEJMoa1203241", lib:"health" },
+{ id:"l-shaw-2007", date:"2007-11-12", when:"2007", kind:"Landmark", title:"The brain matures in the normal pattern in ADHD, but about three years later",
+  source:"Proceedings of the National Academy of Sciences (U.S. National Institute of Mental Health)",
+  sum:"Brain scans of 446 young people, half with ADHD, showed that the cortex reached its peak thickness at about age 10.5 in those with ADHD, compared with 7.5 in those without. The delay was greatest in frontal regions that support attention, planning and self-control. The order of development was the same in both groups.",
+  means:"A delay, not a defect. It helps explain why skills like planning and self-control come later, and why some people's symptoms ease with age.",
+  note:"These are group averages. A scan can't diagnose ADHD, and for many people ADHD continues in adulthood.",
+  url:"https://www.nih.gov/news-events/news-releases/brain-matures-few-years-late-adhd-follows-normal-pattern", lib:"brain" },
+{ id:"l-polanczyk-2007", date:"2007-06-01", when:"2007", kind:"Landmark", title:"ADHD is found worldwide, in about 5% of children and teens",
+  source:"The American Journal of Psychiatry (Polanczyk and colleagues)",
+  sum:"Pooling 102 studies with 171,756 participants from every world region, researchers estimated worldwide prevalence at 5.29%. Differences between studies were explained largely by how each one defined and measured ADHD.",
+  means:"ADHD isn't an American or a modern phenomenon. It appears wherever researchers look for it.",
+  note:"Individual studies varied a lot, and many regions had little data at the time.",
+  url:"https://pubmed.ncbi.nlm.nih.gov/17541055/", lib:"how-common" },
+{ id:"l-kessler-2006", date:"2006-04-01", when:"2006", kind:"Landmark", title:"First national estimate: 4.4% of U.S. adults have ADHD, most untreated",
+  source:"The American Journal of Psychiatry (Kessler and colleagues, National Comorbidity Survey Replication)",
+  sum:"A nationally representative survey estimated that 4.4% of U.S. adults had ADHD. It often occurred alongside other conditions, was linked to substantial difficulty at work and home, and most people with it weren't being treated for it.",
+  means:"This study helped establish adult ADHD as a common, serious and overlooked condition.",
+  note:"It was based on a sample of adults aged 18 to 44. Newer CDC figures are in the Library.",
+  url:"https://pubmed.ncbi.nlm.nih.gov/16585449/", lib:"adults" },
+{ id:"l-strattera-2002", date:"2002-11-26", when:"2002", kind:"Landmark", title:"First non-stimulant ADHD medication approved",
+  source:"U.S. Food and Drug Administration; Psychiatric News",
+  sum:"The FDA approved atomoxetine (Strattera). It was the first ADHD medication that isn't a stimulant or a controlled substance, and the first approved for adults with ADHD.",
+  means:"It opened up options for people who can't take stimulants, and it marked official recognition that adults need treatment too.",
+  note:"Non-stimulants generally take longer to work than stimulants. Which is right for you is a decision for you and your prescriber.",
+  url:"https://psychiatryonline.org/doi/10.1176/pn.37.24.0021b", lib:"meds-nonstimulants" },
+{ id:"l-mta-1999", date:"1999-12-01", when:"1999", kind:"Landmark", title:"The MTA study: the largest treatment trial in children with ADHD",
+  source:"Archives of General Psychiatry (U.S. National Institute of Mental Health MTA Cooperative Group)",
+  sum:"579 children aged 7 to 9 were assigned to 14 months of carefully managed medication, intensive behavior therapy, both together, or usual community care. For core ADHD symptoms, medication (alone or combined) did better than behavior therapy alone or usual care.",
+  means:"This is where much of today's guidance on treating children comes from. It also showed that how carefully medication is managed matters.",
+  note:"The advantage shrank after the study treatments ended, and by three years the groups no longer differed. Staying well takes ongoing support, not a one-time course of treatment.",
+  url:"https://pubmed.ncbi.nlm.nih.gov/10591283/", lib:"treatment-overview" },
+{ id:"l-dsm-1980", date:"1980-01-01", when:"1968 to 2013", kind:"Landmark", title:"From \"hyperkinetic reaction\" to ADHD: how the definition changed",
+  source:"American Psychiatric Association, Diagnostic and Statistical Manual (DSM)",
+  sum:"The condition entered the DSM in 1968 as \"hyperkinetic reaction of childhood.\" It became attention deficit disorder (ADD) in 1980, ADHD in 1987, and gained three subtypes in 1994. In 2013, DSM-5 raised the age-of-onset cutoff from 7 to 12 and lowered the symptom count for adults to five.",
+  means:"If you were told you had \"ADD,\" or were assessed under older rules, it's the same condition. The 2013 changes made it easier to recognize ADHD in adults.",
+  note:"Definitions are agreed by expert committees and keep evolving as evidence grows.",
+  url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC3955126", lib:"history" },
+{ id:"l-ritalin-1955", date:"1955-01-01", when:"1955 to 1961", kind:"Landmark", title:"Ritalin approved, then approved for children",
+  source:"U.S. Food and Drug Administration (history via Arizona State University's Embryo Project)",
+  sum:"Methylphenidate, first made in 1944, was approved by the FDA in 1955 for conditions such as depression and fatigue in adults. In 1961 it was approved for children with behavior problems, including hyperactivity.",
+  means:"Methylphenidate has been in use for about 70 years, which makes it one of the longest-studied medications in psychiatry.",
+  note:"Long use isn't the same as long-term trials. Good long-term evidence is still limited, as the 2025 BMJ review (above) points out.",
+  url:"https://embryo.asu.edu/pages/ritalin-adhd-treatment", lib:"meds-stimulants" },
+{ id:"l-bradley-1937", date:"1937-01-01", when:"1937", kind:"Landmark", title:"A chance discovery: stimulants improve behavior and schoolwork",
+  source:"Dr. Charles Bradley, Emma Pendleton Bradley Home, Rhode Island",
+  sum:"Bradley gave the stimulant Benzedrine to children in his hospital to treat headaches. It didn't help the headaches, but 14 of 30 children showed a striking improvement in behavior and school performance within a week.",
+  means:"This accident is the origin of stimulant treatment for ADHD. It took more than 20 years for the idea to be widely adopted.",
+  note:"It was a small, uncontrolled observation by today's standards. Modern trials have since confirmed the effect.",
+  url:"https://ajp.psychiatryonline.org/doi/10.1176/ajp.155.7.968", lib:"history" },
+{ id:"l-still-1902", date:"1902-03-01", when:"1902", kind:"Landmark", title:"George Still's lectures describe children with poor attention and self-control",
+  source:"The Lancet (Goulstonian Lectures, Royal College of Physicians, London)",
+  sum:"The British pediatrician Sir George Still described children who had serious trouble sustaining attention and controlling their behavior, despite normal intelligence. He suspected the cause was inborn and not poor upbringing.",
+  means:"More than a century ago, a leading doctor had already concluded that this pattern wasn't caused by bad parenting.",
+  note:"Still used the moral language of his era, and some of the children he described would probably receive other diagnoses today.",
+  url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC3000907", lib:"history" },
+{ id:"l-weikard-1775", date:"1775-01-01", when:"1775 to 1798", kind:"Landmark", title:"The earliest medical descriptions of attention problems",
+  source:"Melchior Adam Weikard (Germany, 1775) and Sir Alexander Crichton (Scotland, 1798)",
+  sum:"Weikard devoted a textbook chapter to people who were inattentive, easily distracted and impulsive; it's the earliest known description in the medical literature. In 1798 Crichton described people unable to hold their attention on one thing, noted it could start early and disrupt schooling, and observed that it often lessened with age.",
+  means:"ADHD was being described 250 years ago, before modern schooling, screens or medication.",
+  note:"These are historical descriptions, not diagnoses. Historians read them as close matches to what we now call ADHD.",
+  url:"https://pubmed.ncbi.nlm.nih.gov/22323122/", lib:"history" }
+);
+
 /* ---------- Library and news pages (v1.5.0) ---------- */
 let libQuery = "";
 const libById = id => LIB.find(a => a.id === id);
 const stripTags = h => h.replace(/<[^>]+>/g, " ");
 const LIB_TEXT = {}; LIB.forEach(a => { LIB_TEXT[a.id] = (a.title + " " + a.sum + " " + a.key.join(" ") + " " + stripTags(a.body)).toLowerCase(); });
 const libCard = a => `<a class="card lib-card" href="#lib-${a.id}"><h3>${a.title}${isNew("a", a) ? " " + NEW_PILL : ""}</h3><p class="small muted">${a.sum}</p></a>`;
-const helpStrip = () => `<a class="card help-strip" href="#lib-find-help"><b>Need help right now?</b><span class="small">In the U.S., call or text <b>988</b> for a mental health crisis. More crisis lines and ADHD helplines →</span></a>`;
 function libResults(q){
   q = q.trim().toLowerCase(); if (!q) return null;
   const words = q.split(/\s+/);
@@ -1963,7 +2182,6 @@ function libResults(q){
 function renderLibrary(app){
   app.innerHTML = `<section class="hero"><h1>ADHD Library</h1><p class="muted">Clear answers about ADHD, written in plain language and linked to their sources. Look something up, then come back any time.</p>
     <div class="field" style="max-width:520px"><label for="libQ">Search the Library</label><input id="libQ" type="text" placeholder="e.g. sleep, diagnosis, medication, 504" value="${esc(libQuery)}" autocomplete="off"></div></section>
-    ${helpStrip()}
     <div id="libOut" class="section" style="gap:26px"></div>
     <p class="note">The Library is for education. It isn't medical or legal advice and can't replace a professional who knows you. Facts were last checked on ${fmtDate(LIB_REVIEWED)}. Most figures and laws describe the United States.</p>`;
   const out = app.querySelector("#libOut");
@@ -2025,9 +2243,11 @@ let newsFilter = "All";
 function renderNews(app){
   const draw = () => {
     const items = NEWS.filter(n => newsFilter === "All" || n.kind === newsFilter);
-    app.innerHTML = `<section class="hero"><h1>Research news</h1><p class="muted">New ADHD research, guidelines, medications and policy, explained in plain language. Each update says what was found, what it means for you, and what to keep in mind, with a link to the original source.</p>
+    app.innerHTML = `<section class="hero"><h1>Research news</h1><p class="muted">New ADHD research, guidelines, medications and policy, explained in plain language, plus the landmark studies of the past. Each update says what was found, what it means for you, and what to keep in mind, with a link to the original source.</p>
       <div class="chips" role="group" aria-label="Filter news">${["All"].concat(NEWS_KINDS).map(k => `<button class="chip ${newsFilter === k ? "on" : ""}" data-k="${k}">${k}</button>`).join("")}</div></section>
-      ${items.map(n => newsCard(n)).join("") || `<p class="muted">No updates of this type yet.</p>`}
+      ${items.filter(n => n.kind !== "Landmark").map(n => newsCard(n)).join("")}
+      ${items.some(n => n.kind === "Landmark") ? `<section class="section" id="landmark"><h2>Landmark research</h2><p class="muted" style="max-width:62ch">The studies and milestones that shaped what we know about ADHD, from 2023 back to 1775. For the full story, see <a href="#lib-history">A history of ADHD</a>.</p></section>` + items.filter(n => n.kind === "Landmark").map(n => newsCard(n)).join("") : ""}
+      ${items.length ? "" : `<p class="muted">No updates of this type yet.</p>`}
       <section class="card section"><h3>How we choose and write these</h3><ul class="list small">
         <li>Sources are peer-reviewed journals, government health agencies and professional medical societies. We link to the original wherever we can.</li>
         <li>One study rarely settles anything, so each update includes its limits.</li>
