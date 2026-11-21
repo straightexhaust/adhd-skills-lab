@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.8.0 (2026-11-20) -->
+<!-- ADHD Skills Lab v1.9.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -250,6 +250,12 @@ button.tw-peg:hover{border-color:var(--accent)}
 .ev.mid{color:#8a5a00;border-color:#d49a00}
 .ev.low{color:var(--muted);border-color:var(--line)}
 .ev.no{color:var(--bad);border-color:var(--bad)}
+.ev.warn{color:#fff;background:var(--bad);border-color:var(--bad)}
+.supp-table{width:100%;border-collapse:collapse;font-size:.92rem}
+.supp-table th,.supp-table td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.supp-table th{font-family:var(--display);font-weight:600}
+@media (max-width:560px){.supp-table{font-size:.82rem;table-layout:fixed}.supp-table th,.supp-table td{padding:6px 4px}.supp-table th:nth-child(1){width:44%}.supp-table th:nth-child(2){width:31%}.supp-table .ev{font-size:.7rem;padding:1px 6px;white-space:normal}}
+.supp-med{display:flex;flex-direction:column;gap:6px;border-left:6px solid var(--spark)}
 :root[data-theme="dark"] .ev.mid{color:#ffd257;border-color:#ffd257}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ev.mid{color:#ffd257;border-color:#ffd257}}
 .supp-group{margin-top:10px}
@@ -278,7 +284,7 @@ button.tw-peg:hover{border-color:var(--accent)}
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.8.0 · <a href="#updates">What's new</a></span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.9.0 · <a href="#updates">What's new</a></span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -993,10 +999,11 @@ const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})))
    announce:false = listed on the What's new page but no banner (e.g. patches).
    To label new content: give a game or lesson added:"YYYY-MM-DD". It shows "New"
    for NEW_DAYS days, or until the learner opens it. */
-const APP_VERSION = "1.8.0";
+const APP_VERSION = "1.9.0";
 const NEW_DAYS = 30;
 const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20", library:"2026-11-20", news:"2026-11-20", supplements:"2026-11-20"};
 const RELEASES = [
+  {v:"1.9.0", date:"2026-11-20", title:"Supplements guide: 25 more supplements", link:"#supplements", linkText:"Open the Supplements guide", items:["The guide now covers <b>41 supplements</b>, including ginseng, passionflower, SAMe, NAC, ashwagandha, lavender, chamomile, glycine, B12 and folate, choline in pregnancy, caffeine, CBD and L-tyrosine.","A new <b>Safety concerns</b> group flags kava, blue-green algae and 5-HTP.","Every entry now lists <b>food sources</b>, and a new section explains how supplements can interact with <b>ADHD medication</b>.","An <b>At a glance</b> table lets you compare them all in one place."]},
   {v:"1.8.0", date:"2026-11-20", title:"New: a guide to supplements", link:"#supplements", linkText:"Open the Supplements guide", items:["A new <b>Supplements</b> page covers 16 vitamins, minerals, herbs and other supplements people use for ADHD, from omega-3 and iron to melatonin and saffron.","Each one explains what it is, why people take it, how it might help ADHD, what research actually found, doses used in studies, safe upper limits, side effects and cautions, with sources.","Filter by what it's for (ADHD symptoms, or sleep, mood and body) or search by name."]},
   {v:"1.7.0", date:"2026-11-20", title:"Five new Library articles", link:"#library", linkText:"Open the Library", items:["New in <b>Living with ADHD</b>: teens and college students, driving, money, parenting when you have ADHD yourself, and ADHD in older adults.","Four more entries under <b>Landmark research</b> on the News page."]},
   {v:"1.6.0", date:"2026-11-20", title:"250 years of ADHD research", link:"#lib-history", linkText:"Read the history", items:["A new Library article, <b>A history of ADHD: 1775 to today</b>, traces how the condition was first described, named and treated.","<b>Landmark research</b> on the News page: 15 studies and milestones that shaped what we know, each with what it found and what it means for you."]},
@@ -1748,7 +1755,7 @@ const LIB = [
   <h3>Mindfulness</h3>
   <p>Also promising but uncertain. Some people find short practices useful for noticing impulses and settling the mind.</p>
   <h3>Food and supplements</h3>
-  <p>Regular meals help keep energy and mood steady, which matters more if medication reduces your appetite. No specific diet or supplement has strong evidence as an ADHD treatment. Be cautious of anything marketed as a cure. The <a href="#supplements">Supplements guide</a> goes through 16 of them one by one.</p>
+  <p>Regular meals help keep energy and mood steady, which matters more if medication reduces your appetite. No specific diet or supplement has strong evidence as an ADHD treatment. Be cautious of anything marketed as a cure. The <a href="#supplements">Supplements guide</a> goes through 41 of them one by one.</p>
   <h3>How to use this</h3>
   <p>Think of healthy habits as the <b>foundation</b> that makes other treatments work better, not as a replacement for them. The Healthy Habits course has step-by-step tools.</p>`,
   src:[S_.bmjUmb, S_.nihCell, S_.nimh], lessons:["sup2","emo6"] },
@@ -2221,7 +2228,7 @@ const SUPPS_INTRO = {
     "The strongest case for a supplement is fixing a real shortfall, such as low iron or low vitamin D. A blood test tells you whether you have one.",
     "\"Natural\" does not mean safe. Iron overdose can be dangerous for children, St. John's wort weakens many medicines, and ginkgo raises bleeding risk.",
     "Supplements are not checked by the FDA before they're sold, and labels can be wrong. In one analysis, 22 of 25 melatonin gummies didn't contain what the label said.",
-    "Talk to a doctor or pharmacist before starting anything, especially for a child, during pregnancy, or alongside ADHD medication."
+    "Talk to a doctor or pharmacist before starting anything, especially for a child, during pregnancy, or alongside ADHD medication. Some supplements change how ADHD medicines work (see the medication section below)."
   ],
   doseNote: "Doses below are the amounts used in research studies, given so you can have an informed conversation with a doctor or pharmacist. They are not a recommendation for you or your child. Children's doses in studies were usually set by body weight and supervised by a clinician."
 };
@@ -2505,13 +2512,488 @@ const SUPPS = [
 }
 ];
 
-/* ---------- Supplements page (v1.8.0) ---------- */
-const SUPP_TAGS = {omega3:["Focus","Mood","Heart"], micronutrients:["Focus","Mood","Emotions"], iron:["Focus","Energy","Sleep"], zinc:["Focus","Immunity"], vitd:["Focus","Bones","Mood"], magnesium:["Sleep","Calm","Muscles"], saffron:["Focus","Mood"], ginkgo:["Focus"], pycnogenol:["Focus"], ps:["Focus","Memory"], bacopa:["Focus","Memory"], carnitine:["Focus","Energy"], melatonin:["Sleep"], theanine:["Sleep","Calm"], probiotics:["Gut","Emotions"], stjohns:["Mood"]};
-const SUPP_FILTERS = [["all","All"],["direct","For ADHD symptoms"],["support","Sleep, mood & body"],["no","Not supported"]];
-const SUPP_GROUP_NAME = {direct:"Studied for ADHD symptoms", support:"Supports sleep, mood and body", no:"Studied and not supported"};
-const SUPP_GROUP_BLURB = {direct:"Tested in people with ADHD for attention, hyperactivity or impulsivity.", support:"Mainly help with problems that make ADHD harder, like poor sleep, restlessness or emotional ups and downs.", no:"Tested properly and found not to help ADHD."};
-const SUPP_EV = {"Promising":"good","Mixed":"mid","Limited":"low","Not supported":"no"};
-const SUPP_TEXT = {}; SUPPS.forEach(s => { SUPP_TEXT[s.id] = [s.name, s.aka, (SUPP_TAGS[s.id] || []).join(" "), s.what, s.general, s.adhd].join(" ").toLowerCase(); });
+/* ===== Supplements guide: expansion (v1.9.0) ===== */
+const SUPPS_MORE = [
+
+/* ---------- Studied for ADHD symptoms ---------- */
+{
+  id:"gla", name:"Evening primrose oil and omega-6 (GLA) blends", aka:"gamma-linolenic acid, borage oil, omega-3/6 blends",
+  group:"direct", ev:"Mixed",
+  what:"Plant oils rich in GLA, an omega-6 fat. GLA is often sold on its own (evening primrose, borage or black currant seed oil) or blended with fish oil.",
+  general:"GLA is used for skin conditions like eczema and for breast pain and joint stiffness, with mixed evidence.",
+  adhd:"Early theories suggested some hyperactive children had trouble making certain fats from their diet, and that GLA could make up the shortfall.",
+  found:"On its own, GLA has done poorly. A 1987 trial found evening primrose oil produced minimal or no improvement in hyperactive children. A small 1989 crossover trial in 18 boys found only a trend on one teacher rating. Blends do somewhat better: in a Swedish trial of an omega-3/6 blend, most children didn't respond, but about a quarter improved substantially, mostly those with the inattentive type. A 2014 analysis linked GLA combined with EPA to bigger drops in inattention.",
+  dose:"The 1989 trial used 8 evening primrose capsules a day (4 twice daily, each 500 mg of oil with about 40 mg GLA). Blend trials used daily capsules containing both EPA/DHA and a small amount of GLA for 3 to 6 months.",
+  limit:"No official upper limit.",
+  side:"Upset stomach, soft stools, headache.",
+  caution:"May add to the effect of blood thinners. Ask a doctor first if you have a seizure disorder or take medicines for one.",
+  src:[
+    ["Aman et al., evening primrose oil in hyperactive children (1987)","https://doi.org/10.1007/BF00916467"],
+    ["Johnson et al., omega-3/6 blend trial, J Atten Disord (2009)","https://pubmed.ncbi.nlm.nih.gov/18448859/"],
+    ["Puri & Martins, PUFA meta-regression (2014)","https://pubmed.ncbi.nlm.nih.gov/24560325/"]
+  ]
+},
+{
+  id:"b6mg", name:"Magnesium with vitamin B6", aka:"Mg-B6, pyridoxine plus magnesium",
+  group:"direct", ev:"Limited",
+  what:"A combination product. Vitamin B6 helps cells take up and use magnesium, and is needed to make dopamine and serotonin.",
+  general:"Both nutrients support nerve and muscle function; B6 is also involved in making red blood cells and in metabolism.",
+  adhd:"Some studies found lower magnesium inside red blood cells in children with ADHD. The combination is meant to raise those levels.",
+  found:"French researchers gave 40 children with ADHD symptoms magnesium plus B6 and compared them with 36 children without ADHD. They reported less hyperactivity and aggression and better attention, and magnesium levels fell again whenever the supplements were stopped. There was no placebo group, so the results could be partly expectation. Reviews say better trials are needed.",
+  dose:"The French study used about 6 mg of magnesium and 0.6 mg of vitamin B6 per kg of body weight a day, for at least 8 weeks.",
+  limit:"Magnesium from supplements: 65 mg (ages 1 to 3), 110 mg (4 to 8), 350 mg (9 and older). Vitamin B6: 30 mg (1 to 3), 40 mg (4 to 8), 60 mg (9 to 13), 80 mg (14 to 18), 100 mg (adults).",
+  side:"Diarrhea and stomach upset from magnesium.",
+  caution:"Taking too much B6 for months can damage nerves, causing numbness and tingling in the hands and feet. Check the label of any other vitamins so the total stays under the limit.",
+  src:[
+    ["Mousain-Bosc et al., magnesium-B6 in ADHD (NCBI Bookshelf chapter)","https://www.ncbi.nlm.nih.gov/books/NBK507249/"],
+    ["NIH ODS: Vitamin B6","https://ods.od.nih.gov/factsheets/VitaminB6-Consumer/"],
+    ["NIH ODS: Magnesium","https://ods.od.nih.gov/factsheets/Magnesium-Consumer/"]
+  ]
+},
+{
+  id:"ginseng", name:"Korean red ginseng", aka:"Panax ginseng",
+  group:"direct", ev:"Limited",
+  what:"The steamed and dried root of Asian ginseng, a traditional tonic in Korean and Chinese medicine.",
+  general:"Ginseng is used for energy, stress and thinking, and has been studied for fatigue, blood sugar and immunity.",
+  adhd:"Ginseng compounds appear to affect dopamine and norepinephrine and may lower stress hormones.",
+  found:"A 2014 Korean trial gave 70 children with ADHD symptoms ginseng extract or placebo for 8 weeks. An earlier small study without a placebo reported better attention. In a 2021 trial, 120 children with milder ADHD symptoms improved on ADHD rating scales with omega-3 plus red ginseng compared with placebo. A 2024 review concluded ginseng may help inattention, but most studies are small and from one country.",
+  dose:"Children's trials used 1 g of red ginseng extract twice a day for 8 weeks.",
+  limit:"No official upper limit.",
+  side:"Trouble sleeping, headache, upset stomach, nervousness.",
+  caution:"Ginseng can lower blood sugar and may interact with blood thinners, diabetes medicines and some antidepressants. Because it can be stimulating, it may add to the side effects of stimulant medication.",
+  src:[
+    ["Ko et al., Korean red ginseng in children, J Child Adolesc Psychopharmacol (2014)","https://pubmed.ncbi.nlm.nih.gov/?term=Ko+HJ+Korean+red+ginseng+inattention+hyperactivity+2014"],
+    ["Omega-3 and red ginseng trial, J Atten Disord (2021)","https://pubmed.ncbi.nlm.nih.gov/32847461/"],
+    ["Lee et al., observational study in 18 children (2011)","https://pmc.ncbi.nlm.nih.gov/articles/PMC3659525"],
+    ["NCCIH: Asian ginseng","https://www.nccih.nih.gov/health/asian-ginseng"]
+  ]
+},
+{
+  id:"passionflower", name:"Passionflower", aka:"Passiflora incarnata",
+  group:"direct", ev:"Limited",
+  what:"A climbing vine whose leaves and flowers are used in calming herbal products.",
+  general:"Passionflower is used for anxiety and sleep, with a few small supportive trials.",
+  adhd:"It may calm the nervous system by affecting GABA, a brain chemical that quiets nerve signals.",
+  found:"In an 8-week Iranian trial, 34 children took passionflower tablets or methylphenidate, and both groups improved by similar amounts on parent and teacher ratings. There was no placebo group, so we can't tell how much was a real effect.",
+  dose:"The trial used weight-based tablets twice a day for 8 weeks; product strength varies widely, so trial doses don't translate to store products.",
+  limit:"No official upper limit.",
+  side:"Drowsiness, dizziness, confusion.",
+  caution:"May add to the effect of sedatives, sleep aids and alcohol. Avoid in pregnancy.",
+  src:[
+    ["Akhondzadeh et al., passionflower vs methylphenidate, Therapy (2005)","https://www.openaccessjournals.com/abstract/passiflora-incarnata-in-the-treatment-of-attentiondeficit-hyperactivity-disorder-in-children-and-adolescents-11150.html"],
+    ["Herbal medicines for pediatric ADHD: updated review, Avicenna J Phytomed (2023)","https://pmc.ncbi.nlm.nih.gov/articles/PMC10474921/"]
+  ]
+},
+{
+  id:"lemonbalm", name:"Lemon balm and valerian", aka:"Melissa officinalis, Valeriana officinalis",
+  group:"direct", ev:"Limited",
+  what:"Two calming herbs, often sold together. Lemon balm is a mint-family plant; valerian is a root.",
+  general:"Both are used for restlessness, anxiety and sleep problems.",
+  adhd:"The idea is that calming restlessness and improving sleep could ease hyperactivity and concentration problems.",
+  found:"A 2022 review found a fair indication that these herbs help some ADHD symptoms, but a 2023 review called the evidence mainly inconclusive. Most studies are small, open-label or use combination products.",
+  dose:"An Iranian children's trial used 160 mg of lemon balm extract twice a day for 8 weeks. Combination products vary.",
+  limit:"No official upper limit.",
+  side:"Drowsiness, dizziness, nausea; valerian can cause headache and morning grogginess.",
+  caution:"May add to sedatives and alcohol. Lemon balm may affect thyroid medicine.",
+  src:[
+    ["Dutta et al., phytotherapy for ADHD review, Front Pharmacol (2022)","https://pmc.ncbi.nlm.nih.gov/articles/PMC9110892"],
+    ["Herbal medicines for pediatric ADHD: updated review (2023)","https://pmc.ncbi.nlm.nih.gov/articles/PMC10474921/"],
+    ["NCCIH: Valerian","https://www.nccih.nih.gov/health/valerian"]
+  ]
+},
+{
+  id:"same", name:"SAMe (S-adenosyl-methionine)", aka:"S-adenosylmethionine",
+  group:"direct", ev:"Limited",
+  what:"A compound the body makes from the amino acid methionine. It donates chemical groups in many reactions, including making brain chemicals.",
+  general:"SAMe has reasonable evidence as an add-on treatment for depression and is also used for joint pain and liver health.",
+  adhd:"SAMe affects dopamine signaling, and ADHD often comes with low mood.",
+  found:"Only one tiny study: in a 4-week open trial in adults with ADHD, 6 of 8 men improved; the two who didn't had also not responded to methylphenidate. That isn't enough to judge.",
+  dose:"Depression trials typically use 800 to 1,600 mg a day. There's no tested ADHD dose.",
+  limit:"No official upper limit.",
+  side:"Upset stomach, trouble sleeping, anxiety, headache.",
+  caution:"Can trigger mania in people with bipolar disorder. Don't combine with antidepressants without a doctor: the combination may raise serotonin too much.",
+  src:[
+    ["Shekim et al., SAMe in adult ADHD (1990)","https://pubmed.ncbi.nlm.nih.gov/2236465/"],
+    ["Sharma et al., SAMe review for the APA, J Clin Psychiatry (2017)","https://pubmed.ncbi.nlm.nih.gov/28682528/"]
+  ]
+},
+{
+  id:"nac", name:"N-acetylcysteine (NAC)", aka:"NAC",
+  group:"direct", ev:"Limited",
+  what:"A form of the amino acid cysteine. The body uses it to make glutathione, its main antioxidant. In hospitals it's used for acetaminophen overdose.",
+  general:"NAC is being studied for compulsive behaviors, addiction and other psychiatric conditions, with mixed results.",
+  adhd:"It may calm overactive glutamate signaling and reduce oxidative stress in the brain.",
+  found:"Evidence comes from people with other conditions. In a trial in 24 people with lupus, NAC improved scores on an adult ADHD self-report scale. Small trials in children with neurofibromatosis or Tourette syndrome have not shown clear ADHD benefits.",
+  dose:"The lupus trial used 2.4 or 4.8 g a day for 3 months. Other psychiatric trials commonly use 1.2 to 2.4 g a day.",
+  limit:"No official upper limit.",
+  side:"Nausea, vomiting, diarrhea, an unpleasant smell or taste.",
+  caution:"People with asthma should ask a doctor first. NAC may interact with nitroglycerin and some blood pressure medicines.",
+  src:[
+    ["Garcia et al., NAC and ADHD scores in lupus (2013)","https://pmc.ncbi.nlm.nih.gov/articles/PMC4034122"],
+    ["Naveed et al., NAC in children and teens: scoping review (2017)","https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5788395/"]
+  ]
+},
+{
+  id:"citicoline", name:"Citicoline", aka:"CDP-choline",
+  group:"direct", ev:"Limited",
+  what:"A compound the body makes from choline. It helps build cell membranes and the brain chemical acetylcholine.",
+  general:"Citicoline has been studied after stroke, for memory decline and for eye health.",
+  adhd:"It may support frontal-lobe energy use and dopamine production.",
+  found:"In a 28-day trial in 75 healthy teenage boys (not boys with ADHD), those taking citicoline showed better attention and motor speed and less impulsivity than those on placebo. The study was co-run by the ingredient's manufacturer. It has not been tested in people with ADHD.",
+  dose:"250 or 500 mg a day for 28 days.",
+  limit:"No official upper limit.",
+  side:"Usually mild: upset stomach, headache, trouble sleeping.",
+  caution:"Little is known about long-term use in children.",
+  src:[
+    ["McGlade et al., citicoline in adolescent males, J Atten Disord","https://pubmed.ncbi.nlm.nih.gov/26179181/"]
+  ]
+},
+
+/* ---------- Supports sleep, mood and body ---------- */
+{
+  id:"b12folate", name:"Vitamin B12 and folate", aka:"cobalamin, folic acid, methylfolate",
+  group:"support", ev:"Limited",
+  what:"Two B vitamins that work together to make DNA, red blood cells and brain chemicals.",
+  general:"They prevent a type of anemia and support nerve health. Folic acid before and during pregnancy prevents some birth defects.",
+  adhd:"Several studies have found lower B12 (and sometimes folate) in children with ADHD, and in one study lower B12 went with more hyperactivity and oppositional behavior.",
+  found:"The evidence is mostly from comparing blood levels, which can't show cause and effect. There are no good trials of B12 or folate as an ADHD treatment. The practical point is checking for a deficiency, which is more common in vegans, people taking metformin or acid-reducing medicines, and older adults.",
+  dose:"No ADHD dose. Daily needs: B12 about 2.4 mcg and folate 400 mcg for adults. Deficiencies are treated with doses a doctor sets.",
+  limit:"No upper limit for B12. Folic acid from supplements and fortified foods: 300 mcg (1 to 3), 400 mcg (4 to 8), 600 mcg (9 to 13), 800 mcg (14 to 18), 1,000 mcg (adults).",
+  side:"B12 rarely causes side effects. High folic acid can hide a B12 deficiency.",
+  caution:"Long-term use of metformin and acid-reducing medicines lowers B12; ask about a blood test.",
+  src:[
+    ["B12, folate and homocysteine in ADHD and autism, Neuropsychiatr Dis Treat (2019)","https://pmc.ncbi.nlm.nih.gov/articles/PMC6689552"],
+    ["NIH ODS: Vitamin B12","https://ods.od.nih.gov/factsheets/VitaminB12-Consumer/"],
+    ["NIH ODS: Folate","https://ods.od.nih.gov/factsheets/Folate-Consumer/"]
+  ]
+},
+{
+  id:"choline", name:"Choline in pregnancy", aka:"phosphatidylcholine, prenatal choline",
+  group:"support", ev:"Limited",
+  what:"A nutrient found in eggs, meat, fish, beans and cruciferous vegetables. It is needed for cell membranes and the brain chemical acetylcholine.",
+  general:"Choline supports liver function and brain development; needs rise sharply in pregnancy.",
+  adhd:"This is about prevention, not treatment: the baby's developing brain needs choline, and animal studies show more choline in pregnancy improves offspring attention.",
+  found:"In a small Cornell feeding trial, children whose mothers ate 930 mg of choline a day in late pregnancy did better on a sustained-attention test at age 7 than those whose mothers ate 480 mg. In a Colorado trial, children of mothers given phosphatidylcholine had fewer parent-rated attention problems at 40 months. Most prenatal vitamins contain little or no choline, and more than 90% of pregnant women get less than recommended.",
+  dose:"Recommended intake in pregnancy is 450 mg a day. The Cornell trial gave 930 mg a day in the third trimester.",
+  limit:"3,000 mg a day (ages 14 to 18), 3,500 mg a day (adults).",
+  side:"At high doses: fishy body odor, sweating, upset stomach, low blood pressure.",
+  caution:"Discuss any pregnancy supplement with your prenatal care provider.",
+  src:[
+    ["Bahnfleth et al., prenatal choline and attention at age 7, FASEB J (2022)","https://pubmed.ncbi.nlm.nih.gov/34962672/"],
+    ["Ross et al., perinatal phosphatidylcholine, Am J Psychiatry (2016)","https://pubmed.ncbi.nlm.nih.gov/26651393/"],
+    ["NIH ODS: Choline","https://ods.od.nih.gov/factsheets/Choline-Consumer/"]
+  ]
+},
+{
+  id:"ashwagandha", name:"Ashwagandha", aka:"Withania somnifera",
+  group:"support", ev:"Mixed",
+  what:"A shrub root from Ayurvedic medicine, sold as an \"adaptogen\" for stress.",
+  general:"Ashwagandha is used for stress, anxiety and sleep, and in sports for strength and recovery.",
+  adhd:"It hasn't been studied for ADHD. People take it for the stress, anxiety and poor sleep that often come with ADHD.",
+  found:"A 2022 analysis of 12 trials in 1,002 adults found reduced anxiety and stress compared with placebo, though results varied a lot between studies. Benefits for sleep appear small. Products differ widely in strength.",
+  dose:"Adult trials commonly use 300 to 600 mg a day of a standardized root extract for 6 to 8 weeks.",
+  limit:"No official upper limit. Long-term safety (beyond about 6 months) isn't well studied.",
+  side:"Upset stomach, diarrhea, drowsiness.",
+  caution:"There are reports of liver injury, and a European drug-safety center flagged this in 2023. Avoid in pregnancy and breastfeeding. It can affect thyroid levels and interact with thyroid, diabetes, blood pressure, immune-suppressing and sedating medicines. Not studied in children.",
+  src:[
+    ["Akhgarjand et al., ashwagandha for anxiety and stress, Phytother Res (2022)","https://pubmed.ncbi.nlm.nih.gov/36017529/"],
+    ["Merck Manual: Ashwagandha","https://www.merckmanuals.com/professional/special-subjects/dietary-supplements/ashwagandha"],
+    ["NCCIH: Ashwagandha","https://www.nccih.nih.gov/health/ashwagandha"]
+  ]
+},
+{
+  id:"lavender", name:"Lavender oil capsules (Silexan)", aka:"Lavandula angustifolia, oral lavender",
+  group:"support", ev:"Promising",
+  what:"A standardized lavender essential oil taken as a capsule. It is a licensed anxiety medicine in Germany and sold as a supplement elsewhere.",
+  general:"Its main use is anxiety and restlessness. Lavender aromatherapy and massage have weaker, smaller effects.",
+  adhd:"It hasn't been studied for ADHD. Anxiety is common alongside ADHD and makes focus and sleep harder.",
+  found:"For anxiety (the evidence label refers to this, not ADHD), a 2023 analysis of 5 placebo-controlled trials found Silexan reduced anxiety in adults, including generalized anxiety disorder, with good tolerability. Results apply to this specific product, not lavender oil in general.",
+  dose:"80 mg once a day for 10 weeks in adult trials; 160 mg was also tested.",
+  limit:"No official upper limit.",
+  side:"Burping with a lavender taste, upset stomach.",
+  caution:"Not studied in children or pregnancy. Never swallow lavender essential oil meant for diffusers or skin.",
+  src:[
+    ["Silexan in anxiety disorders: meta-analysis, Eur Arch Psychiatry Clin Neurosci (2023)","https://pubmed.ncbi.nlm.nih.gov/36717399/"],
+    ["Silexan network meta-analysis, Sci Rep (2019)","https://pmc.ncbi.nlm.nih.gov/articles/PMC6889391/"]
+  ]
+},
+{
+  id:"chamomile", name:"Chamomile", aka:"Matricaria chamomilla",
+  group:"support", ev:"Limited",
+  what:"A daisy-like flower used as tea or as a standardized extract.",
+  general:"Chamomile is a traditional calming herb used for sleep, anxiety and upset stomach.",
+  adhd:"It hasn't been studied as an ADHD treatment, though reviews of herbal ADHD remedies mention it alongside lemon balm and valerian. People use it to wind down at night.",
+  found:"A 2019 analysis of 12 trials found chamomile improved sleep quality, but not anxiety in its pooled analysis. Individual trials in generalized anxiety disorder found modest benefit from a 1,500 mg daily extract.",
+  dose:"Anxiety trials used 1,500 mg a day of extract (500 mg three times a day). Tea is much weaker.",
+  limit:"No official upper limit.",
+  side:"Usually none; occasional nausea or drowsiness.",
+  caution:"Avoid if allergic to ragweed, daisies or related plants. May interact with blood thinners such as warfarin.",
+  src:[
+    ["Chamomile for anxiety and sleep: meta-analysis, Phytother Res (2019)","https://pubmed.ncbi.nlm.nih.gov/31006899/"],
+    ["Mao et al., long-term chamomile for GAD, Phytomedicine (2016)","https://pubmed.ncbi.nlm.nih.gov/27912875/"],
+    ["NCCIH: Chamomile","https://www.nccih.nih.gov/health/chamomile"]
+  ]
+},
+{
+  id:"glycine", name:"Glycine", aka:"amino acid glycine",
+  group:"support", ev:"Limited",
+  what:"An amino acid the body makes and gets from protein foods. In the brain it acts as a calming signal.",
+  general:"Glycine is a building block of proteins like collagen and is used as a sleep aid.",
+  adhd:"Not studied for ADHD. Sleep problems are very common in ADHD and worsen next-day attention.",
+  found:"Small Japanese studies found 3 g of glycine before bed improved how people rated their sleep and shortened the time to fall asleep and reach deep sleep. Several were small, and some were run with employees of the manufacturer.",
+  dose:"3 g about an hour before bed in adult studies.",
+  limit:"No official upper limit. Studies of 3 g reported no side effects.",
+  side:"Rarely, upset stomach at high doses.",
+  caution:"Talk to a doctor before using it alongside antipsychotic medicines; very high doses are used in schizophrenia research and can change how these medicines work.",
+  src:[
+    ["Yamadera et al., glycine and sleep, Sleep Biol Rhythms (2007)","https://link.springer.com/article/10.1111/j.1479-8425.2007.00262.x"],
+    ["Bannai et al., glycine and daytime performance (2012)","https://pmc.ncbi.nlm.nih.gov/articles/PMC3328957"]
+  ]
+},
+{
+  id:"rhodiola", name:"Rhodiola", aka:"Rhodiola rosea, golden root, arctic root",
+  group:"support", ev:"Limited",
+  what:"A root from cold mountain regions, sold as an \"adaptogen\" for stress and fatigue.",
+  general:"Rhodiola is used for mental and physical fatigue, stress and low mood.",
+  adhd:"Not studied in ADHD. People take it for the tiredness and mental fatigue that often come with ADHD.",
+  found:"A 2012 review of 11 trials found inconsistent results and a high risk of bias, and called for a rigorous trial. A few individual trials reported less stress-related fatigue.",
+  dose:"Trials used roughly 200 to 600 mg a day of standardized extract.",
+  limit:"No official upper limit.",
+  side:"Dizziness, dry mouth, trouble sleeping if taken late in the day.",
+  caution:"Can be stimulating; may add to stimulant side effects. Ask a doctor first if you have bipolar disorder or take antidepressants.",
+  src:[
+    ["Ishaque et al., Rhodiola for fatigue: systematic review (2012)","https://pubmed.ncbi.nlm.nih.gov/22643043/"]
+  ]
+},
+{
+  id:"lionsmane", name:"Lion's mane mushroom", aka:"Hericium erinaceus",
+  group:"support", ev:"Limited",
+  what:"An edible mushroom sold as a powder or extract for \"brain health.\"",
+  general:"Lab studies suggest it may support nerve growth. Human studies are few and small.",
+  adhd:"Not studied in ADHD. It's marketed for focus and memory.",
+  found:"In a pilot trial of 41 healthy young adults, one dose sped up performance on an attention task, but other results were null or mixed. Another small trial found no clear effect on thinking or mood. Earlier studies focused on older adults with memory decline.",
+  dose:"Trials used about 1 to 3 g a day of mushroom powder or extract.",
+  limit:"No official upper limit.",
+  side:"Upset stomach; allergic reactions in people sensitive to mushrooms.",
+  caution:"Product content varies (fruiting body vs mycelium). Not studied in children.",
+  src:[
+    ["Lion's mane pilot trial in young adults, Nutrients (2023)","https://pubmed.ncbi.nlm.nih.gov/38004235/"],
+    ["Acute lion's mane trial, Front Nutr (2025)","https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2025.1405796/pdf"]
+  ]
+},
+
+/* ---------- Studied and not supported ---------- */
+{
+  id:"ala", name:"Flaxseed oil (alpha-linolenic acid)", aka:"ALA, plant omega-3",
+  group:"no", ev:"Not supported",
+  what:"The omega-3 fat found in flaxseed, chia, walnuts and canola oil. The body converts only a small share of it into EPA and DHA, the forms in fish oil.",
+  general:"ALA is part of a heart-healthy diet.",
+  adhd:"It's sometimes used as a vegetarian substitute for fish oil.",
+  found:"In an Israeli trial, 40 children with ADHD took oil with 1 g of ALA a day or placebo for 8 weeks, and there was no difference in symptoms. Many children dropped out, partly because of capsule size, so the study was small.",
+  dose:"The trial used 2 g of oil (1 g ALA) a day. Vegetarians who want EPA/DHA can use algae oil instead.",
+  limit:"No official upper limit.",
+  side:"Loose stools, gas.",
+  caution:"Flaxseed oil may add to the effect of blood thinners at high doses. Vegetarians wanting EPA and DHA can use algae oil instead.",
+  src:[
+    ["Dubnov-Raz et al., ALA in children with ADHD, Front Hum Neurosci (2014)","https://pmc.ncbi.nlm.nih.gov/articles/PMC4188038"]
+  ]
+},
+{
+  id:"tyrosine", name:"L-tyrosine", aka:"tyrosine",
+  group:"no", ev:"Not supported",
+  what:"An amino acid the body uses to make dopamine and norepinephrine. It's sometimes marketed online as a \"natural Adderall.\"",
+  general:"Short-term studies suggest it may help thinking under acute stress such as cold or sleep loss.",
+  adhd:"The idea is that more raw material could mean more dopamine.",
+  found:"In a 1987 open trial in 12 adults, 8 improved within 2 weeks, but by 6 weeks the benefit faded as they developed tolerance, and the authors concluded it wasn't useful. A small 1988 study in children found no improvement.",
+  dose:"No established dose for ADHD. Not recommended for it.",
+  limit:"No official upper limit.",
+  side:"Nausea, headache, heartburn, fatigue.",
+  caution:"Avoid with MAO-inhibitor antidepressants (risk of a dangerous rise in blood pressure). May interact with thyroid hormone and levodopa.",
+  src:[
+    ["Reimherr et al., L-tyrosine in adults, Am J Psychiatry (1987)","https://pubmed.ncbi.nlm.nih.gov/3300376/"]
+  ]
+},
+{
+  id:"caffeine", name:"Caffeine", aka:"coffee, tea, energy drinks, caffeine pills",
+  group:"no", ev:"Not supported",
+  what:"A stimulant found in coffee, tea, cola, energy drinks and some medicines.",
+  general:"Caffeine increases alertness and can improve reaction time and mood in the short term.",
+  adhd:"Like ADHD medicines, it's a stimulant, and many adults with ADHD self-medicate with coffee or energy drinks.",
+  found:"A 2023 analysis of trials in children found no significant benefit of caffeine over placebo for ADHD symptoms. Animal studies suggest it may help attention, but that hasn't held up in human trials. It is much weaker and less targeted than ADHD medicines.",
+  dose:"Not recommended as an ADHD treatment. For healthy adults, the FDA says up to about 400 mg a day (roughly 4 cups of coffee) isn't generally linked to harm.",
+  limit:"About 400 mg a day for healthy adults (FDA guidance). Children and teens should have much less.",
+  side:"Jitteriness, anxiety, fast heartbeat, upset stomach, and poor sleep, which makes ADHD symptoms worse.",
+  caution:"Combined with stimulant medication it adds to heart-rate, anxiety and sleep side effects. Coffee and acidic energy drinks can also reduce absorption of immediate-release amphetamine.",
+  src:[
+    ["Effects of caffeine in children with ADHD: meta-analysis, Brain Sci (2023)","https://pmc.ncbi.nlm.nih.gov/articles/PMC10526204/"],
+    ["FDA: Spilling the beans: how much caffeine is too much?","https://www.fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much"]
+  ]
+},
+{
+  id:"cannabis", name:"Cannabis and CBD", aka:"THC, cannabidiol, marijuana products",
+  group:"no", ev:"Not supported",
+  what:"Products from the cannabis plant. THC causes the high; CBD does not. CBD is sold as a supplement in many places, often with unreliable labels.",
+  general:"A prescription CBD medicine is approved for certain rare seizure disorders. Other uses are mostly unproven.",
+  adhd:"Many adults with ADHD say cannabis calms them, and some prefer it to medication.",
+  found:"The only placebo-controlled trial, in 30 adults with ADHD, tested a THC/CBD mouth spray and found no significant difference on its main measure, with some non-significant trends. There's no good evidence that cannabis or CBD treats ADHD.",
+  dose:"Not recommended for ADHD.",
+  limit:"Not applicable.",
+  side:"THC: impaired attention, memory and driving, anxiety, and dependence with regular use. CBD: drowsiness, diarrhea, appetite changes.",
+  caution:"CBD can raise liver enzymes and interact with many medicines. Laws vary by state and country. Cannabis is especially risky for teens' developing brains.",
+  src:[
+    ["Cooper et al., cannabinoids in ADHD: RCT, Eur Neuropsychopharmacol (2017)","https://www.pubmed.gov/28576350/"],
+    ["NCCIH: Cannabis (marijuana) and cannabinoids","https://www.nccih.nih.gov/health/cannabis-marijuana-and-cannabinoids-what-you-need-to-know"]
+  ]
+},
+{
+  id:"dmae", name:"DMAE (deanol)", aka:"dimethylaminoethanol",
+  group:"no", ev:"Not supported",
+  what:"A compound related to choline, found in small amounts in fish. It was once a prescription drug (Deaner) for children's learning and behavior problems.",
+  general:"Today it's sold mainly in \"brain\" and anti-aging products.",
+  adhd:"It was thought to raise acetylcholine, though that was never well proven.",
+  found:"A 1975 trial in 74 children found deanol and methylphenidate both improved some test scores. The prescription version was withdrawn in 1983 after the FDA asked for more efficacy studies, which were never done. There are no modern trials.",
+  dose:"Not recommended; no established dose.",
+  limit:"No official upper limit.",
+  side:"Headache, trouble sleeping, muscle tension.",
+  caution:"Safety in pregnancy and in children hasn't been studied in modern trials.",
+  src:[
+    ["Deanol and methylphenidate in minimal brain dysfunction, Clin Pharmacol Ther (1975)","https://pubmed.ncbi.nlm.nih.gov/1092513/"]
+  ]
+},
+{
+  id:"inositol", name:"Inositol", aka:"myo-inositol",
+  group:"no", ev:"Not supported",
+  what:"A sugar-like compound involved in cell signaling, found in fruit, beans and grains.",
+  general:"Inositol is used for polycystic ovary syndrome, and small trials suggested benefits in panic disorder and depression.",
+  adhd:"It was tested because it seemed to help other psychiatric conditions.",
+  found:"In a small 8-week crossover trial in 11 children, ADHD symptoms got worse on inositol compared with placebo.",
+  dose:"The trial used 200 mg per kg of body weight a day. Not recommended for ADHD.",
+  limit:"No official upper limit.",
+  side:"Nausea, gas, diarrhea at high doses.",
+  caution:"Not recommended for ADHD.",
+  src:[
+    ["Levine et al., inositol may worsen ADHD, Hum Psychopharmacol (1995)","https://zendy.io/title/10.1002/hup.470100608"]
+  ]
+},
+
+/* ---------- Safety concerns ---------- */
+{
+  id:"kava", name:"Kava", aka:"kava kava, Piper methysticum",
+  group:"caution", ev:"Safety concern",
+  what:"A Pacific Island plant root used as a calming drink and in anxiety supplements.",
+  general:"Some trials suggest kava eases anxiety.",
+  adhd:"Not studied in ADHD. People sometimes try it for anxiety or restlessness.",
+  found:"The issue is safety. The FDA warned in 2002 that kava supplements may cause severe liver injury, citing more than 25 reports abroad including hepatitis, cirrhosis and liver failure, and a U.S. case needing a liver transplant. Several countries restricted it.",
+  dose:"Not recommended.",
+  limit:"Not applicable.",
+  side:"Liver damage (rare but severe), drowsiness, scaly skin with heavy use.",
+  caution:"Avoid, especially with alcohol, liver disease or medicines that affect the liver. Signs of liver trouble include yellow skin or eyes, dark urine and stomach pain.",
+  src:[
+    ["NIH ODS: FDA consumer advisory on kava","https://ods.od.nih.gov/Health_Information/kava.aspx"],
+    ["NCCIH: Kava","https://www.nccih.nih.gov/health/kava"]
+  ]
+},
+{
+  id:"bluegreen", name:"Blue-green algae (AFA)", aka:"Aphanizomenon flos-aquae, some spirulina products",
+  group:"caution", ev:"Safety concern",
+  what:"Water-grown bacteria sold as \"superfood\" powders and capsules. Some have been marketed to parents of children with ADHD.",
+  general:"Spirulina is a protein- and nutrient-rich food when grown and tested properly.",
+  adhd:"Marketing claims for ADHD aren't backed by trials.",
+  found:"The concern is contamination with liver toxins called microcystins, especially in products harvested from open lakes. The FDA reports recalls of blue-green algae products in 2018 and 2020 for microcystin levels above safety guidelines. Children are more vulnerable because of their smaller size.",
+  dose:"Not recommended for ADHD.",
+  limit:"Not applicable.",
+  side:"Upset stomach, liver damage from contaminated products.",
+  caution:"If you use spirulina as a food, choose products tested for microcystins. Avoid wild-harvested AFA for children.",
+  src:[
+    ["FDA: Blue-green algae products and microcystins","https://www.fda.gov/food/natural-toxins-food/blue-green-algae-products-and-microcystins"]
+  ]
+},
+{
+  id:"htp", name:"5-HTP", aka:"5-hydroxytryptophan",
+  group:"caution", ev:"Safety concern",
+  what:"A compound made from the seeds of an African plant. The body turns it into serotonin.",
+  general:"It's used for mood, sleep and appetite, with limited evidence.",
+  adhd:"Sometimes combined with tyrosine in \"amino acid\" ADHD programs. There are no reliable ADHD trials.",
+  found:"There's no good evidence for ADHD. The concern is safety: some people taking 5-HTP developed eosinophilia-myalgia syndrome, a serious blood and muscle disorder, possibly from contaminants, and it can raise serotonin to dangerous levels when combined with antidepressants.",
+  dose:"Not recommended for ADHD.",
+  limit:"Not applicable.",
+  side:"Nausea, vomiting, diarrhea.",
+  caution:"Never combine with antidepressants (SSRIs, SNRIs and others), triptans, tramadol or other serotonin-raising drugs without a doctor. Stop at least 2 weeks before surgery.",
+  src:[
+    ["MedlinePlus: 5-HTP","https://medlineplus.gov/druginfo/natural/794.html"],
+    ["Poison Control: 5-HTP safety concerns","https://www.poison.org/articles/5htp-safety-concerns-173"]
+  ]
+}
+];
+
+/* Where each supplement is found in food (all 42) */
+const SUPP_FOOD = {
+  omega3:"Salmon, sardines, mackerel, herring, trout; algae oil for vegetarians.",
+  micronutrients:"A varied diet of vegetables, fruit, whole grains, beans, nuts, dairy, eggs and meat or fish.",
+  iron:"Red meat, poultry, fish, beans, lentils, spinach, fortified cereals (vitamin C helps absorb plant iron).",
+  zinc:"Oysters, beef, crab, poultry, beans, nuts, seeds, fortified cereals.",
+  vitd:"Oily fish, egg yolks, fortified milk and cereals; the skin makes it in sunlight.",
+  magnesium:"Pumpkin seeds, almonds, cashews, spinach, black beans, whole grains, dark chocolate.",
+  saffron:"Saffron spice in cooking (extract doses are higher and standardized).",
+  ginkgo:"Not in ordinary food (supplement only).",
+  pycnogenol:"Not in food (pine bark extract).",
+  ps:"Small amounts in meat, fish (especially organ meats) and white beans.",
+  bacopa:"Not in Western diets (herbal supplement).",
+  carnitine:"Red meat, dairy, fish; the body also makes it.",
+  melatonin:"Tiny amounts in tart cherries, nuts and grains; dim evening light helps the body make its own.",
+  theanine:"Green, black and white tea (a cup has roughly 10 to 30 mg).",
+  probiotics:"Yogurt and kefir with live cultures, sauerkraut, kimchi, miso.",
+  stjohns:"Not in food.",
+  gla:"Borage, black currant seed and evening primrose oils; hemp seeds.",
+  b6mg:"B6: chickpeas, tuna, salmon, poultry, potatoes, bananas. Magnesium: see Magnesium.",
+  ginseng:"Ginseng tea and some Korean dishes, at low amounts.",
+  passionflower:"Herbal tea.",
+  lemonbalm:"Lemon balm tea; valerian is used as tea or extract.",
+  same:"Not in food in useful amounts; the body makes it from methionine (in meat, fish, eggs).",
+  nac:"Not in food; cysteine comes from protein foods like poultry, eggs and yogurt.",
+  citicoline:"Small amounts in liver and other organ meats; the body makes it from choline.",
+  b12folate:"B12: meat, fish, eggs, dairy, fortified cereals. Folate: leafy greens, beans, citrus, fortified grains.",
+  choline:"Eggs (one yolk has about 150 mg), beef, fish, chicken, soybeans, broccoli, Brussels sprouts.",
+  ashwagandha:"Not in Western diets (herbal supplement).",
+  lavender:"Culinary lavender is very weak compared with capsules.",
+  chamomile:"Chamomile tea.",
+  glycine:"Bone broth, gelatin, meat, fish, beans (diet supplies about 3 to 5 g a day).",
+  rhodiola:"Not in food.",
+  lionsmane:"Lion's mane mushrooms can be cooked and eaten.",
+  ala:"Ground flaxseed, chia seeds, walnuts, canola and soybean oil.",
+  tyrosine:"Protein foods: cheese, chicken, fish, soy, eggs, beans.",
+  caffeine:"Coffee (about 95 mg a cup), tea, cola, energy drinks, chocolate.",
+  cannabis:"Not applicable.",
+  dmae:"Small amounts in anchovies and sardines.",
+  inositol:"Citrus fruit, cantaloupe, beans, whole grains.",
+  kava:"Traditional kava drinks in Pacific Island cultures.",
+  bluegreen:"Spirulina powders and smoothies.",
+  htp:"Not in food; tryptophan in turkey, eggs and dairy is its building block."
+};
+
+/* Supplements and ADHD medication (v1.9.0) */
+const SUPP_MEDS = {
+  title:"Supplements and ADHD medication",
+  intro:"Some supplements change how ADHD medicines work, or add to their side effects. Give your prescriber and pharmacist a full list, including teas, powders and gummies.",
+  items:[
+    ["Vitamin C, juice, coffee and soda with amphetamine","Acidic drinks and vitamin C supplements can reduce how much immediate-release amphetamine (such as Adderall) the body absorbs. Ask your pharmacist how to time them.", "https://www.thecarlatreport.com/articles/2793-ask-the-editor-three-significant-food-interactions-with-adhd-medications"],
+    ["High-fat meals with some extended-release medicines","A high-fat meal can delay some extended-release amphetamines by hours, and raises levels of extended-release guanfacine, which can cause tiredness and low blood pressure.", "https://www.thecarlatreport.com/articles/2793-ask-the-editor-three-significant-food-interactions-with-adhd-medications"],
+    ["Caffeine, ginseng and rhodiola with stimulants","These can add to stimulant side effects: faster heartbeat, jitteriness, anxiety and poor sleep.", "https://www.fda.gov/consumers/consumer-updates/spilling-beans-how-much-caffeine-too-much"],
+    ["St. John's wort, 5-HTP and SAMe with antidepressants","Many people with ADHD also take antidepressants. These supplements can raise serotonin too much or, for St. John's wort, weaken many other medicines.", "https://www.nccih.nih.gov/health/st-johns-wort"],
+    ["Micronutrient formulas with any psychiatric medicine","Researchers report these formulas can strengthen the effects of psychiatric medicines, so doses may need adjusting under medical supervision.", "https://pmc.ncbi.nlm.nih.gov/articles/PMC8782920"],
+    ["Ginkgo, fish oil, saffron, phosphatidylserine and chamomile with blood thinners","These may add to bleeding risk with warfarin, aspirin, ibuprofen and similar medicines.", "https://www.nccih.nih.gov/health/ginkgo"],
+    ["Melatonin for stimulant-related sleep trouble","Melatonin can help some children fall asleep, but a health professional should set the dose and timing.", "https://aasm.org/advocacy/position-statements/melatonin-use-in-children-and-adolescents-health-advisory/"]
+  ]
+};
+SUPPS.push(...SUPPS_MORE);
+
+/* ---------- Supplements page (v1.8.0, expanded v1.9.0) ---------- */
+const SUPP_TAGS = {omega3:["Focus","Mood","Heart"], micronutrients:["Focus","Mood","Emotions"], iron:["Focus","Energy","Sleep"], zinc:["Focus","Immunity"], vitd:["Focus","Bones","Mood"], magnesium:["Sleep","Calm","Muscles"], saffron:["Focus","Mood"], ginkgo:["Focus"], pycnogenol:["Focus"], ps:["Focus","Memory"], bacopa:["Focus","Memory"], carnitine:["Focus","Energy"], melatonin:["Sleep"], theanine:["Sleep","Calm"], probiotics:["Gut","Emotions"], stjohns:["Mood"], gla:["Focus"], b6mg:["Calm","Focus"], ginseng:["Focus","Energy"], passionflower:["Calm","Focus"], lemonbalm:["Calm","Sleep"], same:["Mood"], nac:["Focus","Impulsivity"], citicoline:["Focus","Memory"], b12folate:["Energy","Mood"], choline:["Pregnancy","Focus"], ashwagandha:["Stress","Sleep"], lavender:["Calm","Anxiety"], chamomile:["Sleep","Calm"], glycine:["Sleep"], rhodiola:["Energy","Stress"], lionsmane:["Focus","Memory"], ala:["Focus"], tyrosine:["Focus"], caffeine:["Focus","Energy"], cannabis:["Calm"], dmae:["Focus"], inositol:["Mood"], kava:["Calm"], bluegreen:["Focus"], htp:["Mood","Sleep"]};
+const SUPP_FILTERS = [["all","All"],["direct","For ADHD symptoms"],["support","Sleep, mood & body"],["no","Not supported"],["caution","Safety concerns"]];
+const SUPP_GROUP_NAME = {direct:"Studied for ADHD symptoms", support:"Supports sleep, mood and body", no:"Studied and not supported", caution:"Safety concerns: avoid"};
+const SUPP_GROUP_BLURB = {direct:"Tested in people with ADHD for attention, hyperactivity or impulsivity.", support:"Mainly help with problems that make ADHD harder, like poor sleep, restlessness or emotional ups and downs.", no:"Tested and found not to help ADHD, or never shown to work by modern standards.", caution:"Real safety risks, from liver damage to dangerous interactions. Avoid unless a doctor advises otherwise."};
+const SUPP_EV = {"Promising":"good","Mixed":"mid","Limited":"low","Not supported":"no","Safety concern":"warn"};
+const SUPP_TEXT = {}; SUPPS.forEach(s => { SUPP_TEXT[s.id] = [s.name, s.aka, (SUPP_TAGS[s.id] || []).join(" "), s.what, s.general, s.adhd, SUPP_FOOD[s.id] || ""].join(" ").toLowerCase(); });
 let suppFilter = "all", suppQuery = "", suppOpen = null;
 function suppCard(s){
   return `<details class="supp" id="supp-${s.id}" data-sid="${s.id}"${suppOpen === s.id ? " open" : ""}>
@@ -2520,6 +3002,7 @@ function suppCard(s){
     <div class="supp-body">
       <div><h4>What it is</h4><p>${esc(s.what)}</p></div>
       <div><h4>Why people take it</h4><p>${esc(s.general)}</p></div>
+      ${SUPP_FOOD[s.id] ? `<div><h4>Found in food</h4><p>${esc(SUPP_FOOD[s.id])}</p></div>` : ""}
       <div><h4>How it might help ADHD</h4><p>${esc(s.adhd)}</p></div>
       <div><h4>What research found</h4><p>${esc(s.found)}</p></div>
       <div class="supp-box dose"><div><h4>Doses used in studies</h4><p>${esc(s.dose)}</p></div><div><h4>Safe upper limit</h4><p>${esc(s.limit)}</p></div></div>
@@ -2537,10 +3020,18 @@ function renderSupplements(app){
       <div class="row small"><span class="ev good">Promising</span><span>Several good trials point the same way, but it isn't proven.</span></div>
       <div class="row small"><span class="ev mid">Mixed</span><span>Many studies, and they disagree.</span></div>
       <div class="row small"><span class="ev low">Limited</span><span>Few, small or short studies.</span></div>
-      <div class="row small"><span class="ev no">Not supported</span><span>Tested properly and didn't help.</span></div></section>
+      <div class="row small"><span class="ev no">Not supported</span><span>Tested properly and didn't help.</span></div>
+      <div class="row small"><span class="ev warn">Safety concern</span><span>Known risks outweigh any benefit.</span></div>
+      <p class="small muted">For supplements in the "sleep, mood and body" group, the label describes evidence for that use (for example, anxiety or sleep), not for ADHD itself.</p></section>
+    <details class="card"><summary>At a glance: all ${SUPPS.length} supplements in one table</summary>
+      <div style="overflow-x:auto;margin-top:12px"><table class="supp-table"><thead><tr><th>Supplement</th><th>Evidence</th><th>Mainly for</th></tr></thead><tbody>
+      ${["direct","support","no","caution"].map(g => SUPPS.filter(s => s.group === g).map(s => `<tr><td><a href="#supplements" data-goto="${s.id}">${esc(s.name)}</a></td><td><span class="ev ${SUPP_EV[s.ev]}">${s.ev}</span></td><td class="small">${(SUPP_TAGS[s.id] || []).join(", ")}</td></tr>`).join("")).join("")}
+      </tbody></table></div></details>
     <section class="section"><div class="field" style="max-width:520px"><label for="suppQ">Search supplements</label><input id="suppQ" type="text" placeholder="e.g. sleep, iron, calm" value="${esc(suppQuery)}" autocomplete="off"></div>
       <div class="chips" role="group" aria-label="Filter supplements">${SUPP_FILTERS.map(f => `<button class="chip" data-sf="${f[0]}" aria-pressed="false">${f[1]}</button>`).join("")}</div></section>
     <div id="suppOut" class="section" style="gap:22px"></div>
+    <section class="section" id="supp-meds"><h2>${SUPP_MEDS.title}</h2><p class="muted" style="max-width:66ch">${esc(SUPP_MEDS.intro)}</p>
+      <div class="grid">${SUPP_MEDS.items.map(m => `<div class="card supp-med"><h3>${esc(m[0])}</h3><p class="small">${esc(m[1])}</p><a class="small" href="${m[2]}" target="_blank" rel="noopener">Source ↗</a></div>`).join("")}</div></section>
     <section class="section"><h3>Before you try a supplement</h3><ul class="list">
       <li>Ask for a blood test if you suspect a shortfall (iron/ferritin, vitamin D, sometimes zinc or magnesium). Fixing a real deficiency is where the evidence is best.</li>
       <li>Tell your doctor and pharmacist everything you take, including ADHD medication. Bring the bottles.</li>
@@ -2554,12 +3045,13 @@ function renderSupplements(app){
     const q = suppQuery.trim().toLowerCase(), words = q ? q.split(/\s+/) : [];
     const list = SUPPS.filter(s => (suppFilter === "all" || s.group === suppFilter) && words.every(w => SUPP_TEXT[s.id].includes(w)));
     app.querySelectorAll("[data-sf]").forEach(b => { const on = b.dataset.sf === suppFilter; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
-    const groups = suppFilter === "all" ? ["direct","support","no"] : [suppFilter];
+    const groups = suppFilter === "all" ? ["direct","support","no","caution"] : [suppFilter];
     out.innerHTML = (q ? `<p aria-live="polite"><b>${list.length}</b> result${list.length === 1 ? "" : "s"} for "${esc(suppQuery.trim())}"</p>` : "") +
       (groups.map(g => { const items = list.filter(s => s.group === g); return items.length ? `<section class="section supp-group"><h2>${SUPP_GROUP_NAME[g]}</h2><p class="small muted">${SUPP_GROUP_BLURB[g]}</p>${items.map(suppCard).join("")}</section>` : ""; }).join("") || `<p class="muted">Nothing matched. Try a different word, or choose "All".</p>`);
   };
   app.querySelectorAll("[data-sf]").forEach(b => b.onclick = () => { suppFilter = b.dataset.sf; draw(); });
   app.querySelector("#suppQ").oninput = e => { suppQuery = e.target.value; draw(); };
+  app.querySelectorAll("[data-goto]").forEach(a => a.onclick = e => { e.preventDefault(); suppFilter = "all"; suppQuery = ""; app.querySelector("#suppQ").value = ""; draw(); const el = app.querySelector("#supp-" + a.dataset.goto); if (el) { el.open = true; el.scrollIntoView({block:"start"}); } });
   draw();
   if (suppOpen) { const el = app.querySelector("#supp-" + suppOpen); suppOpen = null; if (el) setTimeout(() => el.scrollIntoView({block:"start"}), 0); }
 }

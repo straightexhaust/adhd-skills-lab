@@ -6,7 +6,7 @@ Repository:  GitHub repo "adhd-skills-lab" (GitHub Pages, branch main, root fold
 Accounts:    Supabase project zxqynpnynhdysbpqpyvu
 Email:       Resend, sending from no-reply@magothymedia.com
 
-CURRENT VERSION: 1.8.0  (upload v1.8.0/index.html to GitHub)
+CURRENT VERSION: 1.9.0  (upload v1.9.0/index.html to GitHub)
 
 Each folder holds the complete index.html for that version. The first line
 inside every index.html names its version and date. Versions 1.1.0 and later
@@ -31,7 +31,27 @@ versions have no account connection, so signed-in learners would lose sync
 
 
 -----------------------------------------------------------------------------
-v1.8.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+v1.9.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+-----------------------------------------------------------------------------
+Type: Minor (new content). Includes everything in 1.8.0.
+- Supplements guide: 25 more supplements (41 total) in four groups.
+  For ADHD symptoms (+8): evening primrose/GLA blends, magnesium + B6,
+  Korean red ginseng, passionflower, lemon balm and valerian, SAMe, NAC,
+  citicoline.
+  Sleep, mood and body (+8): B12 and folate, choline in pregnancy,
+  ashwagandha, lavender (Silexan), chamomile, glycine, rhodiola,
+  lion's mane.
+  Not supported (+6): flaxseed oil (ALA), L-tyrosine, caffeine,
+  cannabis/CBD, DMAE, inositol.
+  New group "Safety concerns: avoid" (3): kava, blue-green algae, 5-HTP.
+- "Found in food" line for all 41 supplements; search matches foods.
+- New "Supplements and ADHD medication" section (7 sourced notes).
+- "At a glance" table of all 41; tapping a name opens its card.
+- All figures checked against sources on 2026-11-20.
+- No new saved items. No database changes.
+
+-----------------------------------------------------------------------------
+v1.8.0  -  2026-11-20                                     Superseded (included in 1.9.0)
 -----------------------------------------------------------------------------
 Type: Minor (new section). Includes everything in 1.7.0.
 - New "Supplements" page (#supplements) and a Supplements tab in the
