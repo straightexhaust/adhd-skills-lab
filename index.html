@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ADHD Skills Lab v1.4.0 (2026-11-20) -->
+<!-- ADHD Skills Lab v1.5.0 (2026-11-20) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -14,6 +14,7 @@
   --paper:#f2f4f9; --card:#ffffff; --ink:#15203b; --muted:#56617e; --line:#d6dcea;
   --accent:#2a4fd8; --spark:#ffc72c;
   --c-focus:#2a4fd8; --c-memory:#8a3fd1; --c-habits:#13875c; --c-skills:#d9601c;
+  --c-understand:#0b7a8a; --c-emotions:#c2336b; --c-work:#7d6608; --c-support:#8b5a2b;
   --good:#13875c; --bad:#cf3b33;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -25,6 +26,7 @@
     --paper:#0e1424; --card:#18203a; --ink:#e7ebf7; --muted:#a1abc8; --line:#2b3758;
     --accent:#7f98ff; --spark:#ffd257;
     --c-focus:#7f98ff; --c-memory:#c08cff; --c-habits:#4fd19b; --c-skills:#ff9a5c;
+  --c-understand:#4fc3d6; --c-emotions:#ff8fb3; --c-work:#e3c14a; --c-support:#d9a877;
     --good:#4fd19b; --bad:#ff7a70; color-scheme:dark;
   }
 }
@@ -32,6 +34,7 @@
   --paper:#0e1424; --card:#18203a; --ink:#e7ebf7; --muted:#a1abc8; --line:#2b3758;
   --accent:#7f98ff; --spark:#ffd257;
   --c-focus:#7f98ff; --c-memory:#c08cff; --c-habits:#4fd19b; --c-skills:#ff9a5c;
+  --c-understand:#4fc3d6; --c-emotions:#ff8fb3; --c-work:#e3c14a; --c-support:#d9a877;
   --good:#4fd19b; --bad:#ff7a70; color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -152,6 +155,35 @@ nav.tabs a.av{padding:3px}
 .linkbtn{background:none;border:0;color:var(--accent);font-weight:700;padding:4px 0;text-decoration:underline;min-height:0}
 .danger{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
 .btn.bad{background:var(--bad)}
+/* v1.5.0: library, news, deeper lessons, new widgets */
+.prose{display:flex;flex-direction:column;gap:12px}
+.prose p,.prose li{max-width:68ch}
+.prose ul{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:5px}
+.prose h3{margin-top:10px}
+details.deeper{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--card)}
+details.deeper summary{color:var(--cc)}
+details.deeper .prose{margin-top:12px}
+.lib-card{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;border-left:5px solid var(--accent)}
+.lib-card:hover{border-left-color:var(--spark)}
+.help-strip{display:flex;flex-direction:column;gap:4px;text-decoration:none;color:inherit;border:2px solid var(--bad)}
+.keypts{border-left:6px solid var(--spark);display:flex;flex-direction:column;gap:8px}
+.gloss{margin:0;display:grid;grid-template-columns:minmax(120px,230px) 1fr;gap:10px 18px}
+.gloss dt{font-weight:700} .gloss dd{margin:0}
+a.chip{text-decoration:none;color:inherit;display:inline-flex;align-items:center}
+.rate-row{display:flex;justify-content:space-between;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid var(--line)}
+.rate-btns{display:flex;gap:6px} .rate-btns .chip{min-width:42px;padding:7px 0}
+.tri-list{display:flex;flex-direction:column;gap:8px}
+.tri-row{display:flex;gap:8px 10px;align-items:center;flex-wrap:wrap;background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:8px 12px}
+.tri-row.now{border-color:var(--cc)}
+.tri-row .grow{flex:1;min-width:140px;overflow-wrap:anywhere}
+.tri-btns{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tri-btns .chip{padding:5px 10px;min-height:36px;font-size:.85rem}
+nav.tabs{overflow-x:auto} nav.tabs a{white-space:nowrap}
+@media (max-width:560px){
+  .gloss{grid-template-columns:1fr;gap:2px} .gloss dd{margin-bottom:10px}
+  nav.tabs a{padding:6px 8px}
+}
+@media (max-width:480px){ header.top .wrap{gap:4px;padding:0 10px} header.top nav.tabs{gap:0} header.top nav.tabs a{padding:6px 5px;font-size:.8rem} header.top nav.tabs a.av{padding:3px} nav.tabs a .ndot{margin-left:3px;width:7px;height:7px} .brand .bt{display:none} .brand i{width:22px;height:22px;border-radius:6px} }
 /* v1.4.0: what's new + New labels */
 .pill.new{background:var(--spark);border-color:var(--spark);color:#15203b}
 .wn{border-left:6px solid var(--spark);display:flex;flex-direction:column;gap:10px}
@@ -204,17 +236,19 @@ button.tw-peg:hover{border-color:var(--accent)}
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#home"><i></i>ADHD Skills <span>Lab</span></a>
+    <a class="brand" href="#home" aria-label="ADHD Skills Lab home"><i></i><b class="bt">ADHD Skills <span>Lab</span></b></a>
     <nav class="tabs" aria-label="Main">
       <a href="#home" data-nav="home">Home</a>
       <a href="#courses" data-nav="courses">Courses</a>
       <a href="#games" data-nav="games">Games</a>
+      <a href="#library" data-nav="library">Library</a>
+      <a href="#news" data-nav="news">News</a>
       <a href="#account" data-nav="account" id="acctBtn" hidden>Sign in</a>
     </nav>
   </div>
 </header>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.4.0 · <a href="#updates">What's new</a></span></div></footer>
+<footer><div class="wrap">ADHD Skills Lab is an educational self-help course. It does not diagnose or treat ADHD and is not a replacement for a doctor, therapist or ADHD coach. Progress is saved in this browser, and to your account when you're signed in. <span style="white-space:nowrap">Version 1.5.0 · <a href="#updates">What's new</a></span></div></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.js"></script>
 <script>
@@ -577,6 +611,349 @@ const COURSES = [
     example:`<p>After forgetting a bill, <b>Tom</b>'s first thought was "I'm hopeless." He reframed: "I forgot a bill. I'll pay it now and set up autopay so it can't happen again." The second version leads to action.</p>`,
     tryTitle:"Reframe your inner critic", widget:{type:"reframe"},
     quiz:{q:"Which thought is most likely to help you try again?", o:["I always mess everything up","I messed this up; here's one thing I'll change","Why bother"], a:1, why:"It's accurate, specific and points to a next step."} }
+  ]},
+/* ===== v1.5.0: four in-depth courses ===== */
+{ id:"understand", title:"Understanding ADHD", color:"--c-understand",
+  blurb:"What ADHD is, how it shows up, and why your brain works the way it does. The foundation for everything else.",
+  lessons:[
+  { id:"und1", added:"2026-11-20", title:"What ADHD is (and what it isn't)", mins:9,
+    idea:`<p>ADHD is a <b>neurodevelopmental condition</b>: a difference in how the brain develops and manages attention, activity and impulses. It isn't laziness, a character flaw or a lack of intelligence.</p>
+    <p>Clinicians look for a <b>lasting pattern</b> of inattention, hyperactivity-impulsivity, or both, that:</p>
+    <ul><li>started in childhood (some signs before age 12),</li><li>shows up in <b>more than one part of life</b> (home, work, school, relationships), and</li><li>gets in the way of daily life, not just now and then.</li></ul>
+    <p>It's also common. In U.S. surveys, about <b>1 in 9 children</b> have been diagnosed at some point, and about <b>1 in 16 adults</b> have a current diagnosis. Roughly half of those adults were diagnosed after they turned 18.</p>`,
+    example:`<p><b>Dana</b>, 34, always thought she was "just disorganized." Her school reports said "bright but doesn't apply herself." Learning that ADHD is a brain-based pattern, present since childhood, helped her swap "what's wrong with me?" for "what does my brain need?"</p>`,
+    deeper:`<p><b>The name is misleading.</b> People with ADHD don't have too little attention. They have trouble <i>steering</i> it. That's why the same person can drift off in a meeting and then lose three hours to a project they love (often called hyperfocus).</p>
+    <p><b>It runs in families.</b> Twin studies put the heritability of ADHD at about 74%, which is high. Genes aren't the whole story, but parenting style, sugar and screens don't cause it.</p>
+    <p><b>It's real and well studied.</b> An international consensus statement signed by 80 researchers from 27 countries lists 208 conclusions about ADHD that are backed by strong evidence.</p>`,
+    refs:["what-is-adhd","how-common","myths"],
+    tryTitle:"Myth or fact?", widget:{type:"scenarios", items:[
+      {q:"\"ADHD is caused by bad parenting or too much sugar.\"", o:["Myth","Fact"], a:0, why:"ADHD is strongly genetic. Parenting and diet can make days easier or harder, but they don't cause it."},
+      {q:"\"If you can focus on video games for hours, you can't have ADHD.\"", o:["Myth","Fact"], a:0, why:"ADHD is about regulating attention. Intense focus on high-interest things is common."},
+      {q:"\"Many adults with ADHD weren't diagnosed until adulthood.\"", o:["Myth","Fact"], a:1, why:"In CDC survey data, about half of adults with ADHD got their diagnosis at 18 or older."},
+      {q:"\"Everyone's a little ADHD.\"", o:["Myth","Fact"], a:0, why:"Everyone gets distracted. ADHD is a persistent pattern since childhood that interferes across several areas of life."}]},
+    quiz:{q:"Which of these is part of how ADHD is defined?", o:["It only affects children","Signs began in childhood and show up in more than one setting","It means you can't pay attention to anything"], a:1, why:"A long-standing pattern across settings that interferes with life is the core of the definition."} },
+  { id:"und2", added:"2026-11-20", title:"Three presentations, one condition", mins:8,
+    idea:`<p>ADHD doesn't look the same in everyone. Clinicians describe three <b>presentations</b>:</p>
+    <ul><li><b>Mostly inattentive:</b> losing track of details, drifting in conversations, misplacing things, trouble finishing. Often quiet and easy to miss.</li>
+    <li><b>Mostly hyperactive-impulsive:</b> restless, always "on the go," talking a lot, interrupting, acting before thinking.</li>
+    <li><b>Combined:</b> a good helping of both.</li></ul>
+    <p>Your presentation can <b>shift over time</b>. Visible hyperactivity often fades by adulthood and turns into inner restlessness, while inattention tends to stick around.</p>`,
+    example:`<p>Brothers <b>Leo</b> and <b>Sam</b> both have ADHD. Leo climbed the furniture and was diagnosed at 7. Sam stared out of the window, got decent grades by cramming, and wasn't diagnosed until college. Same condition, different presentation.</p>`,
+    deeper:`<p><b>What adult hyperactivity looks like:</b> fidgeting, needing to stay busy, picking active jobs, talking fast, finding it hard to relax, a mind that "won't switch off."</p>
+    <p><b>What adult inattention looks like:</b> missed appointments, half-finished projects, zoning out while reading, late bills, a wall of open browser tabs.</p>
+    <p>The older term "ADD" usually meant what's now called the inattentive presentation. It's all ADHD today.</p>`,
+    refs:["symptoms","women"],
+    tryTitle:"Which signs sound like you?", widget:{type:"checklist", key:"und2signs", foot:"ticked. This is for self-understanding, not a diagnosis. If many of these have been true since childhood and cause real trouble, it's worth talking to a clinician.", items:["I lose track of what people are saying, even when I'm trying to listen","I start things with energy and struggle to finish them","I misplace everyday things (keys, phone, wallet) a lot","I put off tasks that need long mental effort","I feel restless inside, or need to keep moving or fidgeting","I interrupt or finish people's sentences without meaning to","I make quick decisions I later regret","I'm often late or misjudge how long things take"]},
+    quiz:{q:"What usually happens to hyperactivity as people with ADHD grow up?", o:["It always disappears along with the ADHD","It often becomes inner restlessness while inattention continues","It gets much worse"], a:1, why:"Outward hyperactivity tends to fade; restlessness and inattention often remain."} },
+  { id:"und3", added:"2026-11-20", title:"Executive functions: your brain's management team", mins:10,
+    idea:`<p><b>Executive functions</b> are the brain's management skills: the ones that turn "I know what to do" into "I did it." ADHD is largely a difference in these skills, which is why it's a problem of <i>doing what you know</i>, not of knowing what to do.</p>
+    <ul><li><b>Getting started</b> (activation)</li><li><b>Holding focus</b> and shifting it when needed</li><li><b>Keeping up effort</b> and alertness</li><li><b>Managing emotions</b></li><li><b>Working memory</b>: holding things in mind</li><li><b>Self-monitoring</b>: noticing and braking impulses</li><li><b>Planning and time sense</b></li></ul>
+    <p>Everyone has a different profile. Knowing yours tells you where to put your energy first.</p>`,
+    example:`<p><b>Marcus</b> is great in a crisis (urgency does the "getting started" for him) but can't begin a report that's due in three weeks. His weak spots are activation and time sense, so he works on those: tiny first steps and visible timers, not "trying harder."</p>`,
+    deeper:`<p>These skills develop more slowly in ADHD and stay more <b>variable</b>: good one day, missing the next. That inconsistency is part of the condition, not proof you "can do it when you want to."</p>
+    <p>The most useful response is to <b>move the skill outside your head</b>: timers for time sense, lists for working memory, routines for getting started. Much of this site is built around that idea.</p>`,
+    refs:["what-is-adhd","glossary"],
+    tryTitle:"Map your executive function profile", widget:{type:"rate", key:"efmap", items:[
+      {k:"start", label:"Getting started on tasks", go:"focus", tip:"Focus & Executive Function: Starting is the hardest part"},
+      {k:"focus", label:"Staying focused", go:"focus", tip:"Focus & Executive Function: Focus sprints"},
+      {k:"effort", label:"Keeping up energy and effort", go:"habits", tip:"Healthy Habits: sleep, movement and fuel"},
+      {k:"emotion", label:"Managing big feelings", go:"emotions", tip:"Emotions & Self-Regulation"},
+      {k:"memory", label:"Remembering and holding things in mind", go:"memory", tip:"Memory Boosters"},
+      {k:"brake", label:"Pausing before acting or speaking", go:"emotions", tip:"Emotions & Self-Regulation: The pause"},
+      {k:"time", label:"Planning and judging time", go:"work", tip:"Work & Study: Estimating time and hitting deadlines"}]},
+    quiz:{q:"ADHD is best described as a problem of…", o:["Not knowing what to do","Doing what you know, when it needs doing","Not caring enough"], a:1, why:"Executive functions turn knowledge and intentions into action. That's where the gap is."} },
+  { id:"und4", added:"2026-11-20", title:"Motivation and the interest switch", mins:9,
+    idea:`<p>Most advice assumes that if something is <b>important</b>, you'll be able to do it. ADHD brains respond much more to whether something is <b>interesting, urgent, new or challenging</b>. Importance alone often doesn't flip the switch.</p>
+    <p>Brain research backs this up. A large 2025 imaging study of nearly 6,000 children found that stimulant medications mainly changed activity in the brain's <b>wakefulness and reward</b> systems, not in its attention networks. In other words, they seem to help by making people more alert and making tasks feel more worth doing.</p>
+    <p>The practical lesson: don't wait for willpower. <b>Engineer the task</b> so it's more rewarding, and protect your sleep.</p>`,
+    example:`<p><b>Priya</b> couldn't make herself do expense reports. She turned it into a race against a 15-minute timer, with a favorite playlist and a coffee afterwards. Same task, but now it has challenge, novelty and a reward.</p>`,
+    deeper:`<p>The same study found that sleep and stimulants affected the brain in similar ways: in children who hadn't slept enough, stimulants erased the brain signature of sleep loss. The researchers suggested that <b>checking sleep</b> should be part of any ADHD evaluation.</p>
+    <p>This doesn't mean medication is "just a wake-up pill," and it's one study. But it fits what many people with ADHD report: when a task feels rewarding, focus follows.</p>`,
+    refs:["brain","sleep"],
+    tryTitle:"Flip the switch on one boring task", widget:{type:"reflect", key:"und4", summary:true, fields:[
+      {k:"task", label:"A task I keep avoiding", ph:"e.g. clearing my inbox"},
+      {k:"reward", label:"How I'll make it more rewarding or interesting", ph:"music, a nicer spot, a treat after, doing it with someone"},
+      {k:"urgent", label:"How I'll add urgency or challenge", ph:"15-minute timer, beat yesterday's count, tell a friend my deadline"}]},
+    quiz:{q:"According to the 2025 brain imaging study, stimulants mainly affected which brain systems?", o:["Attention networks","Wakefulness and reward systems","Memory storage"], a:1, why:"The study found changes in arousal and reward networks, with attention improving as a knock-on effect."} },
+  { id:"und5", added:"2026-11-20", title:"ADHD across your life", mins:9,
+    idea:`<p>ADHD starts in childhood, but it doesn't stay the same.</p>
+    <ul><li><b>Childhood:</b> often spotted through hyperactivity or trouble at school. Quiet, inattentive kids are easier to miss.</li>
+    <li><b>Teen years:</b> more demands on planning and independence. Risk-taking and emotional ups and downs can stand out.</li>
+    <li><b>Adulthood:</b> the structure of school disappears. Work, money, relationships and parenting all lean on executive functions.</li>
+    <li><b>Later life:</b> ADHD doesn't retire. Health routines and memory worries can bring it back into focus.</li></ul>
+    <p><b>Girls and women</b> are more likely to be missed in childhood. Symptoms can also shift with hormones: many women report changes across the menstrual cycle, after childbirth and around menopause.</p>`,
+    example:`<p><b>Renee</b> coped well until her second child arrived and she was promoted in the same year. The demands on her planning doubled and her old workarounds stopped working. She was diagnosed at 41. Looking back, the signs were there in every school report.</p>`,
+    deeper:`<p>A late diagnosis often brings <b>mixed feelings</b>: relief ("there's a reason"), grief ("what if I'd known sooner?") and sometimes anger. All of that is normal and tends to settle with time.</p>
+    <p>ADHD also touches <b>physical health</b>. Studies link it to more accidents, sleep problems and missed medical care, which is one reason routines for sleep, driving and check-ups matter. Getting support is linked to better outcomes.</p>`,
+    refs:["women","adults","health"],
+    tryTitle:"Look back with kinder eyes", widget:{type:"reflect", key:"und5", fields:[
+      {k:"child", label:"Something from childhood that makes more sense now", ph:"e.g. always losing homework I had actually done", area:true},
+      {k:"cope", label:"A workaround I invented without realizing it", ph:"e.g. doing everything at the last minute so urgency would kick in", area:true},
+      {k:"need", label:"What I need more of at this stage of life", ph:"e.g. reminders I don't have to remember to check", area:true}]},
+    quiz:{q:"Why are girls and women more often diagnosed late?", o:["ADHD is rare in women","Their symptoms are more often inattentive and easier to overlook","They grow out of it faster"], a:1, why:"Quieter, inattentive symptoms draw less attention in childhood, so they're more likely to be missed."} },
+  { id:"und6", added:"2026-11-20", title:"Travel companions: conditions that come with ADHD", mins:8,
+    idea:`<p>ADHD rarely travels alone. In a national U.S. survey, nearly <b>8 in 10 children</b> with ADHD had at least one other condition, and it's similar for adults. Common companions:</p>
+    <ul><li><b>Anxiety</b> and <b>depression</b></li><li><b>Sleep problems</b></li><li><b>Learning differences</b> such as dyslexia</li><li><b>Autism</b></li><li><b>Substance use problems</b></li></ul>
+    <p>This matters for two reasons. First, the symptoms <b>overlap</b>: poor sleep, anxiety and depression can all look like ADHD, and ADHD can hide behind them. Second, treating only one usually isn't enough. A good evaluation looks at the whole picture.</p>`,
+    example:`<p><b>Tom</b> was treated for anxiety for years with little change. Once his ADHD was also recognized, it became clear that much of his worry came from constantly dropping balls. Working on both made the difference.</p>`,
+    deeper:`<p>Sometimes the other condition is partly a <b>result</b> of unsupported ADHD: years of criticism and missed deadlines can feed anxiety and low mood. Sometimes they simply share genetic roots.</p>
+    <p>If you ever have thoughts of harming yourself, treat that as urgent, not as "part of ADHD." In the U.S. you can call or text <b>988</b> at any time. See <a href="#lib-find-help">Find help</a> in the Library.</p>`,
+    refs:["co-occurring","sleep","find-help"],
+    tryTitle:"Worth raising with a clinician?", widget:{type:"checklist", key:"und6", foot:"ticked. Bring this list to your next appointment. These are common and treatable.", items:["I worry a lot, even when things are going fine","My mood has been low or flat for more than two weeks","I have trouble falling asleep, staying asleep or waking up","I snore heavily or wake up unrefreshed","Reading, spelling or math has always been unusually hard","I use alcohol, cannabis or other substances to cope or wind down","I've had ups and downs in energy and mood that feel bigger than ADHD"]},
+    quiz:{q:"Why should a good ADHD evaluation check for other conditions?", o:["To delay the diagnosis","Because symptoms overlap and both may need support","Because ADHD isn't real"], a:1, why:"Anxiety, depression and poor sleep can mimic or mask ADHD, and they often occur together."} }
+  ]},
+{ id:"emotions", title:"Emotions & Self-Regulation", color:"--c-emotions",
+  blurb:"Big feelings, rejection sensitivity, overwhelm and burnout: why they happen and what helps.",
+  lessons:[
+  { id:"emo1", added:"2026-11-20", title:"Why feelings hit harder", mins:8,
+    idea:`<p>Many people with ADHD feel emotions <b>faster, stronger and for longer</b>. Frustration, excitement, hurt and boredom can all arrive at full volume. This isn't in the official checklist of symptoms, but researchers and clinicians widely recognize it as part of ADHD for many people.</p>
+    <p>Why? The same executive functions that brake your actions also brake your feelings. And when a strong feeling floods your working memory, there's little room left for perspective.</p>
+    <p>The first skill is the simplest: <b>name it</b>. Putting a precise word on a feeling ("I'm embarrassed," not just "I feel bad") engages the thinking parts of the brain and tends to take the edge off.</p>`,
+    example:`<p>Stuck in a slow checkout line, <b>Alex</b> feels rage building. He says to himself: "I'm impatient, and I'm worried about being late." The feeling doesn't vanish, but it drops from a 9 to a 6, which is enough to stop him snapping at the cashier.</p>`,
+    deeper:`<p>Strong emotions aren't all bad. The same intensity brings enthusiasm, humor, warmth and passion. The goal isn't to feel less. It's to have a bit more <b>choice</b> about what you do next.</p>
+    <p>Feelings also hit harder when you're tired, hungry or overloaded. If everything feels like too much, check the basics before you judge yourself.</p>`,
+    refs:["emotions","co-occurring"],
+    tryTitle:"Name it to tame it", widget:{type:"namefeel"},
+    quiz:{q:"Why does naming a feeling precisely help?", o:["It makes the feeling go away forever","It engages your thinking brain and lowers the intensity","It doesn't; you should ignore feelings"], a:1, why:"Labeling brings in the parts of the brain that regulate emotion, which tends to turn the volume down."} },
+  { id:"emo2", added:"2026-11-20", title:"The pause", mins:8,
+    idea:`<p>Between something happening and you reacting, there's a tiny gap. With ADHD that gap is shorter. You can't rely on catching it in the moment, so you <b>plan the pause in advance</b>.</p>
+    <ul><li><b>Know your early warning sign.</b> A hot face, tight jaw, fast speech, the urge to hit "send."</li>
+    <li><b>Pick one pause move</b> you'll always use: three slow breaths, a sip of water, "let me think about that," or leaving the room.</li>
+    <li><b>Write an if-then plan:</b> "If I notice my jaw tighten, then I'll take three breaths before I answer."</li></ul>
+    <p>If-then plans work because they hand the decision to a habit, so you don't need willpower at the exact moment you have the least of it.</p>`,
+    example:`<p><b>Keisha</b> used to fire back at critical emails within seconds. Her rule now: "If an email makes my heart race, then I write my reply in a note, not in the email, and look again after lunch." Most of those replies never get sent.</p>`,
+    deeper:`<p>Useful delays for common situations: a <b>24-hour rule</b> for big purchases and angry messages, a <b>draft folder</b> for emails, and "<b>I'll get back to you</b>" as your default answer to new commitments.</p>
+    <p>You'll still miss the pause sometimes. A quick, honest repair ("I snapped earlier and I'm sorry. Here's what I meant.") is a skill too, and it protects relationships.</p>`,
+    refs:["emotions"],
+    tryTitle:"Build your pause plan", widget:{type:"reflect", key:"emo2", summary:true, fields:[
+      {k:"sign", label:"My early warning sign", ph:"e.g. my voice gets louder"},
+      {k:"move", label:"My pause move", ph:"e.g. three slow breaths"},
+      {k:"line", label:"A line I can say to buy time", ph:"e.g. \"Let me think about that and come back to you.\""}]},
+    quiz:{q:"Why plan your pause ahead of time?", o:["Because you'll have the most willpower in the heat of the moment","So a habit can do the work when willpower is lowest","Planning is more fun than acting"], a:1, why:"If-then plans turn a hard decision into an automatic response."} },
+  { id:"emo3", added:"2026-11-20", title:"Rejection sensitivity", mins:9,
+    idea:`<p>Many people with ADHD describe a sudden, intense wave of hurt when they sense criticism, rejection or failure, even when it's small or imagined. You may have seen it called <b>rejection sensitive dysphoria (RSD)</b>. That's a popular term, not an official diagnosis, but the experience is real and common.</p>
+    <p>It can lead to people-pleasing, avoiding anything you might fail at, or lashing out. The way through is to slow down and separate two things:</p>
+    <ul><li><b>The facts:</b> what a camera would have recorded.</li><li><b>The story:</b> what your mind added.</li></ul>
+    <p>Then ask: "What are two other explanations?" You don't have to believe them. You just have to admit they're possible.</p>`,
+    example:`<p><b>Fact:</b> Jo's manager said "Can we talk tomorrow?" <b>Story:</b> "I'm getting fired." <b>Other explanations:</b> a new project, a scheduling question, feedback on something small. It turned out to be a question about vacation dates.</p>`,
+    deeper:`<p>Why is it so common in ADHD? Probably a mix of stronger emotional reactions and history. Many people with ADHD have had far more correction and criticism than their peers since childhood, so the alarm is set to "sensitive."</p>
+    <p>If rejection sensitivity is running your life, a therapist who knows ADHD can help, and it's worth mentioning to your prescriber too.</p>`,
+    refs:["emotions"],
+    tryTitle:"Check the story", widget:{type:"scenarios", items:[
+      {q:"A friend hasn't replied to your message for two days. Which thought is the most balanced?", o:["They're sick of me","They're probably busy; I'll check in at the weekend","I must have said something wrong"], a:1, why:"It fits the facts and leaves room for what you don't know."},
+      {q:"Your boss rewrites a paragraph of your report. Which is most balanced?", o:["My work is terrible","Editing is part of their job; I'll ask what they wanted changed","They want me out"], a:1, why:"One edit isn't a verdict on you. Asking gets you real information."},
+      {q:"You weren't invited to a coworker's lunch. Which is most balanced?", o:["Nobody here likes me","It might have been a small or last-minute thing","I should stop talking to them"], a:1, why:"There are many ordinary reasons. One event is thin evidence."}]},
+    quiz:{q:"What's the difference between \"facts\" and \"story\"?", o:["Facts are what a camera would record; the story is what your mind adds","They're the same thing","The story is always wrong"], a:0, why:"Separating them shows you where your mind has filled in the blanks."} },
+  { id:"emo4", added:"2026-11-20", title:"Overwhelm and shutdown", mins:8,
+    idea:`<p>When too many demands land at once, an ADHD brain can <b>freeze</b>. You scroll, stare, or do something unimportant while the real list grows. It looks like not caring. It's actually overload.</p>
+    <p>The fix is to <b>shrink the field</b>:</p>
+    <ul><li><b>Dump it.</b> Get every task out of your head and onto a page. Your working memory can't hold it all.</li>
+    <li><b>Pick one.</b> Not the most important thing in your life. Just the next thing.</li>
+    <li><b>Lower the bar.</b> "Open the document," not "write the report."</li>
+    <li><b>Park the rest</b> on purpose: "not today" is a decision, not a failure.</li></ul>`,
+    example:`<p><b>Sam</b> had 14 things swirling in his head on Sunday night and did none of them. He wrote them down, circled "put work clothes in the wash," and marked nine as "not today." Twenty minutes later, three were done.</p>`,
+    deeper:`<p>Overwhelm is often <b>sensory</b> too: noise, clutter, notifications, bright lights. Cutting the input (headphones, one clear surface, phone in another room) can unfreeze you faster than any planning method.</p>
+    <p>If you shut down often, look at your load. You may be doing the work of two people with the support of none.</p>`,
+    refs:["emotions"],
+    tryTitle:"Brain dump and pick one", widget:{type:"triage"},
+    quiz:{q:"You're frozen with too much to do. What's the best first move?", o:["Try to hold it all in your head and prioritize","Write everything down, then pick one small next step","Wait until you feel motivated"], a:1, why:"Getting it out of your head frees working memory; one small step restarts momentum."} },
+  { id:"emo5", added:"2026-11-20", title:"Shame and the inner critic", mins:9,
+    idea:`<p>By adulthood, many people with ADHD have heard "try harder" and "you're not living up to your potential" thousands of times. It's no surprise if your inner voice has learned the script.</p>
+    <p>Shame says "I <i>am</i> the problem." It feels like it should motivate you, but it mostly makes people hide, avoid and give up. <b>Self-compassion</b> works better, and it isn't letting yourself off the hook. It has three parts:</p>
+    <ul><li><b>Notice:</b> "This is hard right now."</li><li><b>Remember you're not alone:</b> "Lots of people with ADHD struggle with exactly this."</li><li><b>Choose a kind next step:</b> "What would help?"</li></ul>`,
+    example:`<p><b>Maria</b> missed her daughter's school form deadline again. Old voice: "I'm a terrible mother." New voice: "I'm upset because this matters to me. Paper forms are a known weak spot for me. I'll email the school now and ask them to send forms digitally."</p>`,
+    deeper:`<p>A quick test: would you say it to a friend with ADHD? If not, it's the critic talking, not the truth.</p>
+    <p>Accountability and kindness aren't opposites. People who treat their mistakes with understanding are generally <b>more</b> willing to own them and try again, because failure stops being a threat to who they are.</p>`,
+    refs:["emotions","myths"],
+    tryTitle:"Write yourself a kinder note", widget:{type:"reflect", key:"emo5", summary:true, fields:[
+      {k:"hard", label:"Something I've been beating myself up about", ph:"e.g. I forgot my friend's birthday", area:true},
+      {k:"common", label:"Why this is understandable with a brain like mine", ph:"e.g. dates don't stick unless they're in my calendar", area:true},
+      {k:"step", label:"One kind, practical next step", ph:"e.g. send a late card today and add birthdays to my phone", area:true}]},
+    quiz:{q:"What does self-compassion do for accountability?", o:["It removes it","It usually makes people more willing to own mistakes and try again","Nothing"], a:1, why:"When failure isn't a threat to your worth, it's easier to face it and fix it."} },
+  { id:"emo6", added:"2026-11-20", title:"Stress, burnout and recovery", mins:9,
+    idea:`<p>Keeping up with ADHD often means working twice as hard behind the scenes: double-checking, staying late, hiding struggles (sometimes called <b>masking</b>). It works, until it doesn't. Burnout is what happens when the effort outruns your recovery for too long.</p>
+    <p><b>Warning signs:</b> tools that used to work stop working, you're more forgetful than usual, small tasks feel huge, you're irritable or numb, and rest doesn't refresh you.</p>
+    <p><b>Recovery is not a reward for finishing.</b> It's maintenance. The basics do most of the work: sleep, movement, food, time with people who don't need you to perform, and <b>taking things off your plate</b>.</p>`,
+    example:`<p><b>Chris</b> noticed he was rereading emails five times and snapping at home. He didn't add a new productivity system. He dropped one committee, moved bedtime 45 minutes earlier, and told his manager which deadline was at risk. Two weeks later his usual tools were working again.</p>`,
+    deeper:`<p>Burnout and depression can look alike and can feed each other. If low mood, hopelessness or exhaustion last more than a couple of weeks, talk to a healthcare provider.</p>
+    <p>If you're having thoughts of harming yourself, please reach out now. In the U.S., call or text <b>988</b>. See <a href="#lib-find-help">Find help</a>.</p>`,
+    refs:["co-occurring","sleep","find-help"],
+    tryTitle:"Your recovery plan", widget:{type:"checklist", key:"emo6", foot:"chosen. Pick one to start this week.", items:["Name one commitment I can drop, delay or hand to someone else","Protect a regular bedtime for the next 7 nights","Schedule one thing that refills me (and treat it as an appointment)","Tell one person honestly how I'm doing","Cut one source of noise or notifications","Move my body for 10 minutes a day, in any way I like","Book a check-in with my doctor or therapist if this has lasted more than two weeks"]},
+    quiz:{q:"When your usual ADHD tools stop working and everything feels huge, what's the most useful response?", o:["Add a stricter system","Reduce your load and restore the basics","Ignore it and push through"], a:1, why:"Burnout is a recovery debt. Taking things off the plate and restoring sleep and rest come first."} }
+  ]},
+{ id:"work", title:"Work & Study", color:"--c-work",
+  blurb:"Get started, hit deadlines, survive meetings and email, and ask for what helps you do your best work.",
+  lessons:[
+  { id:"wrk1", added:"2026-11-20", title:"Work with your energy", mins:8,
+    idea:`<p>Your focus isn't the same all day. Most people have one or two <b>peak windows</b> when hard thinking comes more easily, and a slump when it doesn't. With ADHD the gap between the two is bigger, so <i>when</i> you do something matters as much as how.</p>
+    <ul><li>Put your <b>hardest task</b> in your best window and guard that time.</li><li>Save <b>easy admin</b> (email, filing, tidying) for the slump.</li><li>If you take medication, notice when it's working best and plan around that too.</li></ul>
+    <p>You can't always choose your schedule. But even moving one hard task into your best hour is worth it.</p>`,
+    example:`<p><b>Nadia</b> noticed she's sharpest from 9 to 11 and useless at 2:30. She stopped opening email first thing, moved her writing to 9, and now does expenses and filing after lunch.</p>`,
+    deeper:`<p>Not sure when your peak is? For three days, jot down a quick 1 to 5 focus rating every couple of hours. A pattern usually shows up fast.</p>
+    <p>Many people with ADHD run on a <b>later body clock</b>. If mornings are rough no matter what, it may be biology, not attitude. Where you have flexibility, use it.</p>`,
+    refs:["sleep","work-rights"],
+    tryTitle:"Map your day", widget:{type:"reflect", key:"wrk1", summary:true, fields:[
+      {k:"peak", label:"My best focus window", ph:"e.g. 9 to 11 in the morning"},
+      {k:"slump", label:"My slump", ph:"e.g. 2 to 3:30 in the afternoon"},
+      {k:"hard", label:"The hard task I'll do in my peak tomorrow", ph:"e.g. draft the budget summary"},
+      {k:"easy", label:"Easy tasks I'll save for the slump", ph:"e.g. email, filing, booking travel"}]},
+    quiz:{q:"What belongs in your peak focus window?", o:["Email","Your hardest thinking task","Whatever comes up"], a:1, why:"Spend your best attention on the work that needs it most."} },
+  { id:"wrk2", added:"2026-11-20", title:"Procrastination: the first two minutes", mins:8,
+    idea:`<p>Procrastination isn't a time problem. It's a <b>feelings</b> problem. The task brings up boredom, confusion or fear of doing it badly, and your brain escapes to something that feels better.</p>
+    <p>You can't argue yourself out of that. You can make starting so small that the feeling doesn't get a vote:</p>
+    <ul><li><b>Two-minute start:</b> commit to two minutes only. You're allowed to stop after.</li><li><b>Make the first step physical:</b> open the file, write the title, put on your shoes.</li><li><b>Start badly on purpose:</b> a rough draft you can fix beats a perfect one you never begin.</li></ul>
+    <p>Most of the time, once you've started, you keep going. Starting was the hard part.</p>`,
+    example:`<p><b>Devon</b> had avoided a difficult email for a week. He set a two-minute timer and typed a terrible first version. Seven minutes later it was sent.</p>`,
+    deeper:`<p>If you still can't start, ask <b>what's in the way</b>: Is the first step unclear? Is the task too big? Am I afraid of the result? Am I missing something I need? Each has a different fix.</p>
+    <p>And go easy on yourself afterwards. Beating yourself up for procrastinating makes the task feel worse, which makes you avoid it more.</p>`,
+    refs:["brain","emotions"],
+    tryTitle:"Two-minute start", widget:{type:"sprint", presets:[2,5,10], label:"Pick the task you've been avoiding. Start with 2 minutes. When the timer ends you can stop, or pick a longer one and keep going."},
+    quiz:{q:"What mostly drives procrastination?", o:["Poor time management","Avoiding an uncomfortable feeling","Laziness"], a:1, why:"We put off tasks that feel bad. Shrinking the start shrinks the feeling."} },
+  { id:"wrk3", added:"2026-11-20", title:"Estimating time and hitting deadlines", mins:10,
+    idea:`<p>Nearly everyone underestimates how long things take. With ADHD's fuzzy sense of time, the gap is wider. So don't trust your gut. Use rules:</p>
+    <ul><li><b>Add a buffer.</b> Take your first guess and multiply it by 1.5, or by 2 for anything new.</li>
+    <li><b>Plan backwards.</b> Start from the deadline and work back: "Due Friday. Review Thursday. Draft done Wednesday. Outline today."</li>
+    <li><b>Make early deadlines real.</b> A deadline only you know about is easy to move. Book a review with someone, or promise to send a draft.</li>
+    <li><b>Track a few real times.</b> After a handful of tasks you'll know your own multiplier.</li></ul>`,
+    example:`<p><b>Elena</b> guessed 2 hours for a presentation. With her 1.5 buffer she blocked 3. It took 2 hours 50. She also told a colleague, "I'll send you the draft Wednesday at noon," which made Wednesday a real deadline.</p>`,
+    deeper:`<p>Don't forget the <b>hidden time</b>: getting set up, finding files, switching from the last task, travel, and the "quick question" that isn't quick.</p>
+    <p>When you're going to miss a deadline, <b>say so early</b>. "This will be Tuesday, not Friday" is far better received on Wednesday than on Friday afternoon.</p>`,
+    refs:["what-is-adhd"],
+    tryTitle:"Estimate, buffer, learn", widget:{type:"estimate"},
+    quiz:{q:"You think a task will take 40 minutes. How long should you block?", o:["30 minutes, to stay motivated","About 60 minutes","40 minutes exactly"], a:1, why:"A 1.5x buffer covers setup, switching and the usual underestimate."} },
+  { id:"wrk4", added:"2026-11-20", title:"Meetings, email and messages", mins:8,
+    idea:`<p>Meetings and inboxes are hard on ADHD brains: lots of listening, little doing, and action items that evaporate the moment you stand up.</p>
+    <ul><li><b>Meetings:</b> take notes by hand or doodle to stay anchored. Write action items in one marked spot. Before leaving, say out loud: "So I'm doing X by Thursday."</li>
+    <li><b>After:</b> send a two-line recap. It turns spoken promises into something you can see.</li>
+    <li><b>Email:</b> check at set times, not constantly. For each message: do it (if under two minutes), schedule it, or archive it.</li>
+    <li><b>Chat apps:</b> mute channels that aren't yours. Use "remind me" features instead of trying to remember.</li></ul>`,
+    example:`<p>After every meeting, <b>Ravi</b> sends: "Thanks all. My actions: 1) send the quote by Wed, 2) book the room. Shout if I missed anything." It takes a minute, and people have started copying him.</p>`,
+    deeper:`<p>If you lose the thread in a long meeting, you're not alone. It's fine to ask, "Can I check I've got the main point?" It usually helps everyone in the room.</p>
+    <p>Asking for instructions <b>in writing</b>, or for agendas in advance, is one of the simplest and most widely useful adjustments at work.</p>`,
+    refs:["work-rights"],
+    tryTitle:"Set up your system", widget:{type:"checklist", key:"wrk4", foot:"set up. One this week is plenty.", items:["Pick one place where all my action items go","Draft a two-line meeting recap I can reuse","Set 2 or 3 fixed times a day to check email","Turn off email and chat pop-ups during focus time","Mute chat channels I don't need","Ask for agendas or written instructions where it would help","Put meeting prep time in my calendar, not just the meeting"]},
+    quiz:{q:"What's the point of a quick written recap after a meeting?", o:["To look busy","To turn spoken promises into something visible you can act on","To replace the meeting"], a:1, why:"Spoken action items fade from working memory. Writing them down makes them stick."} },
+  { id:"wrk5", added:"2026-11-20", title:"Body doubling and accountability", mins:7,
+    idea:`<p><b>Body doubling</b> means working alongside another person, in the room or on a video call, while you each do your own thing. Many people with ADHD find it makes starting and sticking with dull tasks far easier.</p>
+    <p>Why might it work? Another person adds a little social pressure, makes the time feel more real, and makes drifting off to your phone feel more noticeable.</p>
+    <ul><li>Ask a friend or coworker for a "work together" hour.</li><li>Try a library, a cafe, or an online co-working session.</li><li>Tell someone what you'll finish and when you'll report back.</li></ul>
+    <p>A fair warning: this is mostly based on people's experience, and research on it is still thin. Try it and see if it works for <i>you</i>.</p>`,
+    example:`<p><b>Hannah</b> and her sister video-call every Sunday at 4 with cameras on and mics off. Hannah does her weekly paperwork, her sister meal-preps. Neither would do it alone.</p>`,
+    deeper:`<p>Accountability works best when it's <b>specific and soon</b>: "I'll send you the first page by 3 today" beats "I'll work on it this week."</p>
+    <p>Choose people who are encouraging, not critical. The goal is company, not supervision.</p>`,
+    refs:["treatment-therapy"],
+    tryTitle:"Plan one session", widget:{type:"reflect", key:"wrk5", summary:true, fields:[
+      {k:"who", label:"Who (or where) could be my body double?", ph:"e.g. my friend Sam, the library, an online co-working room"},
+      {k:"what", label:"The task I'll bring", ph:"e.g. sorting the mail pile"},
+      {k:"when", label:"When", ph:"e.g. Saturday 10 am"}]},
+    quiz:{q:"What makes accountability most effective?", o:["Vague goals with lots of time","A specific task and a near deadline, with an encouraging person","Being watched by someone critical"], a:1, why:"Specific and soon makes it real; a supportive partner keeps you coming back."} },
+  { id:"wrk6", added:"2026-11-20", title:"Accommodations and disclosure", mins:10,
+    idea:`<p>An <b>accommodation</b> is a change to how, when or where you work or study that lets you do your best. In the United States, the Americans with Disabilities Act (ADA) can cover ADHD when it substantially limits a major life activity such as concentrating or working. Covered employers must then provide <b>reasonable accommodations</b> unless that would cause undue hardship.</p>
+    <p>Common requests: written instructions, a quieter workspace or headphones, flexible start times, regular check-ins, deadline reminders, and software for notes or reminders.</p>
+    <p><b>Disclosure is your choice.</b> You don't have to tell your employer about a diagnosis unless you're asking for a formal accommodation. And many adjustments can be requested as simple work preferences, with no diagnosis mentioned.</p>`,
+    example:`<p><b>Luis</b> didn't want to disclose. He just asked: "Could you send me a quick email recap after our one-to-ones? It helps me make sure I've got everything." His manager said yes. A year later, when he needed a schedule change, he made a formal request in writing with a note from his doctor.</p>`,
+    deeper:`<p>Be honest with yourself about <b>what actually helps</b>. The evidence on accommodations is mixed. A 2026 trial in children found that four common classroom accommodations, used on their own, didn't improve behavior or schoolwork, while behavior support and medication did. Accommodations work best alongside skills and treatment, and they should be chosen for you, not from a standard list.</p>
+    <p>The <b>Job Accommodation Network (JAN)</b> gives free, confidential advice. If you make a formal request, put it in writing. Students can ask their college's disability services office. Laws differ outside the U.S. See the Library for details.</p>`,
+    refs:["work-rights","school-rights"],
+    tryTitle:"What would you do?", widget:{type:"scenarios", items:[
+      {q:"You keep missing details from verbal instructions. You don't want to mention ADHD. What's a good first step?", o:["Say nothing and try harder","Ask for instructions or a recap in writing, as a work preference","Quit"], a:1, why:"Many adjustments can be asked for without disclosing anything."},
+      {q:"You need a later start time, and your manager has said no to informal requests. What now?", o:["Make a formal accommodation request in writing","Just start coming in late","Give up"], a:0, why:"A written request starts the formal process and gives you a record."},
+      {q:"You've been given a quiet room, but your work hasn't improved. What's the most useful conclusion?", o:["Accommodations never work","This one may not be what you need; look at what's actually getting in the way","You're not trying"], a:1, why:"Supports should match your real obstacles. If one doesn't help, try a different one."}]},
+    quiz:{q:"Do you have to tell your employer you have ADHD?", o:["Yes, always","No. It's your choice unless you're requesting a formal accommodation","Only if they ask"], a:1, why:"Disclosure is voluntary. It becomes necessary only when you ask for a formal accommodation."} }
+  ]},
+{ id:"support", title:"Getting Support: Diagnosis & Treatment", color:"--c-support",
+  blurb:"How evaluation works, what the evidence says about treatment, and how to build a plan and a team that fit you.",
+  lessons:[
+  { id:"sup1", added:"2026-11-20", title:"Is it ADHD? How an evaluation works", mins:9,
+    idea:`<p>There's <b>no single test</b> for ADHD: no blood test, brain scan or app can diagnose it. A diagnosis comes from a careful evaluation by a qualified professional such as a psychiatrist, psychologist, or a primary care provider.</p>
+    <p>They'll usually:</p>
+    <ul><li>Ask about your <b>current difficulties</b> and how they affect work, home and relationships.</li>
+    <li>Ask about your <b>childhood</b>, because some signs need to have been there before age 12.</li>
+    <li>Use <b>rating scales</b> or checklists, and may ask someone who knows you well for their view.</li>
+    <li>Check for <b>other explanations</b>: sleep problems, anxiety, depression, thyroid issues, substance use and more.</li></ul>
+    <p>Adults need at least 5 symptoms of inattention or of hyperactivity-impulsivity; children need 6.</p>`,
+    example:`<p>Before her appointment, <b>Aisha</b> dug out two old report cards, asked her mom what she was like at age 8, and wrote down three recent examples from work. Her evaluation went smoothly because she had the history ready.</p>`,
+    deeper:`<p><b>Online quizzes</b> can be a helpful nudge to seek an evaluation, but they can't diagnose you. A quick diagnosis after a ten-minute chat should make you cautious too.</p>
+    <p>In the U.S. there have been no official guidelines for diagnosing and treating ADHD <b>in adults</b>. A professional society, APSARD, has been writing the first ones; in August 2026 it said they had reached final review. See <a href="#news">Research news</a> for updates.</p>`,
+    refs:["diagnosis","diagnosis-kids","find-help"],
+    tryTitle:"Get ready for your appointment", widget:{type:"checklist", key:"sup1", foot:"ready. Bring what you can; you don't need all of it.", items:["Write down 3 to 5 specific examples of how symptoms affect my life now","Note what I was like as a child (ask a parent or sibling if possible)","Find old school reports or records, if I have them","List my current medications and health conditions","Note my sleep, caffeine, alcohol and other substance use honestly","Write down family members with ADHD or similar difficulties","List my questions so I don't forget them in the room"]},
+    quiz:{q:"How is ADHD diagnosed?", o:["With a brain scan","Through a careful evaluation of history, symptoms and other possible causes","With an online quiz"], a:1, why:"There's no single test. A clinician pieces together current symptoms, childhood history and other explanations."} },
+  { id:"sup2", added:"2026-11-20", title:"What the evidence says about treatment", mins:10,
+    idea:`<p>With so much conflicting advice online, it helps to know what the research supports. The largest review so far, published in <i>The BMJ</i> in late 2025, pulled together more than 200 meta-analyses. Its main findings:</p>
+    <ul><li><b>Medication</b> has the strongest short-term evidence for reducing ADHD symptoms in both children and adults.</li>
+    <li>For adults, <b>cognitive behavioral therapy (CBT)</b> is also well supported.</li>
+    <li><b>Exercise, mindfulness and similar approaches</b> look promising, but the studies are small and lower quality, so we can't be as sure.</li>
+    <li>Good <b>long-term</b> evidence is thin for almost everything.</li></ul>
+    <p>Treatment isn't either/or. Most guidelines favor a combination: education about ADHD, skills and supports, and medication where it fits.</p>`,
+    example:`<p><b>Ben</b> was torn between "meds fix everything" and "meds are dangerous" posts online. He and his doctor looked at the evidence together and agreed a plan: try medication, start a CBT skills group, and review in three months.</p>`,
+    deeper:`<p><b>Children are a little different.</b> For children under 6, pediatric guidelines recommend parent training in behavior management first. From age 6, they recommend medication together with behavior support at home and school.</p>
+    <p>The BMJ team also built a free website where you can explore the evidence for each treatment yourself. It's linked in the Library.</p>
+    <p>None of this tells you what's right for <i>you</i>. That's a decision to make with a clinician who knows your health and history.</p>`,
+    refs:["treatment-overview","treatment-therapy","lifestyle"],
+    tryTitle:"Check your understanding", widget:{type:"scenarios", items:[
+      {q:"Which treatments have the strongest short-term evidence for adults?", o:["Supplements and brain-training apps","Medication and cognitive behavioral therapy","Diet changes alone"], a:1, why:"That's what the 2025 BMJ umbrella review found."},
+      {q:"A website says exercise \"cures\" ADHD. What's a fair reading of the evidence?", o:["It's proven","Exercise looks helpful, but the evidence is weaker and it isn't a cure","Exercise is useless"], a:1, why:"Promising but low-certainty. It's good for you either way."},
+      {q:"For a 4-year-old with ADHD, what do pediatric guidelines recommend first?", o:["Parent training in behavior management","Extended-release stimulants","Waiting until age 10"], a:0, why:"Behavioral approaches come first for children under 6."}]},
+    quiz:{q:"What's the fairest summary of ADHD treatment evidence?", o:["Nothing works","Medication and (for adults) CBT are best supported; other approaches are promising but less certain","Only natural approaches are safe and effective"], a:1, why:"That's the picture from the largest review to date."} },
+  { id:"sup3", added:"2026-11-20", title:"Medication basics: what to ask", mins:10,
+    idea:`<p>Medication doesn't cure ADHD or teach skills, but for many people it turns the difficulty down enough for skills to stick. This is general information, not medical advice. Only a prescriber who knows you can say what's suitable.</p>
+    <ul><li><b>Stimulants</b> come in two families: methylphenidate (such as Ritalin and Concerta) and amphetamine (such as Adderall and Vyvanse). They're usually tried first and come in short- and long-acting forms.</li>
+    <li><b>Non-stimulants</b> include atomoxetine, viloxazine, guanfacine and clonidine. They can be an option when stimulants don't suit.</li></ul>
+    <p>Common side effects of stimulants include lower appetite and trouble sleeping. Finding the right medication and dose usually takes a few adjustments, with your prescriber checking how you're doing.</p>`,
+    example:`<p><b>Olivia</b> kept a simple daily note for the first month: focus, mood, appetite, sleep. At her follow-up she could show her prescriber exactly what had changed, and they adjusted the timing so it no longer affected her sleep.</p>`,
+    deeper:`<p><b>Safety basics:</b> stimulants are controlled substances. Take them only as prescribed, store them securely, and never share or sell them. Tell your prescriber about heart problems, other medications and any history of substance use.</p>
+    <p><b>Supply and access (U.S.):</b> some stimulants have been in short supply since 2022, and rules on prescribing by telehealth are temporary and due to change. See <a href="#lib-access">Shortages and telehealth</a> in the Library and <a href="#news">Research news</a>.</p>
+    <p><b>New options:</b> in July 2026 the FDA approved centanafadine (Simtriyo), the first ADHD medication of a new type.</p>`,
+    refs:["meds-stimulants","meds-nonstimulants","access"],
+    tryTitle:"Questions to bring to your prescriber", widget:{type:"checklist", key:"sup3", foot:"picked. Take them with you or screenshot this list.", items:["What are my options, and why do you suggest this one for me?","What benefits should I expect, and how soon?","What side effects should I watch for, and which need a call?","How will this interact with my other medications or conditions?","How will we know if it's working? When is the follow-up?","What should I do if I miss a dose or the pharmacy is out of stock?","Are there options if I'm pregnant, planning pregnancy or breastfeeding?","What happens if I want to stop?"]},
+    quiz:{q:"What's the best way to judge whether a medication is working for you?", o:["Go by how you feel on day one","Track a few things (focus, sleep, appetite, mood) and review them with your prescriber","Ask a friend who takes it"], a:1, why:"Simple notes give you and your prescriber real information to adjust the plan."} },
+  { id:"sup4", added:"2026-11-20", title:"Therapy, coaching and skills training", mins:9,
+    idea:`<p>Medication can turn down the noise. Therapy and coaching help you build the life around it.</p>
+    <ul><li><b>CBT for adult ADHD</b> is practical and skills-based: planning, managing time, dealing with procrastination, and changing the "I always mess up" thinking that keeps you stuck. It has good research support.</li>
+    <li><b>ADHD coaching</b> focuses on goals, routines and follow-through. It can be very helpful, but coaching isn't a regulated profession, so check training and experience.</li>
+    <li><b>Parent training in behavior management</b> is the best-supported approach for young children.</li>
+    <li><b>Support groups</b> offer what professionals can't: people who get it.</li></ul>`,
+    example:`<p><b>Greg</b>'s medication helped him focus, but he was still drowning in clutter and late bills. Twelve sessions of ADHD-focused CBT gave him a planner habit and a weekly money routine that medication alone never did.</p>`,
+    deeper:`<p><b>Finding the right person:</b> ask "How much of your work is with ADHD?" and "What does a typical session look like?" General talk therapy that only explores feelings tends to help less with ADHD itself, though it can help with anxiety or depression alongside it.</p>
+    <p>Cost and access are real barriers. Group programs, workbooks based on CBT, and nonprofit support groups (such as CHADD and ADDA in the U.S.) are lower-cost routes.</p>`,
+    refs:["treatment-therapy","find-help"],
+    tryTitle:"Match the need to the support", widget:{type:"scenarios", items:[
+      {q:"\"I know what to do, I just can't build the routines.\"", o:["ADHD coaching or CBT skills work","A brain scan","Nothing can help"], a:0, why:"Both focus on turning intentions into systems and habits."},
+      {q:"\"My 5-year-old was just diagnosed.\"", o:["Parent training in behavior management","Adult CBT","Wait and see"], a:0, why:"It's the recommended first step for young children."},
+      {q:"\"I feel like the only one who struggles like this.\"", o:["More self-criticism","A support group","A stricter planner"], a:1, why:"Meeting others with ADHD is one of the fastest ways to feel less alone."}]},
+    quiz:{q:"What should you check when choosing an ADHD coach?", o:["Nothing; they're all licensed","Their training and experience, since coaching isn't regulated","Only their price"], a:1, why:"Anyone can use the title, so it's worth asking about background and approach."} },
+  { id:"sup5", added:"2026-11-20", title:"Building your team and talking to family", mins:8,
+    idea:`<p>Managing ADHD alone is the hard way. A <b>support team</b> doesn't have to be big: a prescriber or doctor, maybe a therapist or coach, and one or two people in your daily life who know what helps.</p>
+    <p>When you talk to family, partners or friends:</p>
+    <ul><li><b>Explain it in a sentence:</b> "My brain has trouble with starting and remembering, even for things I care about."</li>
+    <li><b>Separate intention from impact:</b> "I know my lateness affects you. It isn't because I don't care."</li>
+    <li><b>Ask for one specific thing:</b> "Could you text me when you're leaving, so I know it's time?"</li></ul>
+    <p>You're not asking to be excused. You're inviting them to help with the solution.</p>`,
+    example:`<p><b>Jamal</b> told his partner: "When I forget things you've told me, it's my memory, not my priorities. Could we keep a shared list on the fridge?" The arguments about forgotten errands dropped off quickly.</p>`,
+    deeper:`<p>Not everyone will understand right away. Some people still believe ADHD is an excuse. You don't have to convince everyone. Share more with those who respond well, and point curious people to reliable sources like the Library here.</p>
+    <p>If ADHD is straining a relationship, couples counseling with someone who knows ADHD can help you both stop blaming and start problem-solving.</p>`,
+    refs:["for-loved-ones","myths"],
+    tryTitle:"Plan one conversation", widget:{type:"reflect", key:"sup5", summary:true, fields:[
+      {k:"who", label:"Someone I'd like to understand me better", ph:"e.g. my partner"},
+      {k:"explain", label:"How I'd explain my ADHD in one sentence", ph:"e.g. I lose track of time even when I'm really trying", area:true},
+      {k:"ask", label:"One specific thing I'd ask of them", ph:"e.g. a 10-minute heads-up before we need to leave", area:true}]},
+    quiz:{q:"What makes a request for support most likely to work?", o:["Asking them to \"just be more understanding\"","Asking for one specific, doable thing","Not asking at all"], a:1, why:"Specific requests are easy to say yes to and easy to follow through on."} },
+  { id:"sup6", added:"2026-11-20", title:"Your personal ADHD plan", mins:10,
+    idea:`<p>You've covered a lot. The last step is to put it on <b>one page</b>, because a plan you can see beats ten good intentions.</p>
+    <p>A useful plan answers five questions:</p>
+    <ul><li><b>What gets in my way most?</b> (two or three things, not twenty)</li><li><b>Which tools am I using for those?</b></li><li><b>Who's on my team?</b></li><li><b>What are my warning signs</b> that things are slipping?</li><li><b>What's my next step?</b></li></ul>
+    <p>Keep it short. Review it once a month, or whenever life changes. Expect to revise it: what works at one stage of life often needs replacing at the next.</p>`,
+    example:`<p><b>Sofia's plan:</b> Challenges: starting, time, overwhelm. Tools: two-minute start, phone timer, Sunday brain dump. Team: Dr. Lee, my sister, Thursday co-working. Warning signs: skipping meals, unopened mail. Next step: book my follow-up appointment.</p>`,
+    deeper:`<p>Progress with ADHD is rarely a straight line. A bad week doesn't erase a good month. When things slip, go back to the page, pick one tool and restart. That's the plan working, not failing.</p>
+    <p>If you'd like, share the plan with your doctor, therapist or someone on your team. It gives them a quick picture of what you're working on.</p>`,
+    refs:["treatment-overview","find-help"],
+    tryTitle:"Build your one-page plan", widget:{type:"reflect", key:"sup6", summary:true, title:"My ADHD plan", fields:[
+      {k:"ch", label:"What gets in my way most (2 or 3 things)", ph:"e.g. starting tasks, losing track of time", area:true},
+      {k:"tools", label:"Tools I'm using for those", ph:"e.g. two-minute start, visible timer, Rule of 3", area:true},
+      {k:"team", label:"My team", ph:"e.g. my doctor, my partner, a friend I co-work with", area:true},
+      {k:"warn", label:"My warning signs", ph:"e.g. staying up late, ignoring messages", area:true},
+      {k:"next", label:"My next step", ph:"e.g. book an appointment; try a body-doubling session"}]},
+    quiz:{q:"How often should you look at your plan?", o:["Never; write it once","About monthly, and when life changes","Every hour"], a:1, why:"A light, regular review keeps it useful as your life and needs change."} }
   ]}
 ];
 const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})));
@@ -586,10 +963,11 @@ const ALL_LESSONS = COURSES.flatMap(c => c.lessons.map(l => ({...l, course:c})))
    announce:false = listed on the What's new page but no banner (e.g. patches).
    To label new content: give a game or lesson added:"YYYY-MM-DD". It shows "New"
    for NEW_DAYS days, or until the learner opens it. */
-const APP_VERSION = "1.4.0";
+const APP_VERSION = "1.5.0";
 const NEW_DAYS = 30;
-const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20"};
+const FEATURES_ADDED = {workout:"2026-11-20", skills:"2026-11-20", library:"2026-11-20", news:"2026-11-20"};
 const RELEASES = [
+  {v:"1.5.0", date:"2026-11-20", title:"Four new courses, an ADHD Library and research news", link:"#library", linkText:"Open the Library", items:["Four in-depth courses: <b>Understanding ADHD</b>, <b>Emotions & Self-Regulation</b>, <b>Work & Study</b> and <b>Getting Support</b>. That's 24 new lessons.","The <b>ADHD Library</b>: clear, sourced answers on symptoms, diagnosis, treatment, rights and where to find help, with search and a glossary.","<b>Research news</b>: new studies, guidelines and medication updates explained in plain language."]},
   {v:"1.4.0", date:"2026-11-20", announce:false, title:"Never miss what's new", items:["A short note on the home page tells you when something new arrives.","New games and lessons wear a <b>New</b> label until you open them."]},
   {v:"1.3.0", date:"2026-11-20", title:"Brain skills update", link:"#games", linkText:"Try today's workout", items:["Four new brain games: <b>Tower Planner</b> (planning), <b>Quick Tap</b> (hand-eye speed), <b>Switch It</b> (switching between rules) and <b>Night Watch</b> (staying focused).","Games now move up a level as you improve, and ease off after a rough round.","<b>My brain skills</b> shows how you're doing in attention, memory, inhibition, planning and speed.","<b>Today's workout</b> picks three games for you each day. It takes about 10 minutes."]},
   {v:"1.2.0", date:"2026-11-20", title:"Smarter Color Clash", link:"#games", linkText:"Play Color Clash", items:["An optional warm-up measures your own baseline speed, then shows how much the mixed-up words slow you down.","Tips at the end of a round now fit how you played."]},
@@ -656,7 +1034,7 @@ function route(){
   const app = document.getElementById("app");
   document.querySelectorAll("[data-nav]").forEach(a => {
     const n = a.dataset.nav;
-    a.classList.toggle("on", n===h || (n==="courses" && COURSES.some(c=>c.id===h)) || (n==="games" && h==="games"));
+    a.classList.toggle("on", n===h || (n==="courses" && COURSES.some(c=>c.id===h)) || (n==="games" && h==="games") || (n==="library" && h.startsWith("lib-")));
   });
   const course = COURSES.find(c => c.id === h);
   if (course) { if (!currentLesson || currentLesson.course.id !== course.id) currentLesson = null; currentLesson ? renderLesson(app, currentLesson) : renderCourse(app, course); }
@@ -664,9 +1042,15 @@ function route(){
   else if (h === "games") { currentGame ? renderGame(app, currentGame) : renderGames(app); }
   else if (h === "account") renderAccount(app);
   else if (h === "updates") renderUpdates(app);
+  else if (h === "library") renderLibrary(app);
+  else if (h === "lib-glossary") renderGlossary(app);
+  else if (h.startsWith("lib-")) renderArticle(app, h.slice(4));
+  else if (h === "news") renderNews(app);
   else renderHome(app);
   const gt = document.querySelector('nav.tabs a[data-nav="games"]');
   if (gt) gt.innerHTML = "Games" + (GAMES.some(g => isNew("g", g)) ? `<i class="ndot" title="New games"></i><span style="position:absolute;left:-9999px"> (new)</span>` : "");
+  const nt = document.querySelector('nav.tabs a[data-nav="news"]');
+  if (nt) nt.innerHTML = "News" + (hasNewNews() ? `<i class="ndot" title="New updates"></i><span style="position:absolute;left:-9999px"> (new)</span>` : "");
   setSync(syncStatus);
   window.scrollTo(0,0);
 }
@@ -681,7 +1065,7 @@ function courseCard(c){
     <span class="tag">${c.lessons.length} lessons · ${c.lessons.reduce((a,l)=>a+l.mins,0)} min</span>
     <h3>${c.title}</h3><p class="muted small">${c.blurb}</p>
     <div class="bar" aria-label="${p.pct}% complete"><span style="width:${p.pct}%"></span></div>
-    <span class="small muted">${p.d} of ${p.t} done${(n => n ? ` · </span><span class="pill new" style="align-self:flex-start">${n} new lesson${n>1?"s":""}` : "")(c.lessons.filter(l => isNew("l", l)).length)}</span></a>`;
+    <span class="small muted">${p.d} of ${p.t} done${(n => n ? `</span><span class="pill new" style="align-self:flex-start">${n} new lesson${n>1?"s":""}` : "")(c.lessons.filter(l => isNew("l", l)).length)}</span></a>`;
 }
 
 function renderHome(app){
@@ -691,8 +1075,8 @@ function renderHome(app){
   app.innerHTML = `${whatsNewBanner()}
   <section class="hero">
     <span class="tag" style="color:var(--accent)">Self-paced · start anywhere</span>
-    <h1>Small lessons, real tools, and games that train your brain</h1>
-    <p class="muted">Four short courses on focus, memory, healthy habits and life skills. Each lesson takes 5–10 minutes and ends with something to try. Skip around, repeat lessons, take breaks. There are no streaks to break here.</p>
+    <h1>Understand your ADHD, build real skills, and train your brain</h1>
+    <p class="muted">${COURSES.length} short courses, a library of clear answers, the latest research in plain language, and brain games. Each lesson takes 5–10 minutes and ends with something to try. Skip around, repeat lessons, take breaks. There are no streaks to break here.</p>
     <div class="row">${nl ? `<button class="btn" id="cont">${done ? "Continue" : "Start"}: ${esc(nl.title)}</button>` : `<span class="pill ok">All lessons complete. Nice work!</span>`}<a class="btn ghost" href="#games">Today's brain workout</a></div>
     ${sb ? (user ? `<div class="row small"><span>Signed in as <b>${esc(displayName())}</b></span>${syncBadge()}</div>` : `<p class="small muted">Want your progress on every device? <a href="#account">Create a free account</a> or <a href="#account">sign in</a>.</p>`) : ""}
   </section>
@@ -702,6 +1086,12 @@ function renderHome(app){
     <div class="stat"><b>${Math.round(done/ALL_LESSONS.length*100)}%</b><span class="small muted">overall</span></div>
   </div>
   <section class="section" data-home-courses><h2>Courses</h2><div class="grid">${COURSES.map(courseCard).join("")}</div></section>
+  <section class="section"><div class="row" style="justify-content:space-between"><h2>ADHD Library${isRecent(FEATURES_ADDED.library) ? " " + NEW_PILL : ""}</h2><a href="#library" class="small">Browse all ${LIB.length} articles</a></div>
+    <p class="muted" style="max-width:62ch">Clear, sourced answers about ADHD: symptoms, diagnosis, treatment, your rights and where to get help.</p>
+    <form id="homeQ" class="row" style="flex-wrap:nowrap;max-width:520px"><input type="text" id="homeQi" placeholder="Search the Library" aria-label="Search the Library" autocomplete="off"><button class="btn" type="submit">Search</button></form>
+    <div class="chips">${["what-is-adhd","diagnosis","treatment-overview","myths","find-help"].map(id => `<a class="chip" href="#lib-${id}">${libById(id).title}</a>`).join("")}</div></section>
+  <section class="section"><div class="row" style="justify-content:space-between"><h2>Research news${isRecent(FEATURES_ADDED.news) ? " " + NEW_PILL : ""}</h2><a href="#news" class="small">All ${NEWS.length} updates</a></div>
+    ${NEWS.slice(0, 2).map(n => newsCard(n, true)).join("")}</section>
   <section class="card section">
     <h3>How to use this lab with an ADHD brain</h3>
     <ul class="list">
@@ -713,10 +1103,11 @@ function renderHome(app){
   </section>`;
   const b = document.getElementById("cont");
   if (b) b.onclick = () => openLesson(nl);
+  document.getElementById("homeQ").onsubmit = e => { e.preventDefault(); libQuery = document.getElementById("homeQi").value; location.hash = "#library"; };
   wireBanner(app);
 }
 function renderCourses(app){
-  app.innerHTML = `<section class="hero"><h1>Courses</h1><p class="muted">Pick a course, then any lesson inside it.</p></section><div class="grid">${COURSES.map(courseCard).join("")}</div>`;
+  app.innerHTML = `<section class="hero"><h1>Courses</h1><p class="muted">Pick a course, then any lesson inside it. New to ADHD? Start with <b>Understanding ADHD</b>.</p></section><div class="grid">${COURSES.map(courseCard).join("")}</div>`;
 }
 function renderCourse(app, c){
   const p = courseProgress(c);
@@ -747,10 +1138,12 @@ function renderLesson(app, l){
     <div class="section"><span class="tag">Lesson ${idx+1} of ${c.lessons.length} · ${l.mins} min</span><h1>${l.title}</h1></div>
     <div class="section"><h3><span class="dot"></span>The idea</h3>${l.idea}</div>
     <div class="section"><h3><span class="dot"></span>Example</h3><div class="example">${l.example}</div></div>
+    ${l.deeper ? `<details class="deeper"><summary>Go deeper (2 more minutes)</summary><div class="prose">${l.deeper}</div></details>` : ""}
     <div class="section"><h3><span class="dot"></span>Try it: ${l.tryTitle}</h3><div class="try" id="widget"></div></div>
     <div class="section card"><h3>Quick check</h3><p>${q.q}</p>
       <div class="choices" id="quiz">${q.o.map((o,i)=>`<button class="choice" data-i="${i}">${o}</button>`).join("")}</div>
       <p class="feedback" id="qfb" aria-live="polite"></p></div>
+    ${l.refs ? `<div class="section"><h3>Read more in the Library</h3><div class="chips">${l.refs.map(r => r === "glossary" ? `<a class="chip" href="#lib-glossary">Glossary</a>` : `<a class="chip" href="#lib-${r}">${libById(r).title}</a>`).join("")}</div></div>` : ""}
     <div class="row">
       <button class="btn cc" id="done">${S.done[l.id] ? "Completed ✓" : "Mark lesson complete"}</button>
       ${idx < c.lessons.length-1 ? `<button class="btn ghost" id="nextL">Next: ${c.lessons[idx+1].title}</button>` : `<a class="btn ghost" href="#games">Celebrate with a game</a>`}
@@ -878,7 +1271,7 @@ checklist(el, w){
   const st = getD("cl_"+w.key, {});
   const draw = () => {
     el.innerHTML = `<div class="checks">${w.items.map((t,i)=>`<label class="check"><input type="checkbox" data-i="${i}" ${st[i]?"checked":""}><span>${t}</span></label>`).join("")}</div>
-    <p class="small muted">${Object.values(st).filter(Boolean).length} of ${w.items.length} set up. Do one today; come back for the rest.</p>`;
+    <p class="small muted">${Object.values(st).filter(Boolean).length} of ${w.items.length} ${w.foot || "set up. Do one today; come back for the rest."}</p>`;
     el.querySelectorAll(".check input").forEach(c => c.onchange = () => { st[c.dataset.i] = c.checked; setD("cl_"+w.key, st); draw(); });
   };
   draw();
@@ -1078,6 +1471,663 @@ reframe(el){
   el.querySelector("#rfMine").oninput = e => setD("rfMine", e.target.value);
 }
 };
+
+/* ---------- ADHD Library (v1.5.0) ----------
+   Reference articles. Each has: id, cat, title, sum (one-line summary), key (key points), body (HTML),
+   src ([label, url] pairs), lessons (related lesson ids), reviewed (date facts were last checked).
+   To add an article: copy one, give it a new id, and add added:"YYYY-MM-DD" for a New label. */
+const LIB_REVIEWED = "2026-11-20";
+const LIB_CATS = [
+  {id:"basics", name:"ADHD basics", blurb:"What it is, how common it is, and what causes it."},
+  {id:"dx", name:"Diagnosis", blurb:"How ADHD is identified in adults and children."},
+  {id:"tx", name:"Treatment", blurb:"Medication, therapy, coaching and lifestyle: what the evidence says."},
+  {id:"life", name:"Living with ADHD", blurb:"Emotions, sleep, health and life stages."},
+  {id:"rights", name:"Rights at work and school", blurb:"Accommodations and legal protections (United States)."},
+  {id:"help", name:"Help and support", blurb:"Where to turn, for yourself or someone you love."}
+];
+const S_ = {
+  cdcData:["CDC: Data and statistics on ADHD","https://www.cdc.gov/adhd/data/index.html"],
+  cdcAdults:["CDC: ADHD in adults","https://www.cdc.gov/adhd/about/adhd-in-adults.html"],
+  cdcDx:["CDC: Diagnosing ADHD","https://www.cdc.gov/adhd/diagnosis/index.html"],
+  cdcCare:["CDC: Clinical care of ADHD in children","https://www.cdc.gov/adhd/hcp/treatment-recommendations/index.html"],
+  mmwr:["CDC MMWR (2024): ADHD diagnosis, treatment and telehealth use in adults","https://www.cdc.gov/mmwr/volumes/73/wr/mm7340a1.htm"],
+  fastats:["CDC FastStats: ADHD","https://www.cdc.gov/nchs/fastats/adhd.htm"],
+  nimh:["NIMH: Attention-Deficit/Hyperactivity Disorder","https://www.nimh.nih.gov/health/topics/attention-deficit-hyperactivity-disorder-adhd"],
+  nimhAdults:["NIMH: ADHD in Adults: 4 Things to Know","https://www.nimh.nih.gov/health/publications/adhd-what-you-need-to-know"],
+  consensus:["World Federation of ADHD International Consensus Statement (2021)","https://doi.org/10.1016/j.neubiorev.2021.01.022"],
+  genetics:["Faraone & Larsson (2019): Genetics of ADHD","https://pmc.ncbi.nlm.nih.gov/articles/PMC6477889"],
+  bmjUmb:["The BMJ (2025): Benefits and harms of ADHD interventions, umbrella review","https://www.bmj.com/content/391/bmj-2025-085875"],
+  ebi:["Evidence tool from the BMJ review team","https://ebiadhd-database.org"],
+  bmjSwe:["The BMJ (2025): ADHD drug treatment and wider outcomes, Sweden","https://www.bmj.com/content/390/bmj-2024-083658"],
+  nihCell:["NIH Research Matters: ADHD medications stimulate alertness, motivation","https://www.nih.gov/news-events/nih-research-matters/adhd-medications-stimulate-alertness-motivation"],
+  aafp:["American Family Physician: AAP guideline summary","https://www.aafp.org/pubs/afp/issues/2020/0701/p58.html"],
+  fdaU6:["FDA (2025): Labeling on weight loss risk in children under 6 taking extended-release stimulants","https://www.fda.gov/drugs/drug-safety-and-availability/fda-requires-expanded-labeling-about-weight-loss-risk-patients-younger-6-years-taking-extended"],
+  fdaShort:["FDA: Drug shortages","https://www.fda.gov/drugs/drug-safety-and-availability/drug-shortages"],
+  deaTele:["Federal Register: Fourth temporary extension of telemedicine flexibilities","https://www.federalregister.gov/documents/2025/12/31/2025-24123/fourth-temporary-extension-of-covid-19-telemedicine-flexibilities-for-prescription-of-controlled"],
+  deaCent:["Federal Register: Placement of centanafadine in Schedule III","https://www.federalregister.gov/documents/2026/10/30/2026-22208/schedules-of-controlled-substances-placement-of-centanafadine-in-schedule-iii"],
+  women:["Kooij et al. (2025): Research advances and future directions in female ADHD","https://www.frontiersin.org/journals/global-womens-health/articles/10.3389/fgwh.2025.1613628/full"],
+  ucl:["UCL (2025): Adults diagnosed with ADHD may have reduced life expectancies","https://www.ucl.ac.uk/news/2025/jan/adults-diagnosed-adhd-may-have-reduced-life-expectancies"],
+  apsard:["APSARD: U.S. guidelines for adults with ADHD","https://apsard.org/Web/Guidelines"],
+  chadd:["CHADD: National Resource Center on ADHD","https://chadd.org/about/about-nrc/"],
+  chaddWork:["CHADD: Asking for workplace accommodations","https://chadd.org/adhd-weekly/asking-for-workplace-accommodations/"],
+  chaddEd:["CHADD: Educational rights","https://chadd.org/for-educators/educational-rights/"],
+  chadd504:["CHADD: Section 504","https://chadd.org/for-parents/section-504/"],
+  ed504:["U.S. Department of Education: Resource guide on students with ADHD (via Parent Center Hub)","https://www.parentcenterhub.org/dear-colleague-letter-and-resource-guide-on-students-with-adhd/"],
+  jan:["Job Accommodation Network (JAN)","https://askjan.org"],
+  jamaPeds:["JAMA Pediatrics (2026): Accommodations, behavior therapy and stimulant medication trial","https://jamanetwork.com/journals/jamapediatrics/fullarticle/2856649"],
+  adda:["ADDA: Attention Deficit Disorder Association","https://add.org"],
+  l988:["988 Suicide & Crisis Lifeline","https://988lifeline.org"]
+};
+const LIB = [
+{ id:"what-is-adhd", cat:"basics", title:"What is ADHD?", sum:"A plain-language overview of the condition.",
+  key:["ADHD is a neurodevelopmental condition, not a character flaw.","It's a lasting pattern of inattention, hyperactivity-impulsivity, or both.","It begins in childhood and often continues into adulthood.","It's highly treatable, and many people with ADHD do very well."],
+  body:`<p>Attention-deficit/hyperactivity disorder (ADHD) is a condition that affects how the brain manages attention, activity levels and impulses. It develops in childhood and, for many people, continues through the teen years and adult life.</p>
+  <h3>What it looks like</h3>
+  <p>Everyone is forgetful, restless or impulsive sometimes. In ADHD these are <b>persistent</b>, they show up in <b>more than one area of life</b>, and they <b>interfere</b> with school, work, relationships or daily tasks. Symptoms fall into two groups:</p>
+  <ul><li><b>Inattention:</b> trouble staying on task, following through, organizing, and keeping track of things.</li><li><b>Hyperactivity and impulsivity:</b> restlessness, talking or moving a lot, interrupting, acting without thinking.</li></ul>
+  <h3>What's going on underneath</h3>
+  <p>ADHD is closely tied to <b>executive functions</b>, the brain's self-management skills: getting started, holding things in mind, managing time and emotions, and stopping to think. That's why people with ADHD often know exactly what to do but have trouble doing it consistently.</p>
+  <h3>What it isn't</h3>
+  <p>ADHD isn't caused by laziness, low intelligence, poor parenting or too much screen time. It says nothing about a person's worth or potential.</p>`,
+  src:[S_.nimh, S_.cdcAdults, S_.consensus], lessons:["und1","und3"] },
+{ id:"symptoms", cat:"basics", title:"Symptoms and the three presentations", sum:"Inattentive, hyperactive-impulsive and combined, and how symptoms change with age.",
+  key:["There are three presentations: inattentive, hyperactive-impulsive and combined.","Hyperactivity often becomes inner restlessness in adults.","Inattentive symptoms are easier to miss, especially in girls and women."],
+  body:`<h3>Inattention</h3>
+  <ul><li>Makes careless mistakes or misses details</li><li>Has trouble keeping attention on tasks or conversations</li><li>Doesn't seem to listen when spoken to directly</li><li>Starts tasks but doesn't finish them</li><li>Has trouble organizing tasks and belongings</li><li>Avoids tasks that need long mental effort</li><li>Loses things needed for daily life</li><li>Is easily distracted</li><li>Is forgetful in daily activities</li></ul>
+  <h3>Hyperactivity and impulsivity</h3>
+  <ul><li>Fidgets, taps or squirms</li><li>Has trouble staying seated</li><li>Feels restless (in children, runs or climbs at the wrong times)</li><li>Has trouble doing things quietly</li><li>Seems "on the go" or driven by a motor</li><li>Talks a lot</li><li>Blurts out answers</li><li>Has trouble waiting their turn</li><li>Interrupts or intrudes on others</li></ul>
+  <h3>The three presentations</h3>
+  <p><b>Predominantly inattentive</b>, <b>predominantly hyperactive-impulsive</b>, or <b>combined</b>, depending on which symptoms are present. A person's presentation can change over time.</p>
+  <h3>In adults</h3>
+  <p>Hyperactivity may look like extreme restlessness or wearing other people out. Inattention often shows up as missed deadlines, disorganization and forgetfulness.</p>
+  <p class="small muted">This list is shortened and is for information only. It can't be used to diagnose yourself or anyone else.</p>`,
+  src:[S_.cdcDx, S_.nimh], lessons:["und2"] },
+{ id:"how-common", cat:"basics", title:"How common is ADHD?", sum:"Current U.S. numbers for children and adults.",
+  key:["About 1 in 9 U.S. children (11.4%) had ever been diagnosed, in 2022 survey data.","About 15.5 million U.S. adults (6%) had a current diagnosis in 2023.","About half of those adults were diagnosed at 18 or older."],
+  body:`<h3>Children</h3>
+  <p>In a national survey of parents using 2022 data, an estimated <b>7 million U.S. children aged 3 to 17 (11.4%)</b> had ever been diagnosed with ADHD. A separate federal survey put the figure at 12.0% in 2024, with boys (15.6%) diagnosed more often than girls (8.2%).</p>
+  <p>About 6 in 10 children with ADHD had moderate or severe ADHD, and nearly 78% had at least one other condition, such as anxiety or a behavior problem.</p>
+  <h3>Adults</h3>
+  <p>In 2023, an estimated <b>15.5 million U.S. adults (6.0%)</b> reported a current ADHD diagnosis. About half received the diagnosis in adulthood. About one third were not receiving any treatment. Among adults taking a stimulant, 71.5% said they'd had trouble getting a prescription filled because the medication was unavailable.</p>
+  <h3>Why the numbers vary</h3>
+  <p>Different surveys ask different questions of different people, and numbers based on "ever diagnosed" are higher than those based on current symptoms. Worldwide research estimates are often lower than U.S. survey figures. Rising numbers partly reflect better recognition, especially in girls, women and adults.</p>`,
+  src:[S_.cdcData, S_.fastats, S_.mmwr], lessons:["und1"] },
+{ id:"causes", cat:"basics", title:"What causes ADHD?", sum:"Genes play the biggest part. Parenting and sugar don't cause it.",
+  key:["ADHD is strongly inherited: twin studies estimate heritability at about 74%.","Many genes are involved, each with a small effect.","Parenting, sugar and screens don't cause ADHD."],
+  body:`<h3>Genes</h3>
+  <p>ADHD runs in families. Across 37 twin studies, the average heritability was about <b>74%</b>, which makes it one of the most heritable conditions in mental health. There's no single "ADHD gene." Many common gene variants each add a little.</p>
+  <h3>Other influences</h3>
+  <p>Research has linked some factors around pregnancy and birth with a higher chance of ADHD, such as being born very early or at a low birth weight. These raise the odds; they don't decide the outcome, and most children with ADHD have no such history.</p>
+  <h3>What doesn't cause it</h3>
+  <p>Research doesn't support the popular ideas that ADHD is caused by eating sugar, watching too much television, or parenting style. These things can make symptoms easier or harder to manage, but they aren't the cause.</p>
+  <h3>The brain</h3>
+  <p>On average, studies find small differences in how brain networks involved in attention, reward and self-control develop and communicate. These are group averages. No brain scan can diagnose ADHD in an individual.</p>`,
+  src:[S_.genetics, S_.consensus, S_.nimh], lessons:["und1","und4"] },
+{ id:"brain", cat:"basics", title:"The ADHD brain: motivation, reward and alertness", sum:"Why interest and urgency work when importance doesn't.",
+  key:["ADHD involves the brain's reward and alertness systems as well as attention.","A 2025 study found stimulants act mainly on wakefulness and reward networks.","Sleep has a large effect on ADHD symptoms."],
+  body:`<p>People with ADHD often describe being able to focus intensely on things that are interesting, urgent or new, and being almost unable to start things that are merely important. Brain research is starting to explain why.</p>
+  <h3>The 2025 imaging study</h3>
+  <p>Researchers at Washington University in St. Louis analyzed brain scans from 5,795 children aged 8 to 11. Stimulant medications changed activity mainly in networks that control <b>wakefulness</b> and <b>reward</b>, while the brain's attention networks were largely unchanged. The findings were published in the journal <i>Cell</i> in December 2025.</p>
+  <p>The researchers' interpretation: stimulants seem to help by making a person more alert and making tasks feel more rewarding, and better attention follows from that.</p>
+  <h3>The sleep connection</h3>
+  <p>The same study found that stimulants and extra sleep affected the brain in similar ways, and suggested that getting enough sleep could help in managing ADHD.</p>
+  <h3>What to take from it</h3>
+  <ul><li>Making tasks more interesting, urgent or rewarding isn't a gimmick. It works with how the ADHD brain is wired.</li><li>Sleep deserves a place at the center of any ADHD plan.</li></ul>
+  <p class="small muted">This is one study, mostly in children. It adds to the picture but doesn't settle it.</p>`,
+  src:[S_.nihCell, S_.consensus], lessons:["und4","wrk2"] },
+{ id:"myths", cat:"basics", title:"Myths and facts", sum:"Quick answers to the things people get wrong about ADHD.",
+  key:["ADHD is real, well studied and not caused by parenting.","Adults have it too, and so do girls and women.","Treatment is linked to better and safer lives."],
+  body:`<p><b>Myth: ADHD isn't real.</b><br>Fact: It's one of the most studied conditions in medicine. In 2021, 80 researchers from 27 countries published 208 evidence-based conclusions about it.</p>
+  <p><b>Myth: It's caused by bad parenting, sugar or screens.</b><br>Fact: ADHD is strongly genetic. Research doesn't support those causes.</p>
+  <p><b>Myth: Only hyperactive boys have it.</b><br>Fact: Girls and women have ADHD too. Their symptoms are more often inattentive and more likely to be missed in childhood.</p>
+  <p><b>Myth: Children grow out of it.</b><br>Fact: Symptoms often continue into adulthood, though they can look different. About 6% of U.S. adults have a current diagnosis.</p>
+  <p><b>Myth: If you can focus on things you enjoy, it isn't ADHD.</b><br>Fact: ADHD is a problem of regulating attention. Deep focus on high-interest activities is common.</p>
+  <p><b>Myth: People with ADHD just need to try harder.</b><br>Fact: Effort isn't the missing ingredient. Most people with ADHD are already working harder than those around them to get the same results.</p>
+  <p><b>Myth: ADHD medication is a shortcut or a crutch.</b><br>Fact: Medication is among the best-supported treatments. A large Swedish study linked it to lower rates of accidents, substance misuse and other serious harms. It's a medical decision to make with a prescriber.</p>
+  <p><b>Myth: Everyone is "a little ADHD."</b><br>Fact: Everyone gets distracted. A diagnosis requires a lasting pattern since childhood that interferes across settings.</p>`,
+  src:[S_.consensus, S_.genetics, S_.nimhAdults, S_.bmjSwe, S_.mmwr], lessons:["und1","emo5"] },
+{ id:"diagnosis", cat:"dx", title:"Getting diagnosed as an adult", sum:"Who can diagnose, what they look at, and how to prepare.",
+  key:["There's no single test. Diagnosis comes from a thorough evaluation.","Adults need at least 5 symptoms, with some present before age 12.","Other conditions can look like ADHD and need to be ruled out or treated too.","It's never too late to seek an evaluation."],
+  body:`<h3>Who can diagnose</h3>
+  <p>Mental health professionals such as psychiatrists and psychologists, and primary care providers. Availability varies a lot by area.</p>
+  <h3>What clinicians look for</h3>
+  <ul><li><b>Five or more</b> symptoms of inattention and/or hyperactivity-impulsivity (six or more for children up to age 16), lasting at least six months.</li><li>Several symptoms present <b>before age 12</b>.</li><li>Symptoms in <b>two or more settings</b> (for example home and work).</li><li>Clear evidence that they <b>interfere</b> with daily functioning.</li><li>Symptoms that aren't better explained by another condition.</li></ul>
+  <h3>What an evaluation involves</h3>
+  <p>An interview about your current life and your childhood, rating scales or checklists, and often input from someone who knows you well. Because adults have to show symptoms that began in childhood, clinicians rely heavily on your history.</p>
+  <p>Stress, sleep problems, anxiety, depression and some physical illnesses can cause similar symptoms, so a good evaluation checks for them.</p>
+  <h3>U.S. guidelines for adults</h3>
+  <p>The United States has had no official clinical guidelines for diagnosing and treating ADHD in adults. The American Professional Society of ADHD and Related Disorders (APSARD) has been developing the first set, and announced in August 2026 that they had entered final review. Check <a href="#news">Research news</a> for the latest.</p>
+  <h3>Tips</h3>
+  <ul><li>Bring specific examples, old school reports if you have them, and a list of medications.</li><li>Be wary of any service that promises a diagnosis in minutes.</li><li>Online screening quizzes can be a prompt to seek help, but they can't diagnose.</li></ul>`,
+  src:[S_.cdcDx, S_.nimhAdults, S_.cdcAdults, S_.apsard], lessons:["sup1"] },
+{ id:"diagnosis-kids", cat:"dx", title:"Diagnosis in children and teens", sum:"What parents can expect.",
+  key:["Pediatricians and other primary care providers can evaluate children from age 4.","Information comes from parents, teachers and the child.","Most children with ADHD have at least one other condition worth checking for."],
+  body:`<p>If you're concerned about your child, the first step is to talk with their healthcare provider. The diagnosis can be made by a pediatrician or other primary care provider, or by a mental health professional.</p>
+  <h3>What the evaluation includes</h3>
+  <ul><li>A history of the child's behavior at home, school and with friends.</li><li>Rating scales completed by parents and teachers.</li><li>Checks to rule out other causes, such as hearing, vision, sleep or learning problems.</li><li>Screening for conditions that often occur alongside ADHD, including anxiety, depression, learning and language disorders, and autism.</li></ul>
+  <h3>Things to know</h3>
+  <ul><li>Diagnosing children aged 4 to 6 is harder because ADHD symptoms overlap with normal behavior for that age.</li><li>Children who are among the youngest in their class are more likely to be diagnosed, so age within the grade is worth mentioning.</li><li>Teens often show less hyperactivity and may play down their symptoms.</li></ul>
+  <p>A diagnosis is also the usual starting point for school supports. See <a href="#lib-school-rights">Rights at school</a>.</p>`,
+  src:[S_.cdcDx, S_.cdcCare, S_.aafp], lessons:["sup1"] },
+{ id:"treatment-overview", cat:"tx", title:"Treatment overview: what works", sum:"The evidence at a glance, from the largest review so far.",
+  key:["Medication has the strongest short-term evidence for children and adults.","CBT is also well supported for adults.","Exercise and mindfulness look promising but the evidence is weaker.","Under age 6, parent training comes first."],
+  body:`<h3>The big picture</h3>
+  <p>In November 2025, <i>The BMJ</i> published the most comprehensive review of ADHD treatments to date. It combined 221 meta-analyses of randomized trials.</p>
+  <ul><li><b>Children and teens:</b> several medications (methylphenidate, amphetamines, atomoxetine, viloxazine and alpha-2 agonists such as guanfacine) showed medium to large short-term benefits.</li>
+  <li><b>Adults:</b> methylphenidate, atomoxetine and <b>cognitive behavioral therapy</b> showed benefits with at least moderate certainty, and so did amphetamines when only high-quality trials were counted.</li>
+  <li><b>Other approaches</b> such as exercise, mindfulness and acupuncture showed promise, but the supporting studies were small or lower quality.</li>
+  <li>Some medications were less well tolerated than placebo, and <b>long-term evidence is limited</b> for nearly every treatment.</li></ul>
+  <p>The authors built a free website where people with ADHD and clinicians can explore the evidence for each option.</p>
+  <h3>By age (U.S. pediatric guidelines)</h3>
+  <ul><li><b>Ages 4 to 5:</b> parent training in behavior management and/or behavioral classroom support first.</li><li><b>Ages 6 to 11:</b> FDA-approved medication together with behavior support at home and school.</li><li><b>Teens:</b> medication, with behavioral and educational supports.</li></ul>
+  <h3>Beyond symptoms</h3>
+  <p>A 2025 Swedish study of more than 148,000 people found that starting ADHD medication was associated with lower rates of suicidal behavior, substance misuse, transport accidents and criminality over the following two years.</p>
+  <p class="small muted">This is general information. Treatment decisions should be made with a healthcare professional who knows you.</p>`,
+  src:[S_.bmjUmb, S_.ebi, S_.cdcCare, S_.bmjSwe], lessons:["sup2","sup6"] },
+{ id:"meds-stimulants", cat:"tx", title:"Stimulant medications", sum:"The most commonly prescribed ADHD medications, in general terms.",
+  key:["Two families: methylphenidate and amphetamine.","Common side effects include reduced appetite and trouble sleeping.","They're controlled substances: take only as prescribed and never share.","Extended-release stimulants aren't approved for children under 6."],
+  body:`<h3>What they are</h3>
+  <p>Stimulants are usually the first medications tried for ADHD. There are two families:</p>
+  <ul><li><b>Methylphenidate</b> (brand names include Ritalin and Concerta)</li><li><b>Amphetamine</b> (brand names include Adderall and Vyvanse)</li></ul>
+  <p>Both come in short-acting and long-acting (extended-release) forms. Long-acting forms mean fewer doses in a day.</p>
+  <h3>How they work</h3>
+  <p>They increase the activity of dopamine and norepinephrine in the brain. Recent research suggests they act mainly on alertness and reward systems. See <a href="#lib-brain">The ADHD brain</a>.</p>
+  <h3>Side effects and safety</h3>
+  <ul><li>Common side effects include <b>loss of appetite, weight loss and trouble sleeping</b>.</li><li>Stimulant labels carry a boxed warning about the risk of misuse and dependence.</li><li>Your prescriber will usually check things like heart rate, blood pressure, weight and, in children, growth.</li><li>In June 2025 the FDA required all extended-release stimulants to carry a warning that children <b>under 6</b> have a higher risk of weight loss and other side effects. These products aren't approved for that age group.</li></ul>
+  <h3>Using them responsibly</h3>
+  <p>Most stimulants are Schedule II controlled substances in the U.S. Take them exactly as prescribed, store them safely, and never share or sell them. Tell your prescriber about heart conditions, other medications, and any history of substance use.</p>
+  <p class="small muted">This is not medical advice and doesn't cover everything. Ask your prescriber or pharmacist about any medication you take.</p>`,
+  src:[S_.fdaU6, S_.bmjUmb, S_.nimh, S_.nihCell], lessons:["sup3"] },
+{ id:"meds-nonstimulants", cat:"tx", title:"Non-stimulant and newer medications", sum:"Other options, including the medication approved in 2026.",
+  key:["Non-stimulants include atomoxetine, viloxazine, guanfacine and clonidine.","They can suit people who can't take, or don't do well on, stimulants.","Centanafadine (Simtriyo), a new type of ADHD medication, was approved in July 2026."],
+  body:`<h3>Non-stimulants</h3>
+  <ul><li><b>Atomoxetine</b> and <b>viloxazine</b> act on norepinephrine.</li><li><b>Guanfacine</b> and <b>clonidine</b> (extended-release forms) are alpha-2 agonists.</li></ul>
+  <p>They generally take longer to show their full effect than stimulants. Most aren't controlled substances, so they aren't affected by the same supply limits. They may be chosen when stimulants cause problems, don't help enough, or aren't suitable.</p>
+  <h3>Centanafadine (Simtriyo)</h3>
+  <p>On July 24, 2026, the FDA approved centanafadine, a once-daily extended-release capsule, for ADHD in adults and in children aged 6 and older who weigh at least 20 kg (about 44 lb). It's the first approved ADHD medication that acts on norepinephrine, dopamine <i>and</i> serotonin.</p>
+  <ul><li>Its FDA label classes it as a central nervous system stimulant.</li><li>The DEA placed it in <b>Schedule III</b> from October 30, 2026 (most other stimulants are Schedule II). That was an interim rule and could still change.</li><li>It hasn't been compared head-to-head with existing ADHD medications, so nobody yet knows how it stacks up against them.</li></ul>
+  <h3>In development</h3>
+  <p>Other new types of medication are in early trials. Early-stage results are a long way from proof that something is safe and effective.</p>
+  <p class="small muted">This is not medical advice. Only a prescriber can say what's appropriate for you.</p>`,
+  src:[S_.bmjUmb, S_.deaCent, ["Medscape (2026): FDA approves first NDSRI for ADHD","https://www.medscape.com/viewarticle/fda-approves-first-ndsri-adhd-adults-and-children-2026a1000pfg"], ["Understood.org (2026): FDA approves Simtriyo","https://www.understood.org/en/articles/fda-approves-simtriyo-adhd"]], lessons:["sup3"] },
+{ id:"treatment-therapy", cat:"tx", title:"Therapy, coaching and parent training", sum:"Non-medication treatments and how to choose among them.",
+  key:["CBT adapted for adult ADHD is well supported by research.","Parent training in behavior management is first-line for young children.","Coaching can help with follow-through but isn't regulated."],
+  body:`<h3>Cognitive behavioral therapy (CBT)</h3>
+  <p>CBT for adult ADHD is structured and practical. It teaches skills for planning, time management and organization, and works on the unhelpful thinking that builds up after years of setbacks. In the 2025 BMJ review it was one of the few non-drug treatments for adults with at least moderate-certainty evidence.</p>
+  <h3>Parent training in behavior management</h3>
+  <p>Parents learn to set clear expectations, strengthen the relationship with their child, and use praise and consistent consequences. It's strongly recommended for children up to middle-school age, and it's the first step for children under 6.</p>
+  <h3>Behavioral classroom support</h3>
+  <p>Teacher-led systems such as daily report cards and clear rules with rewards. A 2026 trial found that this kind of behavior support reduced classroom rule-breaking, while common accommodations on their own did not.</p>
+  <h3>ADHD coaching</h3>
+  <p>Coaches help with goals, routines and accountability. Many people find it valuable. Coaching isn't a licensed profession, so ask about training, experience and approach.</p>
+  <h3>Support groups</h3>
+  <p>Groups run by organizations such as CHADD and ADDA connect you with people who share the experience.</p>
+  <h3>Choosing a therapist</h3>
+  <p>Ask how much of their work is with ADHD, and what a typical session involves. Therapy that only talks through feelings, without building skills, tends to do less for ADHD itself.</p>`,
+  src:[S_.bmjUmb, S_.cdcCare, S_.aafp, S_.jamaPeds, S_.chadd], lessons:["sup4","wrk5"] },
+{ id:"lifestyle", cat:"tx", title:"Sleep, exercise and food: what we know", sum:"Helpful habits, and an honest look at the evidence.",
+  key:["Sleep has a strong link with ADHD symptoms.","Exercise looks helpful, but the research is lower quality.","No diet has been shown to treat ADHD."],
+  body:`<h3>Sleep</h3>
+  <p>Sleep problems are common with ADHD, and too little sleep makes attention, mood and self-control worse for anyone. A 2025 brain imaging study found that stimulants and extra sleep had similar effects on the brain, and its authors suggested that enough sleep could help in managing ADHD.</p>
+  <h3>Exercise</h3>
+  <p>The 2025 BMJ review found that exercise showed promise for ADHD symptoms, but rated the evidence as low quality because studies were small. It's good for mood, sleep and health in any case, so there's little to lose.</p>
+  <h3>Mindfulness</h3>
+  <p>Also promising but uncertain. Some people find short practices useful for noticing impulses and settling the mind.</p>
+  <h3>Food and supplements</h3>
+  <p>Regular meals help keep energy and mood steady, which matters more if medication reduces your appetite. No specific diet or supplement has strong evidence as an ADHD treatment. Be cautious of anything marketed as a cure.</p>
+  <h3>How to use this</h3>
+  <p>Think of healthy habits as the <b>foundation</b> that makes other treatments work better, not as a replacement for them. The Healthy Habits course has step-by-step tools.</p>`,
+  src:[S_.bmjUmb, S_.nihCell, S_.nimh], lessons:["sup2","emo6"] },
+{ id:"access", cat:"tx", added:"2026-11-20", title:"Medication shortages and telehealth rules (U.S.)", sum:"What's happening with supply and online prescribing, as of November 2026.",
+  key:["Several stimulants were still on the FDA shortage list in October 2026.","Telehealth prescribing of controlled medications is allowed without an in-person visit through December 31, 2026.","A permanent rule is expected. Check before your next refill."],
+  body:`<h3>Shortages</h3>
+  <p>The FDA first listed a shortage of immediate-release amphetamine mixed salts (Adderall and generics) in October 2022. As of October 2026, several stimulant products were still listed as in shortage, including some amphetamine, lisdexamfetamine and extended-release methylphenidate products, although supply has improved since the worst point. In a 2023 CDC survey, 71.5% of adults taking a stimulant said they'd had trouble getting a prescription filled.</p>
+  <h3>If your pharmacy is out</h3>
+  <ul><li>Call the pharmacy a few days before you need a refill.</li><li>Ask whether a different strength, form or manufacturer is in stock.</li><li>Ask your prescriber about alternatives. Don't ration, split or stop medication without talking to them.</li><li>Never buy medication from unofficial sellers. Counterfeit pills are a real danger.</li></ul>
+  <h3>Telehealth prescribing</h3>
+  <p>Since March 2020, federal rules have temporarily allowed clinicians to prescribe controlled medications, including stimulants, by video visit without a prior in-person exam. The DEA and HHS have extended this four times. The current extension runs <b>through December 31, 2026</b>.</p>
+  <p>The DEA has been working on a permanent rule and sent a final version for White House review in August 2026. As of mid-November 2026 it hadn't been published. State rules can be stricter than federal ones.</p>
+  <p><b>What to do:</b> if you get ADHD medication through telehealth, ask your provider now what their plan is for 2027.</p>
+  <p class="small muted">This section is time-sensitive. See Research news for updates.</p>`,
+  src:[S_.fdaShort, S_.mmwr, S_.deaTele, ["McDermott law firm (2026): DEA appears close to finalizing telemedicine special registration","https://www.mcdermottlaw.com/insights/dea-appears-close-to-finalizing-telemedicine-special-registration/"]], lessons:["sup3"] },
+{ id:"adults", cat:"life", title:"ADHD in adults", sum:"How it shows up at work, at home and in relationships.",
+  key:["About half of adults with ADHD were diagnosed in adulthood.","Adult ADHD often looks like disorganization, lateness and restlessness.","About one in three adults with ADHD gets no treatment."],
+  body:`<p>ADHD doesn't end at 18. For many people it continues for life, though it changes shape.</p>
+  <h3>Common adult experiences</h3>
+  <ul><li><b>Work:</b> missed deadlines, trouble prioritizing, starting many things and finishing few, restlessness in meetings.</li><li><b>Home:</b> clutter, late bills, forgotten appointments.</li><li><b>Relationships:</b> forgetting what was said, interrupting, running late, strong emotional reactions.</li><li><b>Health:</b> irregular sleep, skipped check-ups, impulsive eating or spending.</li></ul>
+  <h3>Diagnosis in adulthood</h3>
+  <p>In a 2023 CDC survey, about half of adults with ADHD had been diagnosed at 18 or older. Many are diagnosed after a child's diagnosis prompts them to recognize the pattern in themselves, or when life gets more demanding than their coping strategies can handle.</p>
+  <h3>Care</h3>
+  <p>Primary care doctors are the main source of ADHD care for adults. About half of adults with ADHD have used telehealth for it. About one third aren't receiving any treatment.</p>
+  <h3>Strengths</h3>
+  <p>Many adults with ADHD describe real strengths, such as energy, creativity, humor and calm in a crisis. The aim of treatment isn't to change who you are. It's to remove obstacles.</p>`,
+  src:[S_.mmwr, S_.cdcAdults, S_.nimhAdults], lessons:["und5","wrk1"] },
+{ id:"women", cat:"life", title:"ADHD in women and girls", sum:"Why it's missed, and how hormones play a part.",
+  key:["Girls are diagnosed less often than boys in childhood; the gap narrows in adulthood.","Symptoms are more often inattentive and internal.","Many women report that symptoms change with hormonal shifts."],
+  body:`<h3>Why it's missed</h3>
+  <p>In 2024 U.S. data, 15.6% of boys but 8.2% of girls had ever been diagnosed. The National Institute of Mental Health notes that symptoms in girls and women are especially likely to have been missed in childhood, and that the difference in diagnosis rates evens out in adulthood.</p>
+  <p>Girls more often have inattentive symptoms, which draw less attention than hyperactivity. Many also work hard to hide their difficulties. The result is often a later diagnosis, sometimes after years of treatment for anxiety or depression alone.</p>
+  <h3>Hormones</h3>
+  <p>A 2025 review by an international group of specialists reported that hormonal transitions can worsen ADHD symptoms and mood. Women describe changes:</p>
+  <ul><li>across the <b>menstrual cycle</b>, often worse in the days before a period</li><li>during <b>pregnancy</b> and after birth</li><li>around <b>perimenopause and menopause</b></li></ul>
+  <p>The same review stressed that research on women with ADHD has been neglected and that much is still unknown, including how treatment should be adjusted.</p>
+  <h3>What helps</h3>
+  <ul><li>Track symptoms alongside your cycle for two or three months and share the pattern with your clinician.</li><li>Tell your prescriber if you're pregnant, planning to be, or breastfeeding.</li><li>If midlife brings new trouble with focus and memory, mention both menopause and ADHD.</li></ul>`,
+  src:[S_.fastats, S_.nimhAdults, S_.women], lessons:["und5","und2"] },
+{ id:"co-occurring", cat:"life", title:"Conditions that often come with ADHD", sum:"Anxiety, depression, sleep problems, learning differences and more.",
+  key:["Nearly 78% of children with ADHD have at least one other condition.","Anxiety, depression and sleep problems are common in adults too.","Overlapping symptoms can hide ADHD, or be mistaken for it."],
+  body:`<h3>In children</h3>
+  <p>In a 2022 national parent survey, nearly 78% of children with ADHD had at least one co-occurring condition. Almost half had a behavior or conduct problem, and about 4 in 10 had anxiety. Depression, autism and Tourette syndrome were also reported.</p>
+  <h3>In adults</h3>
+  <p>Anxiety disorders, mood disorders and substance use disorders may all occur with ADHD. Most health center visits by adults with ADHD in 2023 included another mental health diagnosis.</p>
+  <h3>Why it matters</h3>
+  <ul><li><b>Look-alikes:</b> stress, sleep disorders, anxiety and depression can cause ADHD-like symptoms.</li><li><b>Masking:</b> ADHD can be hidden behind a more obvious condition.</li><li><b>Treatment:</b> if two conditions are present, both usually need attention, and the order can matter.</li></ul>
+  <h3>What to do</h3>
+  <p>Tell your clinician about mood, worry, sleep, learning difficulties and substance use, even if you've come in about focus. If you ever have thoughts of harming yourself, see <a href="#lib-find-help">Find help now</a>.</p>`,
+  src:[S_.cdcData, S_.nimhAdults, S_.cdcCare, ["CDC NCHS Data Brief 543 (2025)","https://www.cdc.gov/nchs/data/databriefs/db543.pdf"]], lessons:["und6","emo6"] },
+{ id:"emotions", cat:"life", title:"Emotions and rejection sensitivity", sum:"Why feelings can be intense, and what \"RSD\" means.",
+  key:["Strong, fast emotions are common in ADHD, though not part of the official criteria.","\"Rejection sensitive dysphoria\" is a popular term, not a formal diagnosis.","Skills such as naming feelings and planned pauses can help."],
+  body:`<h3>Emotional intensity</h3>
+  <p>Many people with ADHD have quick, strong emotional reactions and take longer to settle. The diagnostic criteria focus on inattention, hyperactivity and impulsivity, so emotion isn't on the official list. Many researchers and clinicians still regard difficulty regulating emotion as a common part of ADHD.</p>
+  <h3>Rejection sensitivity</h3>
+  <p>"Rejection sensitive dysphoria" (RSD) describes intense emotional pain in response to real or perceived criticism or rejection. It isn't an official diagnosis and research on it is limited, but many people with ADHD recognize the experience immediately.</p>
+  <h3>What helps</h3>
+  <ul><li><b>Name the feeling</b> precisely.</li><li><b>Separate facts from story.</b></li><li><b>Plan a pause</b> for heated moments.</li><li><b>Look after the basics.</b> Tiredness and hunger make everything louder.</li><li><b>Get support</b> if emotions are damaging your work or relationships. Therapy can help, and it's worth telling your prescriber.</li></ul>
+  <p>The Emotions & Self-Regulation course turns each of these into a practical exercise.</p>
+  <h3>When it might be more</h3>
+  <p>Low mood, anxiety or mood swings that last, or that feel bigger than ADHD, deserve their own evaluation.</p>`,
+  src:[S_.nimh, S_.consensus], lessons:["emo1","emo2","emo3"] },
+{ id:"sleep", cat:"life", title:"ADHD and sleep", sum:"Why sleep is hard, why it matters, and where to start.",
+  key:["Sleep problems are common with ADHD and make symptoms worse.","Stimulants can cause trouble sleeping, depending on timing.","Sleep disorders can mimic ADHD and are worth checking for."],
+  body:`<h3>The two-way street</h3>
+  <p>ADHD makes sleep harder: a busy mind at bedtime, losing track of time at night, and trouble getting up. Poor sleep then makes attention, mood and impulse control worse the next day.</p>
+  <h3>Medication</h3>
+  <p>Trouble sleeping is a common side effect of stimulants. If your sleep changed after starting or adjusting a medication, tell your prescriber. Timing or formulation can often be changed.</p>
+  <h3>Rule out sleep disorders</h3>
+  <p>Sleep disorders, including sleep apnea, can cause symptoms that look like ADHD, and guidelines recommend screening for them. Loud snoring, gasping at night or waking unrefreshed are worth mentioning to a doctor.</p>
+  <h3>Starting points</h3>
+  <ul><li>Keep a consistent wake-up time, including weekends.</li><li>Set an alarm for <i>starting</i> to wind down, not just for waking.</li><li>Charge your phone outside the bedroom.</li><li>Get daylight and movement early in the day.</li></ul>
+  <p>The Healthy Habits course has a bedtime calculator and a full lesson on sleep.</p>`,
+  src:[S_.nihCell, S_.fdaU6, S_.cdcCare, S_.nimhAdults], lessons:["und4","emo6"] },
+{ id:"health", cat:"life", title:"Long-term health and safety", sum:"What research says about risks, and why support matters.",
+  key:["Untreated ADHD is linked to more accidents and health problems.","A UK study found shorter average life expectancy in adults diagnosed with ADHD.","Treatment is associated with lower risk of several serious harms.","These are averages across groups, not predictions for any one person."],
+  body:`<p>This topic can be worrying to read about, so first: these findings describe <b>averages across large groups</b>. They aren't a forecast for you, and many of the risks are things that support and treatment can reduce.</p>
+  <h3>Life expectancy</h3>
+  <p>A 2025 study in <i>The British Journal of Psychiatry</i> looked at more than 30,000 UK adults with diagnosed ADHD. Compared with similar people without ADHD, life expectancy appeared to be about 4.5 to 9 years shorter for men and 6.5 to 11 years shorter for women. The authors pointed to unmet support needs rather than ADHD itself, and cautioned that because most adults with ADHD in the UK are undiagnosed, the people studied may have been those with the greatest difficulties.</p>
+  <h3>Accidents and other harms</h3>
+  <p>ADHD is associated with higher rates of accidental injuries, transport accidents, substance misuse and suicidal behavior.</p>
+  <h3>Treatment and risk</h3>
+  <p>A 2025 Swedish study of 148,581 people with newly diagnosed ADHD found that starting medication was associated with lower rates over two years: about 17% lower for suicidal behavior, 15% for substance misuse, 12% for transport accidents and 13% for criminality.</p>
+  <h3>Later life</h3>
+  <p>A 2026 study in <i>JAMA Psychiatry</i> linked ADHD with a higher chance of later cognitive impairment or dementia (6.7% of participants with ADHD versus 3.4% without). This shows an association, not a cause, and most participants with ADHD did not develop either.</p>
+  <h3>Practical takeaways</h3>
+  <ul><li>Don't skip routine health checks. Put them in your calendar with reminders.</li><li>Take driving seriously: phone out of reach, and take medication as prescribed if you have it.</li><li>Sleep, movement and not smoking matter for everyone, and more so here.</li><li>If you're struggling, reach out. See <a href="#lib-find-help">Find help now</a>.</li></ul>`,
+  src:[S_.ucl, S_.bmjSwe, ["University of Pittsburgh / EurekAlert (2026): ADHD and late-life cognitive impairment","https://www.eurekalert.org/news-releases/1146661"]], lessons:["und5"] },
+{ id:"work-rights", cat:"rights", title:"Rights at work (U.S.)", sum:"The ADA, reasonable accommodations and whether to disclose.",
+  key:["ADHD can count as a disability under the ADA when it substantially limits a major life activity.","Employers must provide reasonable accommodations unless it causes undue hardship.","Disclosure is your choice. Put formal requests in writing.","JAN offers free, confidential advice."],
+  body:`<h3>The law in brief</h3>
+  <p>The Americans with Disabilities Act (ADA) has no list of covered conditions. It uses a general definition of disability, so some people with ADHD are covered and some aren't. A diagnosis alone isn't enough: the ADHD has to substantially limit a major life activity, and you must be able to do the essential functions of the job, with or without accommodation.</p>
+  <p>Where it applies, employers must provide <b>reasonable accommodations</b> unless doing so would cause undue hardship.</p>
+  <h3>Examples of accommodations</h3>
+  <ul><li>Written instructions and meeting recaps</li><li>A quieter workspace, or noise-canceling headphones</li><li>Flexible start times or adjusted breaks</li><li>Regular check-ins on priorities</li><li>Reminder or organization software</li></ul>
+  <p>Most accommodations are minor and inexpensive.</p>
+  <h3>Disclosure</h3>
+  <p>You don't have to tell your employer about a diagnosis unless you're asking for an accommodation. If you do ask, the employer has a right to know that a disability is involved. Advocates recommend asking <b>before</b> performance problems become serious, and putting the request in writing so there's a record.</p>
+  <p>Many adjustments can also be requested informally, as work preferences, without mentioning a diagnosis.</p>
+  <h3>Where to get help</h3>
+  <p>The <b>Job Accommodation Network (JAN)</b>, a service of the U.S. Department of Labor's Office of Disability Employment Policy, gives free guidance to employees and employers.</p>
+  <p class="small muted">This is general information about U.S. law, not legal advice. Laws differ in other countries and can differ by state.</p>`,
+  src:[S_.chaddWork, S_.jan, ["CHADD: What works for you in the workplace?","https://chadd.org/attention-article/what-works-for-you-in-the-workplace"]], lessons:["wrk6","wrk4"] },
+{ id:"school-rights", cat:"rights", title:"Rights at school (U.S.)", sum:"Section 504 plans, IEPs, and what a 2026 study adds.",
+  key:["Two federal laws protect students with ADHD: Section 504 and IDEA.","A 504 plan provides accommodations; an IEP provides special education services.","Under IDEA, ADHD usually falls under \"Other Health Impairment.\"","A 2026 trial suggests accommodations alone may not be enough."],
+  body:`<h3>Two laws</h3>
+  <ul><li><b>Section 504</b> of the Rehabilitation Act protects students with disabilities from discrimination and provides accommodations, written into a <b>504 plan</b>.</li><li>The <b>Individuals with Disabilities Education Act (IDEA)</b> provides special education and related services through an <b>Individualized Education Program (IEP)</b>.</li></ul>
+  <p>A student with ADHD may qualify under either, depending on how much the ADHD affects learning and behavior at school. Under IDEA, children with ADHD often qualify in the "Other Health Impairment" category. Students who don't qualify under IDEA may still qualify under Section 504.</p>
+  <h3>How to start</h3>
+  <p>Ask the school, in writing, for an evaluation. Schools have a duty to identify and evaluate students who may need services.</p>
+  <h3>What a 2026 study adds</h3>
+  <p>A randomized trial published in <i>JAMA Pediatrics</i> in November 2026 tested four common accommodations (extra time, frequent breaks, standing desks and a low-distraction workspace) with 255 children in kindergarten through sixth grade. None improved classroom behavior or academic work, alone or combined with other treatments. Behavior support and stimulant medication both reduced rule-breaking, and medication also improved quiz scores and seatwork.</p>
+  <p>This doesn't mean a child's plan should be dropped. The study took place in a summer program, looked at specific accommodations, and its lead researchers said accommodations may help in some situations but shouldn't be one-size-fits-all. It does suggest asking the school what <b>behavior support and skill teaching</b> will sit alongside any accommodations, and checking whether each support is actually helping.</p>
+  <h3>College</h3>
+  <p>IEPs and 504 plans don't carry over automatically. Students need to contact the college's disability services office themselves.</p>
+  <p class="small muted">General information about U.S. law, not legal advice.</p>`,
+  src:[S_.chaddEd, S_.chadd504, S_.ed504, S_.jamaPeds, ["FIU / EurekAlert (2026): Common ADHD classroom accommodations","https://www.eurekalert.org/news-releases/1151884"]], lessons:["wrk6"] },
+{ id:"for-loved-ones", cat:"help", title:"For partners, parents and friends", sum:"How to support someone with ADHD without burning out.",
+  key:["ADHD behavior isn't a measure of how much someone cares.","Agree on systems together instead of repeating reminders.","Notice what's going well. Criticism is already plentiful.","Look after yourself too."],
+  body:`<h3>Understand the gap</h3>
+  <p>People with ADHD usually know what they should do and want to do it. The difficulty is in doing it reliably. Forgetting your request or running late isn't a sign that you don't matter to them.</p>
+  <h3>What helps</h3>
+  <ul><li><b>Build systems together:</b> a shared calendar, a list on the fridge, a set place for keys. Systems work better than reminders, and they take you out of the role of nag.</li><li><b>Be specific:</b> "Please take the bins out before 8 tonight" works better than "You never help."</li><li><b>Pick your moment:</b> not in the middle of a task or an argument.</li><li><b>Say what's working.</b> Many people with ADHD hear far more criticism than praise.</li><li><b>Learn about ADHD.</b> It makes it easier to tell "can't" from "won't."</li></ul>
+  <h3>For parents</h3>
+  <p>Parent training in behavior management is the best-supported approach for younger children. It teaches clear expectations, consistent routines and positive reinforcement. Ask your child's doctor for a referral.</p>
+  <h3>Your own needs</h3>
+  <p>Supporting someone isn't the same as doing everything for them. It's fair to have limits and to ask for change. Support groups for families, such as those run by CHADD, can help.</p>`,
+  src:[S_.cdcCare, S_.chadd, S_.aafp], lessons:["sup5"] },
+{ id:"find-help", cat:"help", title:"Find help now", sum:"Crisis lines, helplines and trusted organizations.",
+  key:["In an emergency in the U.S., call 911. For a mental health crisis, call or text 988.","CHADD's ADHD helpline: 1-866-200-8098.","Your primary care provider is a good first step for evaluation."],
+  body:`<h3>If you're in crisis</h3>
+  <p>If you're thinking about harming yourself, or you're worried about someone else, please reach out now.</p>
+  <ul><li><b>988 Suicide & Crisis Lifeline (U.S.):</b> call or text <b>988</b>, any time.</li><li><b>Emergency:</b> call <b>911</b> in the U.S., or your local emergency number.</li><li>Outside the U.S., contact your local emergency services or crisis line.</li></ul>
+  <h3>ADHD information and support</h3>
+  <ul><li><b>CHADD National Resource Center on ADHD:</b> funded by the CDC. Its helpline, <b>1-866-200-8098</b>, is staffed by trained health information specialists.</li><li><b>ADDA (Attention Deficit Disorder Association):</b> support and virtual groups for adults.</li><li><b>NIMH</b> and <b>CDC:</b> reliable, free information.</li></ul>
+  <h3>Getting evaluated or treated</h3>
+  <ul><li>Start with your primary care provider. They routinely diagnose and treat ADHD and can refer you on.</li><li>Check your insurance directory for psychiatrists and psychologists.</li><li>University clinics and community health centers may offer lower-cost options.</li></ul>
+  <h3>Work and school</h3>
+  <ul><li><b>Job Accommodation Network (JAN):</b> free advice on workplace accommodations.</li><li>Your school district, or your college's disability services office.</li></ul>
+  <p class="small muted">ADHD Skills Lab is an educational site. It can't provide medical advice, diagnosis or crisis support.</p>`,
+  src:[S_.l988, S_.chadd, ["CDC: Resources for families","https://www.cdc.gov/adhd/php/partner-toolkit/resources-for-families.html"], S_.adda, S_.nimh, S_.jan], lessons:[] }
+];
+const GLOSSARY = [
+  ["504 plan","A written plan of accommodations for a U.S. student with a disability, under Section 504 of the Rehabilitation Act."],
+  ["Accommodation","A change to how, when or where someone works or learns, so a disability doesn't hold them back."],
+  ["ADA","Americans with Disabilities Act. The U.S. law that prohibits disability discrimination, including at work."],
+  ["ADD","An older name, usually meaning what's now called the inattentive presentation of ADHD."],
+  ["Alpha-2 agonist","A type of non-stimulant ADHD medication, such as guanfacine or clonidine."],
+  ["Body doubling","Working alongside another person to make it easier to start and stay on task."],
+  ["CBT","Cognitive behavioral therapy. A structured, skills-based therapy. Versions adapted for adult ADHD are well supported by research."],
+  ["Combined presentation","ADHD with enough symptoms of both inattention and hyperactivity-impulsivity."],
+  ["Co-occurring condition","Another condition present alongside ADHD, such as anxiety. Also called a comorbidity."],
+  ["Controlled substance","A medication regulated by the DEA because it can be misused. Most stimulants are Schedule II."],
+  ["Dopamine","A brain chemical involved in motivation and reward. Most ADHD medications increase its activity."],
+  ["DSM-5","The manual U.S. clinicians use to diagnose mental health conditions, including ADHD."],
+  ["Emotional dysregulation","Difficulty managing how strongly and how long you feel emotions."],
+  ["Executive functions","The brain's self-management skills: starting, planning, remembering, managing time and emotions, and pausing before acting."],
+  ["Extended-release","A long-acting form of a medication that releases gradually through the day."],
+  ["Heritability","How much of the variation in a trait across a population is explained by genes. For ADHD, about 74%."],
+  ["Hyperfocus","Deep, hard-to-interrupt concentration on something highly interesting."],
+  ["IDEA","Individuals with Disabilities Education Act. The U.S. law that provides special education services."],
+  ["IEP","Individualized Education Program. A plan for special education services under IDEA."],
+  ["Inattentive presentation","ADHD mainly involving trouble with focus, organization and follow-through, with little hyperactivity."],
+  ["Masking","Hiding or compensating for ADHD traits to fit in. It can be exhausting over time."],
+  ["Meta-analysis","A study that combines the results of many studies to get a more reliable answer."],
+  ["Neurodevelopmental","Related to how the brain grows and develops, starting in childhood."],
+  ["Non-stimulant","An ADHD medication that isn't a stimulant, such as atomoxetine, viloxazine, guanfacine or clonidine."],
+  ["Norepinephrine","A brain chemical involved in alertness and attention."],
+  ["Parent training in behavior management","A program that teaches parents skills for supporting a child with ADHD. Recommended first for children under 6."],
+  ["Randomized trial","A study in which people are assigned to treatments by chance. The most reliable way to test whether a treatment works."],
+  ["Rejection sensitive dysphoria (RSD)","A popular term for intense emotional pain at real or perceived rejection. Not an official diagnosis."],
+  ["Stimulant","The most commonly prescribed type of ADHD medication: methylphenidate or amphetamine."],
+  ["Time blindness","An informal term for difficulty sensing how much time is passing or how long things will take."],
+  ["Working memory","The ability to hold information in mind for a short time while using it."]
+];
+
+/* ---------- Research news (v1.5.0) ----------
+   Plain-language summaries of new research, guidelines and policy. Newest first.
+   Each item: id, date (YYYY-MM-DD), when (optional label, e.g. "September 2026"), kind, title, source, sum,
+   means (what it means for you), note (keep in mind), url, lib (related Library article id).
+   kind is one of: Research, Guideline, Medication, Policy. */
+const NEWS_KINDS = ["Research","Medication","Guideline","Policy"];
+const NEWS = [
+{ id:"n-sfn-2026", date:"2026-11-17", kind:"Research", title:"New brain research highlights time pressure and breathing patterns in ADHD",
+  source:"Society for Neuroscience, Neuroscience 2026 meeting",
+  sum:"Studies presented at the Society for Neuroscience's annual meeting reported that people with ADHD experience chronic time pressure, a persistent sense of running behind, and that young adults with ADHD showed a distinctive breathing pattern that changed with stimulant medication.",
+  means:"The \"always behind\" feeling many people describe is being taken seriously by researchers. Tools that make time visible, like timers and buffers, target exactly this.",
+  note:"These are conference presentations. They haven't yet been through full peer review, so treat them as early findings.",
+  url:"https://www.news-medical.net/news/20261117/ADHD-affects-mental-and-physical-health-across-the-lifespan.aspx", lib:"brain" },
+{ id:"n-accom-2026", date:"2026-11-13", kind:"Research", title:"Trial: common classroom accommodations didn't help on their own",
+  source:"JAMA Pediatrics (Florida International University)",
+  sum:"A randomized trial with 255 children in kindergarten through sixth grade tested extra time, frequent breaks, standing desks and low-distraction workspaces. None improved behavior or schoolwork, alone or combined with other treatments. Behavior support and stimulant medication both helped.",
+  means:"If your child has a 504 plan or IEP, ask what behavior support and skill teaching go with the accommodations, and whether each one is making a visible difference.",
+  note:"The study ran in a summer program and tested four specific accommodations. The researchers said accommodations may help in some cases but shouldn't be one-size-fits-all. It isn't a reason to give up a child's plan.",
+  url:"https://jamanetwork.com/journals/jamapediatrics/fullarticle/2856649", lib:"school-rights" },
+{ id:"n-biotypes-2026", date:"2026-11-10", kind:"Research", title:"Brain scans point to three \"biotypes\" in children with ADHD and anxiety",
+  source:"Stanford Medicine",
+  sum:"A Stanford-led study using brain scans found three distinct brain patterns, or \"biotypes,\" among children with ADHD, an anxiety disorder, or both.",
+  means:"It supports what many families already see: ADHD isn't one single thing, and it overlaps with anxiety. In time this could help match children to the treatments most likely to work for them.",
+  note:"This is groundwork for future research. Brain scans can't currently diagnose ADHD or guide an individual's treatment.",
+  url:"https://med.stanford.edu/news/all-news/2026/11/adhd-biotypes.html", lib:"co-occurring" },
+{ id:"n-simtriyo-2026", date:"2026-10-30", kind:"Medication", title:"New ADHD medication Simtriyo (centanafadine) approved and scheduled",
+  source:"FDA approval July 24, 2026; DEA rule October 30, 2026",
+  sum:"The FDA approved centanafadine, a once-daily capsule, for adults and for children aged 6 and up who weigh at least 20 kg. It's the first ADHD medication to act on norepinephrine, dopamine and serotonin. On October 30 the DEA placed it in Schedule III, the step needed before it can be dispensed.",
+  means:"There's a new option to discuss with a prescriber, which may matter if current medications haven't suited you.",
+  note:"It hasn't been tested head-to-head against existing ADHD medications. Its label classes it as a stimulant, and the Schedule III placement is an interim rule that could change.",
+  url:"https://www.federalregister.gov/documents/2026/10/30/2026-22208/schedules-of-controlled-substances-placement-of-centanafadine-in-schedule-iii", lib:"meds-nonstimulants" },
+{ id:"n-shortage-2026", date:"2026-10-18", when:"October 2026", kind:"Policy", title:"Stimulant shortages continue into late 2026",
+  source:"FDA Drug Shortages database",
+  sum:"Four years after the first shortage was declared, several ADHD stimulant products were still listed as in shortage in October 2026, including some amphetamine, lisdexamfetamine and extended-release methylphenidate products. Supply has improved from its lowest point.",
+  means:"Call your pharmacy a few days before you need a refill, and ask your prescriber about alternatives if yours is unavailable. Don't ration or stop medication without talking to them.",
+  note:"Availability changes week to week and differs by strength and manufacturer.",
+  url:"https://www.fda.gov/drugs/drug-safety-and-availability/drug-shortages", lib:"access" },
+{ id:"n-dementia-2026", date:"2026-10-07", kind:"Research", title:"Study links ADHD with higher risk of later cognitive impairment",
+  source:"JAMA Psychiatry (University of Pittsburgh)",
+  sum:"Among more than 187,000 U.S. adults aged 50 and older, 6.7% of those with ADHD developed dementia or mild cognitive impairment, compared with 3.4% of those without. Higher genetic risk for ADHD was also linked to cognitive decline.",
+  means:"It's a reason to look after brain health over the long term: sleep, exercise, blood pressure, and staying on top of medical care.",
+  note:"This shows a link, not a cause, and the great majority of people with ADHD in the study did not develop either condition. The study doesn't show whether treating ADHD changes the risk.",
+  url:"https://www.eurekalert.org/news-releases/1146661", lib:"health" },
+{ id:"n-alks-2026", date:"2026-09-22", when:"September 2026", kind:"Medication", title:"A new type of non-stimulant shows early promise in adults",
+  source:"Medscape Medical News (Alkermes phase 1b study)",
+  sum:"An experimental drug called ALKS 7290, which works on the brain's orexin system, showed what its maker described as clinically meaningful results in a small early study in adults with ADHD.",
+  means:"New kinds of ADHD medication are being developed, including non-stimulants.",
+  note:"This was a small, early-stage study reported by the company. Most drugs at this stage never reach pharmacies, and any approval would be years away.",
+  url:"https://www.medscape.com/viewarticle/novel-first-class-drug-promising-early-adhd-study-2026a1000z95", lib:"meds-nonstimulants" },
+{ id:"n-apsard-2026", date:"2026-08-27", kind:"Guideline", title:"First U.S. guidelines for adult ADHD reach final review",
+  source:"American Professional Society of ADHD and Related Disorders (APSARD)",
+  sum:"The U.S. has never had official clinical guidelines for diagnosing and treating ADHD in adults. APSARD announced that its guidelines had entered the last review stage, with publication anticipated in fall 2026. They're expected to cover screening, diagnosis, medication and non-medication care.",
+  means:"Once published, adults should see more consistent evaluations and treatment, wherever they go for care.",
+  note:"As of mid-November 2026 the guidelines had not yet been published. We'll update this page when they are.",
+  url:"https://apsard.org/Web/Guidelines", lib:"diagnosis" },
+{ id:"n-telehealth-2026", date:"2025-12-31", kind:"Policy", title:"Telehealth prescribing of ADHD medication extended through 2026",
+  source:"DEA and HHS, Federal Register",
+  sum:"Federal rules that let clinicians prescribe controlled medications, including stimulants, by video visit without a prior in-person exam were extended for a fourth time, through December 31, 2026. The DEA sent a permanent rule for final review in August 2026.",
+  means:"If you get ADHD medication through telehealth, ask your provider now what will change for you in 2027.",
+  note:"As of mid-November 2026 the permanent rule hadn't been published, so what happens after December 31 isn't yet known. State rules can be stricter.",
+  url:"https://www.federalregister.gov/documents/2025/12/31/2025-24123/fourth-temporary-extension-of-covid-19-telemedicine-flexibilities-for-prescription-of-controlled", lib:"access" },
+{ id:"n-cell-2025", date:"2025-12-24", kind:"Research", title:"Stimulants act on alertness and reward, not attention circuits",
+  source:"Cell (Washington University in St. Louis); NIH Research Matters",
+  sum:"Brain scans from 5,795 children showed that stimulant medications mainly changed activity in networks for wakefulness and reward. Attention networks were largely unchanged. Stimulants and extra sleep had similar effects on the brain.",
+  means:"Making tasks more rewarding and protecting your sleep aren't side issues. They work on the same systems medication does.",
+  note:"One study, mainly in children aged 8 to 11. It changes how scientists think stimulants work, not whether they work.",
+  url:"https://www.nih.gov/news-events/nih-research-matters/adhd-medications-stimulate-alertness-motivation", lib:"brain" },
+{ id:"n-umbrella-2025", date:"2025-11-26", kind:"Research", title:"Largest review yet shows which ADHD treatments are best supported",
+  source:"The BMJ",
+  sum:"Researchers combined more than 200 meta-analyses. Medication for children and adults, and cognitive behavioral therapy for adults, had the strongest short-term evidence. Exercise, mindfulness and acupuncture showed promise but with low-quality evidence. Long-term evidence was limited across the board.",
+  means:"You can explore the evidence yourself on the team's free website, and use it in conversations with your clinician.",
+  note:"\"Short-term\" matters: most trials last weeks or months, and ADHD lasts years.",
+  url:"https://www.bmj.com/content/391/bmj-2025-085875", lib:"treatment-overview" },
+{ id:"n-sweden-2025", date:"2025-08-13", kind:"Research", title:"ADHD medication linked to lower risk of serious harms",
+  source:"The BMJ (Karolinska Institutet and University of Southampton)",
+  sum:"In 148,581 people in Sweden with newly diagnosed ADHD, starting medication was associated with lower rates of suicidal behavior (17%), substance misuse (15%), transport accidents (12%) and criminality (13%) over two years.",
+  means:"Treatment may protect more than focus. It's one factor to weigh when discussing options with a prescriber.",
+  note:"This was an observational study designed to mimic a trial. It's strong evidence of a link but can't fully prove cause.",
+  url:"https://www.bmj.com/content/390/bmj-2024-083658", lib:"health" },
+{ id:"n-fda-2025", date:"2025-06-30", kind:"Medication", title:"FDA adds warning on extended-release stimulants for children under 6",
+  source:"U.S. Food and Drug Administration",
+  sum:"The FDA required all extended-release stimulants to carry a warning that children younger than 6 have a higher risk of weight loss and other side effects than older children on the same dose. These products aren't approved for that age group but are sometimes prescribed.",
+  means:"If your child is under 6 and takes an extended-release stimulant, talk to their doctor about growth monitoring and alternatives. Don't stop medication on your own.",
+  note:"For children under 6, guidelines recommend parent training in behavior management first.",
+  url:"https://www.fda.gov/drugs/drug-safety-and-availability/fda-requires-expanded-labeling-about-weight-loss-risk-patients-younger-6-years-taking-extended", lib:"meds-stimulants" },
+{ id:"n-life-2025", date:"2025-01-23", kind:"Research", title:"UK study finds shorter life expectancy in adults diagnosed with ADHD",
+  source:"The British Journal of Psychiatry (University College London)",
+  sum:"Among 30,029 UK adults with diagnosed ADHD, life expectancy appeared to be about 4.5 to 9 years shorter for men and 6.5 to 11 years shorter for women than for similar adults without ADHD.",
+  means:"The researchers pointed to unmet support and treatment needs, which are things that can change. Looking after sleep, health checks and safety matters.",
+  note:"Fewer than 1 in 9 UK adults with ADHD were diagnosed, so those studied may have had greater difficulties than average. The findings may not apply to other countries.",
+  url:"https://www.ucl.ac.uk/news/2025/jan/adults-diagnosed-adhd-may-have-reduced-life-expectancies", lib:"health" }
+];
+
+/* ---------- Library and news pages (v1.5.0) ---------- */
+let libQuery = "";
+const libById = id => LIB.find(a => a.id === id);
+const stripTags = h => h.replace(/<[^>]+>/g, " ");
+const LIB_TEXT = {}; LIB.forEach(a => { LIB_TEXT[a.id] = (a.title + " " + a.sum + " " + a.key.join(" ") + " " + stripTags(a.body)).toLowerCase(); });
+const libCard = a => `<a class="card lib-card" href="#lib-${a.id}"><h3>${a.title}${isNew("a", a) ? " " + NEW_PILL : ""}</h3><p class="small muted">${a.sum}</p></a>`;
+const helpStrip = () => `<a class="card help-strip" href="#lib-find-help"><b>Need help right now?</b><span class="small">In the U.S., call or text <b>988</b> for a mental health crisis. More crisis lines and ADHD helplines →</span></a>`;
+function libResults(q){
+  q = q.trim().toLowerCase(); if (!q) return null;
+  const words = q.split(/\s+/);
+  const arts = LIB.filter(a => words.every(w => LIB_TEXT[a.id].includes(w)))
+    .sort((a, b) => (b.title.toLowerCase().includes(q) ? 1 : 0) - (a.title.toLowerCase().includes(q) ? 1 : 0));
+  const terms = GLOSSARY.filter(g => words.every(w => (g[0] + " " + g[1]).toLowerCase().includes(w)));
+  const lessons = ALL_LESSONS.filter(l => words.every(w => (l.title + " " + stripTags(l.idea)).toLowerCase().includes(w))).slice(0, 6);
+  return {arts, terms, lessons};
+}
+function renderLibrary(app){
+  app.innerHTML = `<section class="hero"><h1>ADHD Library</h1><p class="muted">Clear answers about ADHD, written in plain language and linked to their sources. Look something up, then come back any time.</p>
+    <div class="field" style="max-width:520px"><label for="libQ">Search the Library</label><input id="libQ" type="text" placeholder="e.g. sleep, diagnosis, medication, 504" value="${esc(libQuery)}" autocomplete="off"></div></section>
+    ${helpStrip()}
+    <div id="libOut" class="section" style="gap:26px"></div>
+    <p class="note">The Library is for education. It isn't medical or legal advice and can't replace a professional who knows you. Facts were last checked on ${fmtDate(LIB_REVIEWED)}. Most figures and laws describe the United States.</p>`;
+  const out = app.querySelector("#libOut");
+  const draw = () => {
+    const r = libResults(libQuery);
+    if (!r) {
+      out.innerHTML = LIB_CATS.map(c => `<section class="section"><h2>${c.name}</h2><p class="small muted">${c.blurb}</p><div class="grid">${LIB.filter(a => a.cat === c.id).map(libCard).join("")}</div></section>`).join("") +
+        `<section class="section"><h2>Glossary</h2><a class="card lib-card" href="#lib-glossary"><h3>ADHD terms in plain language</h3><p class="small muted">${GLOSSARY.length} terms, from "504 plan" to "working memory."</p></a></section>`;
+      return;
+    }
+    const n = r.arts.length + r.terms.length + r.lessons.length;
+    out.innerHTML = `<p aria-live="polite"><b>${n}</b> result${n === 1 ? "" : "s"} for "${esc(libQuery.trim())}"</p>` +
+      (r.arts.length ? `<section class="section"><h2>Articles</h2><div class="grid">${r.arts.map(libCard).join("")}</div></section>` : "") +
+      (r.terms.length ? `<section class="section"><h2>Glossary</h2><dl class="gloss card">${r.terms.map(g => `<dt>${g[0]}</dt><dd>${g[1]}</dd>`).join("")}</dl></section>` : "") +
+      (r.lessons.length ? `<section class="section"><h2>Lessons</h2><div class="lesson-list">${r.lessons.map(l => `<button class="lesson-item" data-l="${l.id}" style="--cc:var(${l.course.color})"><span class="grow"><b>${l.title}</b><br><span class="small muted">${l.course.title} · ${l.mins} min</span></span><span class="pill">Open</span></button>`).join("")}</div></section>` : "") +
+      (n ? "" : `<p class="muted">Nothing matched. Try a shorter or different word, or browse by clearing the search.</p>`);
+    out.querySelectorAll("[data-l]").forEach(b => b.onclick = () => openLesson(ALL_LESSONS.find(l => l.id === b.dataset.l)));
+  };
+  app.querySelector("#libQ").oninput = e => { libQuery = e.target.value; draw(); };
+  draw();
+}
+function sourceList(src){ return `<ol class="list small">${src.map(s => `<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a></li>`).join("")}</ol>`; }
+function renderArticle(app, id){
+  const a = libById(id); if (!a) { location.hash = "#library"; return; }
+  const cat = LIB_CATS.find(c => c.id === a.cat); markOpened("a", a.id);
+  const ls = a.lessons.map(x => ALL_LESSONS.find(l => l.id === x)).filter(Boolean);
+  const more = LIB.filter(x => x.cat === a.cat && x.id !== a.id).slice(0, 4);
+  app.innerHTML = `<article class="section" style="gap:20px">
+    <div class="crumbs"><a href="#library">Library</a><span class="muted">/</span><span>${cat.name}</span></div>
+    <div class="section"><span class="tag" style="color:var(--accent)">${cat.name}</span><h1>${a.title}</h1><p class="muted" style="max-width:62ch;font-size:1.08rem">${a.sum}</p></div>
+    <div class="card keypts"><h3>Key points</h3><ul class="list">${a.key.map(k => `<li>${k}</li>`).join("")}</ul></div>
+    <div class="prose">${a.body}</div>
+    ${ls.length ? `<div class="section"><h3>Practice this</h3><div class="lesson-list">${ls.map(l => `<button class="lesson-item" data-l="${l.id}" style="--cc:var(${l.course.color})"><span class="grow"><b>${l.title}</b><br><span class="small muted">${l.course.title} · ${l.mins} min lesson</span></span><span class="pill">Open</span></button>`).join("")}</div></div>` : ""}
+    <div class="section"><h3>Sources</h3>${sourceList(a.src)}<p class="small muted">Links open in a new tab. Last checked ${fmtDate(a.reviewed || LIB_REVIEWED)}.</p></div>
+    ${more.length ? `<div class="section"><h3>More in ${cat.name}</h3><div class="chips">${more.map(x => `<a class="chip" href="#lib-${x.id}">${x.title}</a>`).join("")}</div></div>` : ""}
+    <p class="note">This article is for education. It isn't medical or legal advice. Talk to a qualified professional about your own situation.${a.id === "find-help" ? "" : ` <a href="#lib-find-help">Find help</a>.`}</p></article>`;
+  app.querySelectorAll("[data-l]").forEach(b => b.onclick = () => openLesson(ALL_LESSONS.find(l => l.id === b.dataset.l)));
+}
+function renderGlossary(app){
+  app.innerHTML = `<article class="section" style="gap:20px"><div class="crumbs"><a href="#library">Library</a><span class="muted">/</span><span>Glossary</span></div>
+    <div class="section"><h1>Glossary</h1><p class="muted">ADHD terms in plain language.</p>
+    <div class="field" style="max-width:420px"><label for="glQ">Filter terms</label><input id="glQ" type="text" placeholder="e.g. IEP" autocomplete="off"></div></div>
+    <dl class="gloss card" id="glOut"></dl></article>`;
+  const draw = q => { q = q.trim().toLowerCase(); const g = GLOSSARY.filter(x => !q || (x[0] + " " + x[1]).toLowerCase().includes(q));
+    app.querySelector("#glOut").innerHTML = g.length ? g.map(x => `<dt>${x[0]}</dt><dd>${x[1]}</dd>`).join("") : `<dd class="muted">No matching terms.</dd>`; };
+  app.querySelector("#glQ").oninput = e => draw(e.target.value); draw("");
+}
+const newsDate = n => n.when || fmtDate(n.date);
+const newsIsNew = n => isRecent(n.date) && n.date > (getD("seenN", "") || "");
+const hasNewNews = () => NEWS.some(newsIsNew);
+function newsCard(n, compact){
+  const a = n.lib && libById(n.lib);
+  return `<section class="card section news-card"><span class="tag" style="color:var(--accent)">${n.kind} · ${newsDate(n)}</span>
+    <h3>${n.title}${newsIsNew(n) ? " " + NEW_PILL : ""}</h3><p class="small muted">${n.source}</p><p>${n.sum}</p>
+    ${compact ? "" : `<div class="example"><b>What it means for you:</b> ${n.means}</div><p class="small muted"><b>Keep in mind:</b> ${n.note}</p>`}
+    <div class="row small"><a href="${n.url}" target="_blank" rel="noopener">Read the source ↗</a>${a ? `<a href="#lib-${a.id}">Background: ${a.title}</a>` : ""}${compact ? `<a href="#news">What it means for you</a>` : ""}</div></section>`;
+}
+let newsFilter = "All";
+function renderNews(app){
+  const draw = () => {
+    const items = NEWS.filter(n => newsFilter === "All" || n.kind === newsFilter);
+    app.innerHTML = `<section class="hero"><h1>Research news</h1><p class="muted">New ADHD research, guidelines, medications and policy, explained in plain language. Each update says what was found, what it means for you, and what to keep in mind, with a link to the original source.</p>
+      <div class="chips" role="group" aria-label="Filter news">${["All"].concat(NEWS_KINDS).map(k => `<button class="chip ${newsFilter === k ? "on" : ""}" data-k="${k}">${k}</button>`).join("")}</div></section>
+      ${items.map(n => newsCard(n)).join("") || `<p class="muted">No updates of this type yet.</p>`}
+      <section class="card section"><h3>How we choose and write these</h3><ul class="list small">
+        <li>Sources are peer-reviewed journals, government health agencies and professional medical societies. We link to the original wherever we can.</li>
+        <li>One study rarely settles anything, so each update includes its limits.</li>
+        <li>Early findings (conference talks, small or company-run studies) are labeled as early.</li>
+        <li>This page is updated when notable research or guidance is published. It isn't medical advice. Please don't change treatment based on a news item; talk to your clinician.</li></ul></section>`;
+    app.querySelectorAll("[data-k]").forEach(b => b.onclick = () => { newsFilter = b.dataset.k; draw(); });
+  };
+  draw();
+  if (NEWS.length && getD("seenN", "") !== NEWS[0].date) { setD("seenN", NEWS[0].date); const d = document.querySelector('nav.tabs a[data-nav="news"] .ndot'); if (d) d.remove(); }
+}
+
+/* ---------- widgets added in v1.5.0 ---------- */
+const FEELS = {Angry:["frustrated","irritated","impatient","resentful","furious"], Sad:["disappointed","discouraged","lonely","hurt","hopeless"], Anxious:["worried","overwhelmed","nervous","on edge","panicky"], Ashamed:["embarrassed","guilty","not good enough","exposed","regretful"], Flat:["bored","drained","numb","restless","unmotivated"], Good:["proud","relieved","excited","content","grateful"]};
+Object.assign(WIDGETS, {
+reflect(el, w){
+  const d = getD("rf_" + w.key, {});
+  const text = () => (w.title ? w.title + "\n\n" : "") + w.fields.map(f => f.label + ":\n" + ((d[f.k] || "").trim() || "–")).join("\n\n");
+  el.innerHTML = w.fields.map((f, i) => `<div class="field"><label for="rf${i}">${f.label}</label>${f.area ? `<textarea id="rf${i}" data-k="${f.k}" placeholder="${esc(f.ph || "")}">${esc(d[f.k] || "")}</textarea>` : `<input id="rf${i}" type="text" data-k="${f.k}" placeholder="${esc(f.ph || "")}" value="${esc(d[f.k] || "")}">`}</div>`).join("") +
+    `<p class="small muted" id="rfS" aria-live="polite">${Object.keys(d).length ? "Saved." : "Your answers save as you type. Only you can see them."}</p>` +
+    (w.summary ? `<div class="row"><button class="btn cc" id="rfC">Copy my answers</button><span class="small muted" id="rfM" aria-live="polite"></span></div>` : "");
+  el.querySelectorAll("[data-k]").forEach(x => x.oninput = () => { d[x.dataset.k] = x.value; setD("rf_" + w.key, d); el.querySelector("#rfS").textContent = "Saved."; });
+  const c = el.querySelector("#rfC");
+  if (c) c.onclick = async () => { const m = el.querySelector("#rfM"); try { await navigator.clipboard.writeText(text()); m.textContent = "Copied. Paste it into your notes."; } catch(e) { m.textContent = "Copy isn't available here. Your answers are still saved above."; } };
+},
+rate(el, w){
+  const d = getD("rate_" + w.key, {});
+  const draw = () => {
+    const done = w.items.every(it => d[it.k]);
+    let out = `<p class="small muted">${Object.keys(d).length} of ${w.items.length} rated.</p>`;
+    if (done) {
+      const sorted = w.items.slice().sort((a, b) => d[a.k] - d[b.k]);
+      const low = sorted.slice(0, 2), top = sorted[sorted.length - 1];
+      out = `<div class="out" style="display:flex;flex-direction:column;gap:8px"><span><b>Your strongest skill:</b> ${top.label.toLowerCase()}. Lean on it.</span>
+        <span><b>Start here:</b></span><ul class="list">${low.map(it => `<li>${it.label}: <a href="#${it.go}">${it.tip}</a></li>`).join("")}</ul>
+        <span class="small muted">Profiles change with sleep, stress and life stage. Redo this any time.</span></div>`;
+    }
+    el.innerHTML = `<p class="small muted">Rate each one from 1 (a real struggle) to 5 (a strength). Go with your gut.</p>` +
+      w.items.map(it => `<div class="rate-row"><span>${it.label}</span><div class="rate-btns" role="group" aria-label="${esc(it.label)}">${[1,2,3,4,5].map(n => `<button class="chip ${d[it.k] === n ? "on" : ""}" data-k="${it.k}" data-n="${n}" aria-pressed="${d[it.k] === n}">${n}</button>`).join("")}</div></div>`).join("") + out;
+    el.querySelectorAll("[data-n]").forEach(b => b.onclick = () => { d[b.dataset.k] = +b.dataset.n; setD("rate_" + w.key, d); draw(); });
+  };
+  draw();
+},
+estimate(el){
+  const st = getD("est", {log:[]});
+  const draw = () => {
+    const log = st.log || [], mult = log.length >= 3 ? log.reduce((a, r) => a + r.a / r.g, 0) / log.length : null;
+    el.innerHTML = `<div class="field"><label for="esT">Task</label><input id="esT" type="text" placeholder="e.g. write the weekly report"></div>
+      <div class="field"><label for="esG">My first guess (minutes)</label><input id="esG" type="number" min="1" max="600" inputmode="numeric" placeholder="e.g. 40"></div>
+      <div class="out" id="esO"><span class="muted">Enter a guess to see how long to block.</span></div>
+      <div class="field"><label for="esA">Afterwards: how long did it really take? (minutes)</label><input id="esA" type="number" min="1" max="900" inputmode="numeric"></div>
+      <div class="row"><button class="btn cc" id="esL">Log it</button><span class="small muted" id="esM" aria-live="polite"></span></div>
+      ${log.length ? `<p class="small"><b>Your log:</b> ${log.slice(-5).map(r => `guessed ${r.g}, took ${r.a}`).join(" · ")}</p>` : ""}
+      <p class="small ${mult ? "" : "muted"}">${mult ? `<b>Your personal multiplier is about ${mult.toFixed(1)}×.</b> Multiply future guesses by that.` : `Log ${Math.max(1, 3 - log.length)} more task${3 - log.length === 1 ? "" : "s"} to learn your personal multiplier.`}</p>`;
+    const G = el.querySelector("#esG"), O = el.querySelector("#esO");
+    G.oninput = () => { const g = +G.value; O.innerHTML = g > 0 ? `Block <b>${Math.round(g * 1.5)} minutes</b> (1.5×). If it's new to you, block <b>${g * 2} minutes</b> (2×).${mult ? ` By your own track record: <b>${Math.round(g * mult)} minutes</b>.` : ""}` : `<span class="muted">Enter a guess to see how long to block.</span>`; };
+    el.querySelector("#esL").onclick = () => { const g = +G.value, a = +el.querySelector("#esA").value, M = el.querySelector("#esM");
+      if (!(g > 0 && a > 0)) { M.textContent = "Enter both your guess and the real time."; return; }
+      st.log = (st.log || []).concat({g, a}).slice(-10); setD("est", st); draw(); };
+  };
+  draw();
+},
+triage(el){
+  const st = getD("triage", {items:[]}); const LABEL = ["", "Now", "Later", "Not today"];
+  const draw = () => {
+    const items = st.items || [], now = items.find(x => x.s === 1);
+    el.innerHTML = `<div class="field"><label for="trI">Get it out of your head. Add everything, one at a time.</label><div class="row" style="flex-wrap:nowrap"><input id="trI" type="text" placeholder="e.g. reply to landlord" maxlength="120"><button class="btn cc" id="trA">Add</button></div></div>
+      ${items.length ? `<p class="small muted">Now sort them. Only <b>one</b> can be "Now."</p>` : ""}
+      <div class="tri-list">${items.map((x, i) => `<div class="tri-row ${x.s === 1 ? "now" : ""}"><span class="grow">${esc(x.t)}</span><div class="tri-btns">${[1,2,3].map(s => `<button class="chip ${x.s === s ? "on" : ""}" data-i="${i}" data-s="${s}" aria-pressed="${x.s === s}">${LABEL[s]}</button>`).join("")}<button class="linkbtn" data-rm="${i}" aria-label="Remove ${esc(x.t)}">✕</button></div></div>`).join("")}</div>
+      ${now ? `<div class="out"><b>Your one thing:</b> ${esc(now.t)}<br><span class="small muted">What's the smallest first step? Do just that. Everything else is parked, on purpose.</span></div>` : items.length ? `<p class="small muted">Pick the one you'll do now. It doesn't have to be the biggest.</p>` : ""}
+      ${items.length ? `<button class="linkbtn" id="trC">Clear the list</button>` : ""}`;
+    const I = el.querySelector("#trI");
+    const add = () => { const t = I.value.trim(); if (!t) return; st.items = (st.items || []).concat({t, s:0}).slice(-30); setD("triage", st); draw(); el.querySelector("#trI").focus(); };
+    el.querySelector("#trA").onclick = add; I.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); add(); } };
+    el.querySelectorAll("[data-s]").forEach(b => b.onclick = () => { const i = +b.dataset.i, s = +b.dataset.s;
+      if (s === 1) st.items.forEach(x => { if (x.s === 1) x.s = 2; });
+      st.items[i].s = st.items[i].s === s ? 0 : s; setD("triage", st); draw(); });
+    el.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => { st.items.splice(+b.dataset.rm, 1); setD("triage", st); draw(); });
+    const C = el.querySelector("#trC"); if (C) C.onclick = () => { st.items = []; setD("triage", st); draw(); };
+  };
+  draw();
+},
+namefeel(el){
+  let core = null, word = null, lvl = 0;
+  const draw = () => {
+    el.innerHTML = `<p><b>1.</b> Which is closest to how you feel right now, or how you felt in a recent tough moment?</p>
+      <div class="chips">${Object.keys(FEELS).map(k => `<button class="chip ${core === k ? "on" : ""}" data-c="${k}">${k}</button>`).join("")}</div>
+      ${core ? `<p><b>2.</b> Can you get more exact?</p><div class="chips">${FEELS[core].map(x => `<button class="chip ${word === x ? "on" : ""}" data-w="${x}">${x}</button>`).join("")}</div>` : ""}
+      ${word ? `<p><b>3.</b> How strong is it? (1 = faint, 5 = intense)</p><div class="chips">${[1,2,3,4,5].map(n => `<button class="chip ${lvl === n ? "on" : ""}" data-n="${n}">${n}</button>`).join("")}</div>` : ""}
+      ${lvl ? `<div class="out"><b>"I feel ${word}, about ${lvl} out of 5."</b><br><span class="small">${core === "Good" ? "Good feelings are worth naming too. Noticing them helps them last."
+        : lvl >= 4 ? "That's a big one. Say the sentence out loud, then take three slow breaths before you do anything else."
+        : "Say the sentence out loud or in your head. Notice whether the intensity shifts, even slightly."}</span>
+        ${word === "hopeless" || (core === "Sad" && lvl === 5) ? `<br><span class="small">If this feeling is strong or has been around for a while, you don't have to carry it alone. <a href="#lib-find-help">Find help</a>.</span>` : ""}</div>` : ""}`;
+    el.querySelectorAll("[data-c]").forEach(b => b.onclick = () => { core = b.dataset.c; word = null; lvl = 0; draw(); });
+    el.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { word = b.dataset.w; lvl = 0; draw(); });
+    el.querySelectorAll("[data-n]").forEach(b => b.onclick = () => { lvl = +b.dataset.n; draw(); });
+  };
+  draw();
+}
+});
+
 
 /* ---------- skills, levels and daily workout (v1.3.0) ---------- */
 const SKILLS = [

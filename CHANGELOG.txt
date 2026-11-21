@@ -6,7 +6,7 @@ Repository:  GitHub repo "adhd-skills-lab" (GitHub Pages, branch main, root fold
 Accounts:    Supabase project zxqynpnynhdysbpqpyvu
 Email:       Resend, sending from no-reply@magothymedia.com
 
-CURRENT VERSION: 1.4.0  (upload v1.4.0/index.html to GitHub)
+CURRENT VERSION: 1.5.0  (upload v1.5.0/index.html to GitHub)
 
 Each folder holds the complete index.html for that version. The first line
 inside every index.html names its version and date. Versions 1.1.0 and later
@@ -31,7 +31,34 @@ versions have no account connection, so signed-in learners would lose sync
 
 
 -----------------------------------------------------------------------------
-v1.4.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+v1.5.0  -  2026-11-20                                     CURRENT / TO DEPLOY
+-----------------------------------------------------------------------------
+Type: Minor (new features and content)
+- 4 new in-depth courses, 24 lessons (48 lessons in 8 courses total):
+  Understanding ADHD; Emotions & Self-Regulation; Work & Study;
+  Getting Support: Diagnosis & Treatment. New lessons add a "Go deeper"
+  section and links into the Library.
+- 5 new exercise types: reflect prompts with copy, executive function
+  profile, name-the-feeling, brain dump (Now/Later/Not today), and a
+  time-estimate tool that learns your personal multiplier.
+- ADHD Library: 24 sourced reference articles in 6 categories, a 31-term
+  glossary, search across articles/glossary/lessons, and a "Need help
+  right now?" strip (988 and ADHD helplines).
+- Research news: on-site feed of research, guideline, medication and
+  policy updates in plain language (14 items, Jan 2025 - Nov 2026), each
+  with "What it means for you", "Keep in mind" and a source link.
+  New items show a New label and a dot on the News tab.
+- Navigation: Library and News tabs; site name collapses to the logo on
+  narrow phones. Home page rewritten with Library and news sections.
+- All medical/statistical/legal statements checked against sources on
+  2026-11-20 (CDC, NIMH, FDA, DEA, BMJ, JAMA and others).
+- TIME-SENSITIVE: telehealth prescribing extension ends Dec 31, 2026;
+  APSARD adult guidelines not yet published; shortage status as of
+  Oct 2026. See the write-up's review table.
+- New saved items rf_*, rate_efmap, triage, est, seenN. No database changes.
+
+-----------------------------------------------------------------------------
+v1.4.0  -  2026-11-20                                     Superseded
 -----------------------------------------------------------------------------
 Type: Minor (new feature: release notices)
 - "What's new" card on the home and Games pages for returning learners,
